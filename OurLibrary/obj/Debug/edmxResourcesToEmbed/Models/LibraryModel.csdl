@@ -1,0 +1,287 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="library_dbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="author">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="name" Type="String" MaxLength="100" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="address" Type="String" MaxLength="100" FixedLength="true" Unicode="true" />
+    <Property Name="email" Type="String" MaxLength="200" FixedLength="true" Unicode="true" />
+    <Property Name="phone" Type="String" MaxLength="200" FixedLength="true" Unicode="true" />
+    <NavigationProperty Name="books" Relationship="Self.author_fk" FromRole="author" ToRole="book" />
+  </EntityType>
+  <EntityType Name="book">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="title" Type="String" MaxLength="150" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="author_id" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="category_id" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="publisher_id" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="isbn" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="review" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="page" Type="Int32" />
+    <Property Name="img" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="author" Relationship="Self.author_fk" FromRole="book" ToRole="author" />
+    <NavigationProperty Name="category" Relationship="Self.category_fk" FromRole="book" ToRole="category" />
+    <NavigationProperty Name="book_record" Relationship="Self.FK_book_record_book" FromRole="book" ToRole="book_record" />
+    <NavigationProperty Name="publisher" Relationship="Self.publisher_fk" FromRole="book" ToRole="publisher" />
+  </EntityType>
+  <EntityType Name="book_issue">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="book_record_id" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="issue_id" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="qty" Type="Int32" Nullable="false" />
+    <Property Name="ref_issue" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <NavigationProperty Name="book_record" Relationship="Self.FK_book_issue_book_record" FromRole="book_issue" ToRole="book_record" />
+    <NavigationProperty Name="issue" Relationship="Self.issue_fk" FromRole="book_issue" ToRole="issue" />
+  </EntityType>
+  <EntityType Name="book_record">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="book_code" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="book_id" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="additional_info" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="book" Relationship="Self.FK_book_record_book" FromRole="book_record" ToRole="book" />
+    <NavigationProperty Name="book_issue" Relationship="Self.FK_book_issue_book_record" FromRole="book_record" ToRole="book_issue" />
+  </EntityType>
+  <EntityType Name="category">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="category_name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+    <NavigationProperty Name="books" Relationship="Self.category_fk" FromRole="category" ToRole="book" />
+  </EntityType>
+  <EntityType Name="class">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="class_name" Type="String" MaxLength="100" FixedLength="true" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="students" Relationship="Self.class_fk" FromRole="class" ToRole="student" />
+  </EntityType>
+  <EntityType Name="issue">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="date" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="user_id" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="student_id" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="addtional_info" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="type" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="book_issue" Relationship="Self.issue_fk" FromRole="issue" ToRole="book_issue" />
+    <NavigationProperty Name="student" Relationship="Self.FK_student_issue" FromRole="issue" ToRole="student" />
+    <NavigationProperty Name="user" Relationship="Self.FK_user_issue" FromRole="issue" ToRole="user" />
+  </EntityType>
+  <EntityType Name="publisher">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="name" Type="String" MaxLength="100" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="address" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="contact" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+    <NavigationProperty Name="books" Relationship="Self.publisher_fk" FromRole="publisher" ToRole="book" />
+  </EntityType>
+  <EntityType Name="student">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="name" Type="String" MaxLength="100" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="bod" Type="String" MaxLength="100" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="class_id" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="email" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="address" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="class" Relationship="Self.class_fk" FromRole="student" ToRole="class" />
+    <NavigationProperty Name="issues" Relationship="Self.FK_student_issue" FromRole="student" ToRole="issue" />
+  </EntityType>
+  <EntityType Name="sysdiagram">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="user">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="email" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="password" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="admin" Type="Byte" Nullable="false" />
+    <Property Name="username" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+    <NavigationProperty Name="issues" Relationship="Self.FK_user_issue" FromRole="user" ToRole="issue" />
+  </EntityType>
+  <Association Name="author_fk">
+    <End Role="author" Type="Self.author" Multiplicity="1" />
+    <End Role="book" Type="Self.book" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="author">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="book">
+        <PropertyRef Name="author_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="category_fk">
+    <End Role="category" Type="Self.category" Multiplicity="1" />
+    <End Role="book" Type="Self.book" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="category">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="book">
+        <PropertyRef Name="category_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_book_record_book">
+    <End Role="book" Type="Self.book" Multiplicity="1" />
+    <End Role="book_record" Type="Self.book_record" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="book">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="book_record">
+        <PropertyRef Name="book_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="publisher_fk">
+    <End Role="publisher" Type="Self.publisher" Multiplicity="1" />
+    <End Role="book" Type="Self.book" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="publisher">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="book">
+        <PropertyRef Name="publisher_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_book_issue_book_record">
+    <End Role="book_record" Type="Self.book_record" Multiplicity="1" />
+    <End Role="book_issue" Type="Self.book_issue" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="book_record">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="book_issue">
+        <PropertyRef Name="book_record_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="issue_fk">
+    <End Role="issue" Type="Self.issue" Multiplicity="1" />
+    <End Role="book_issue" Type="Self.book_issue" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="issue">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="book_issue">
+        <PropertyRef Name="issue_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="class_fk">
+    <End Role="class" Type="Self.class" Multiplicity="1" />
+    <End Role="student" Type="Self.student" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="class">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="student">
+        <PropertyRef Name="class_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_student_issue">
+    <End Role="student" Type="Self.student" Multiplicity="1" />
+    <End Role="issue" Type="Self.issue" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="student">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="issue">
+        <PropertyRef Name="student_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_user_issue">
+    <End Role="user" Type="Self.user" Multiplicity="1" />
+    <End Role="issue" Type="Self.issue" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="user">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="issue">
+        <PropertyRef Name="user_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="LibraryEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="authors" EntityType="Self.author" />
+    <EntitySet Name="books" EntityType="Self.book" />
+    <EntitySet Name="book_issue" EntityType="Self.book_issue" />
+    <EntitySet Name="book_record" EntityType="Self.book_record" />
+    <EntitySet Name="categories" EntityType="Self.category" />
+    <EntitySet Name="classes" EntityType="Self.class" />
+    <EntitySet Name="issues" EntityType="Self.issue" />
+    <EntitySet Name="publishers" EntityType="Self.publisher" />
+    <EntitySet Name="students" EntityType="Self.student" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+    <EntitySet Name="users" EntityType="Self.user" />
+    <AssociationSet Name="author_fk" Association="Self.author_fk">
+      <End Role="author" EntitySet="authors" />
+      <End Role="book" EntitySet="books" />
+    </AssociationSet>
+    <AssociationSet Name="category_fk" Association="Self.category_fk">
+      <End Role="category" EntitySet="categories" />
+      <End Role="book" EntitySet="books" />
+    </AssociationSet>
+    <AssociationSet Name="FK_book_record_book" Association="Self.FK_book_record_book">
+      <End Role="book" EntitySet="books" />
+      <End Role="book_record" EntitySet="book_record" />
+    </AssociationSet>
+    <AssociationSet Name="publisher_fk" Association="Self.publisher_fk">
+      <End Role="publisher" EntitySet="publishers" />
+      <End Role="book" EntitySet="books" />
+    </AssociationSet>
+    <AssociationSet Name="FK_book_issue_book_record" Association="Self.FK_book_issue_book_record">
+      <End Role="book_record" EntitySet="book_record" />
+      <End Role="book_issue" EntitySet="book_issue" />
+    </AssociationSet>
+    <AssociationSet Name="issue_fk" Association="Self.issue_fk">
+      <End Role="issue" EntitySet="issues" />
+      <End Role="book_issue" EntitySet="book_issue" />
+    </AssociationSet>
+    <AssociationSet Name="class_fk" Association="Self.class_fk">
+      <End Role="class" EntitySet="classes" />
+      <End Role="student" EntitySet="students" />
+    </AssociationSet>
+    <AssociationSet Name="FK_student_issue" Association="Self.FK_student_issue">
+      <End Role="student" EntitySet="students" />
+      <End Role="issue" EntitySet="issues" />
+    </AssociationSet>
+    <AssociationSet Name="FK_user_issue" Association="Self.FK_user_issue">
+      <End Role="user" EntitySet="users" />
+      <End Role="issue" EntitySet="issues" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
