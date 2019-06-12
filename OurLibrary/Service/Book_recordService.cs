@@ -62,10 +62,55 @@ namespace OurLibrary.Service
 
         }
 
+        public book_record FindByIdFull(string Id)
+        {
+            string sql = "select * from book_record where id = '" + Id + "'";
+            List<book_record> book_record = (List<book_record>)ObjectUtil.ConvertList(ListWithSql(sql), typeof(List<book_record>));
+            if(book_record.Count>0)
+                return book_record[0];
+            return null;
+        }
+
         public List<book_record> FindByBookId(string Id)
         {
-            List<book_record> book_record = (from b_r in dbEntities.book_record where b_r.book_id.Equals(Id) orderby b_r.book_code select b_r).ToList();
-            return book_record;
+            string sql = "select * from book_record where book_id = '"+Id+"'";
+            List<book_record> book_record= (List < book_record > )ObjectUtil.ConvertList(ListWithSql(sql), typeof(List<book_record>));
+            return  book_record;
+        }
+
+        private List<object> ListWithSql(string sql, int limit = 0, int offset = 0)
+        {
+            List<object> book_recordsList = new List<object>();
+            var book_records = dbEntities.book_record
+                .SqlQuery(sql
+                ).
+                Select(book_record => new
+                {
+                    book_record,
+                    book = dbEntities.books.Where(b => b.id.Equals(book_record.book_id)).Select(p => p).FirstOrDefault()   });
+            if (limit > 0)
+            {
+                book_records = book_records.Skip(offset * limit).Take(limit).ToList();
+            }
+            else
+            {
+                book_records = book_records.ToList();
+            }
+            /*  where b.author.name.Contains(val)
+               || b.title.Contains(val) || b.review.Contains(val) || b.author.name.Contains(val)
+
+            || b.category.category_name.Contains(val) || b.publisher.name.Contains(val)
+               select b;*/
+            foreach (var b in book_records)
+            {
+                book_record Book = new book_record();
+                Book = b.book_record;
+                Book.book = b.book;
+                //   Debug.WriteLine("title:"+Book.title+", cat:"+Book.category.category_name+", auth:"+Book.author.name);
+                book_recordsList.Add(Book);
+            }
+
+            return book_recordsList;
         }
     }
 }

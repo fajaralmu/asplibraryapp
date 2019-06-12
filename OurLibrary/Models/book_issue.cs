@@ -11,7 +11,7 @@ namespace OurLibrary.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    [Serializable]
     public partial class book_issue
     {
         public string id { get; set; }

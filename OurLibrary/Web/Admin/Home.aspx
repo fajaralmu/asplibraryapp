@@ -16,7 +16,7 @@
             
             <li><a runat="server" href="~/Web/Admin/Management/Management.aspx?object=book_record">Book Record</a></li>
             
-            <li><a runat="server" href="~/Web/Admin/Transaction/AddBookStorage.aspx">Add Book</a></li>
+            <li><a runat="server" href="~/Web/Admin/Transaction/IssueBook.aspx">Issue Book</a></li>
         </ul>
 
     </div>

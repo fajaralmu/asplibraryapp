@@ -12,7 +12,7 @@ namespace OurLibrary.Models
     using Annotation;
     using System;
     using System.Collections.Generic;
-
+    [Serializable]
     public partial class book_record
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
