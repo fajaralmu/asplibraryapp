@@ -10,11 +10,11 @@
 
     <div class="row">
         <div class="col-md-4">
-            <h2>Adding new Book</h2>
+            <h2>Adding new Book Record</h2>
             <p>
-                Adding data to database </p>
+                Record new book to library </p>
             <p>
-                <a class="btn btn-default" href="~/Web/Doc/BookData.aspx">Learn more &raquo;</a>
+                <a class="btn btn-default" href="~/Web/Admin/Management/Management.aspx?object=book_record">Go &raquo;</a>
             </p>
         </div>
         <div class="col-md-4">

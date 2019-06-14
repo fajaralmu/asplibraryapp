@@ -9,6 +9,8 @@ namespace OurLibrary.Annotation
     {
         public string FieldName { get; set; }
         public string FieldType { get; set; }
+        public object[] DropDownValues { get; set; }
+        public object[] DropDownItemName { get; set; }
         public string ClassReference { get; set; }
         public string[] AttrToDisplay { get; set; }
         public bool Required { get; set; }

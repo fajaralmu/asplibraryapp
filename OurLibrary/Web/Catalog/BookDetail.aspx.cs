@@ -18,7 +18,7 @@ namespace OurLibrary.Web.Catalog
         private book Book;
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Request.QueryString["ID"] == null || Request.QueryString["ID"].ToString().Equals("")) 
+            if (Request.QueryString["ID"] == null || Request.QueryString["ID"].ToString().Equals(""))
             {
                 Response.Redirect("~/Web/Catalog/");
             }
@@ -41,7 +41,7 @@ namespace OurLibrary.Web.Catalog
         {
             BannerTitle.InnerText = Book.title;
             LabelTitle.Text = Book.title;
-            if(Book.author!=null)
+            if (Book.author != null)
                 LabelAuthor.Text = Book.author.name;
             if (Book.publisher != null)
                 LabelPublisher.Text = Book.publisher.name;
@@ -54,9 +54,10 @@ namespace OurLibrary.Web.Catalog
             {
                 BookCoverImage.ImageUrl = "~/Assets/Image/App/bookCover.png";
 
-            }else
+            }
+            else
             {
-                BookCoverImage.ImageUrl = "~/Assets/Image/Book/"+Book.img;
+                BookCoverImage.ImageUrl = "~/Assets/Image/Book/" + Book.img;
 
             }
         }
@@ -64,26 +65,34 @@ namespace OurLibrary.Web.Catalog
         private void PopulateAvailabilityDetail()
         {
             if (Book == null)
-            {
-
-               
                 return;
-            }
 
             PanelAvailabilityDetail.Controls.Clear();
             List<book_record> BookRecords = BookRecordService.FindByBookId(Book.id);
-            if(BookRecords==null || BookRecords.Count == 0)
+            if (BookRecords == null || BookRecords.Count == 0)
             {
-                LabelAvailabilityStatus.Text = "Unavailable";
+                LabelAvailabilityStatus.Text = "Book Is Not Present In This Library";
                 LabelAvailabilityStatus.ForeColor = System.Drawing.Color.Red;
                 return;
             }
-            foreach(book_record BR in BookRecords)
+            foreach (book_record BR in BookRecords)
             {
                 LabelAvailabilityStatus.Text = "Available";
                 LabelAvailabilityStatus.ForeColor = System.Drawing.Color.Green;
-                string text = "Record Id:" + BR.id + ", Book Code:" + BR.book_code +" <br/>";
-                Label RecordDetail = ControlUtil.GenerateLabel(text, System.Drawing.Color.Blue);
+                System.Drawing.Color LabelColor = System.Drawing.Color.Blue;
+                string text;
+                if (BR.available == 1)
+                {
+                    
+                    text = "Record Id: " + BR.id + " | Book Code: " + BR.book_code + " <br/>";
+                }
+                else
+                {
+                    LabelColor = System.Drawing.Color.Black;
+                    text = "Record Id: " + BR.id + " | Book Code: " + BR.book_code + " (unavailable) <br/>";
+                }
+                
+                Label RecordDetail = ControlUtil.GenerateLabel(text, LabelColor);
                 PanelAvailabilityDetail.Controls.Add(RecordDetail);
             }
         }

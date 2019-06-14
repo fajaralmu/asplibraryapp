@@ -30,6 +30,8 @@
     <EntitySetMapping Name="book_issue">
       <EntityTypeMapping TypeName="library_dbModel.book_issue">
         <MappingFragment StoreEntitySet="book_issue">
+          <ScalarProperty Name="book_issue_id" ColumnName="book_issue_id" />
+          <ScalarProperty Name="book_return" ColumnName="book_return" />
           <ScalarProperty Name="id" ColumnName="id" />
           <ScalarProperty Name="book_record_id" ColumnName="book_record_id" />
           <ScalarProperty Name="issue_id" ColumnName="issue_id" />
@@ -41,6 +43,7 @@
     <EntitySetMapping Name="book_record">
       <EntityTypeMapping TypeName="library_dbModel.book_record">
         <MappingFragment StoreEntitySet="book_record">
+          <ScalarProperty Name="available" ColumnName="available" />
           <ScalarProperty Name="id" ColumnName="id" />
           <ScalarProperty Name="book_code" ColumnName="book_code" />
           <ScalarProperty Name="book_id" ColumnName="book_id" />

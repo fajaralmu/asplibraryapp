@@ -5,19 +5,35 @@
         <asp:Label ID="Label1" runat="server" Text="Label"></asp:Label>
     </p>
     <div class="navbar-collapse collapse">
-        <ul class="nav navbar-nav">
+
+        <div class="nav navbar-nav">
+            <p>Master Data</p>
             <li><a runat="server" href="~/Web/Admin">Home</a></li>
             <li><a runat="server" href="~/Web/Admin/Management/Management.aspx?object=publisher">Publisher Management</a></li>
             <li><a runat="server" href="~/Web/Admin/Management/Management.aspx?object=author">Author Management</a></li>
             <li><a runat="server" href="~/Web/Admin/Management/Management.aspx?object=category">Category Management</a></li>
             <li><a runat="server" href="~/Web/Admin/Management/Management.aspx?object=book">Book Master Data Management</a></li>
+        </div>
+        <br />
+        <br />
+        <hr />
+
+        <div class="nav navbar-nav">
+            <p>Student Data</p>
             <li><a runat="server" href="~/Web/Admin/Management/Management.aspx?object=class">Class Management</a></li>
             <li><a runat="server" href="~/Web/Admin/Management/Management.aspx?object=student">Student Management</a></li>
-            
+        </div>
+        <br />
+        <br />
+        <hr />
+        <div class="nav navbar-nav">
+            <p>Transaction</p>
             <li><a runat="server" href="~/Web/Admin/Management/Management.aspx?object=book_record">Book Record</a></li>
-            
-            <li><a runat="server" href="~/Web/Admin/Transaction/IssueBook.aspx">Issue Book</a></li>
-        </ul>
+
+            <li><a runat="server" href="~/Web/Admin/Transaction/BookIssue.aspx">Issue Book</a></li>
+            <li><a runat="server" href="~/Web/Admin/Transaction/CheckStudentIssue.aspx">Student Issue</a></li>
+        </div>
+       
 
     </div>
     <br />

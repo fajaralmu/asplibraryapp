@@ -285,6 +285,20 @@ namespace OurLibrary.Web.Admin.Management
                                 FieldCell.Controls.Add(PanelForList);
                                 break;
                             case AttributeConstant.TYPE_DROPDOWN:
+                                FieldControl = new DropDownList();
+                                FieldControl.ID = PropsInfo.Name;
+                                ((DropDownList)FieldControl).CssClass = "form-control";
+
+                                if (Attribute.DropDownValues != null && Attribute.DropDownItemName != null)
+                                {
+                                    for (int v = 0;v< Attribute.DropDownValues.Length; v++)
+                                    {
+                                        ListItem Item = new ListItem(Attribute.DropDownItemName[v].ToString(), Attribute.DropDownValues[v].ToString());
+                                        ((DropDownList)FieldControl).Items.Add(Item);
+                                    }
+                                    FieldCell.Controls.Add(FieldControl);
+                                    break;
+                                }
                                 object ClassService = null;
                                 string classReferenceAttribute = Attribute.ClassAttributeConverter;
                                 if (!ServicesMap.ContainsKey(Attribute.ClassReference))
@@ -299,10 +313,8 @@ namespace OurLibrary.Web.Admin.Management
                                 }
                                 object[] Params = { 0, 100 };
                                 List<object> ObjList = (List<object>)ClassService.GetType().GetMethod("ObjectList").Invoke(ClassService, Params);
-                                FieldControl = new DropDownList();
-                                FieldControl.ID = PropsInfo.Name;
+                               
                                 if (ObjectList != null)
-
                                     foreach (object obj in ObjList)
                                     {
                                         string IdField = ObjectUtil.GetIDProps(ModelParameter.NameSpace + Attribute.ClassReference);
@@ -311,7 +323,6 @@ namespace OurLibrary.Web.Admin.Management
                                         ListItem Item = new ListItem(Text.TrimEnd(), Value.TrimEnd());
                                         ((DropDownList)FieldControl).Items.Add(Item);
                                     }
-                                ((DropDownList)FieldControl).CssClass = "form-control";
                                 FieldCell.Controls.Add(FieldControl);
                                 break;
 
@@ -549,7 +560,7 @@ namespace OurLibrary.Web.Admin.Management
                             //LABEL
                             Label FieldLabel = new Label();
                             object PropValue = obj.GetType().GetProperty(PropsInfo.Name).GetValue(obj);
-
+                            
                             if (Attribute.ClassReference != null && Attribute.ClassAttributeConverter != null)
                             {
                                 object ClassService = null;
@@ -568,7 +579,15 @@ namespace OurLibrary.Web.Admin.Management
                                 object ClassReff = ClassService.GetType().GetMethod("GetById").Invoke(ClassService, Params2);
                                 object ClassRefConverterValue = ClassReff.GetType().GetProperty(Attribute.ClassAttributeConverter).GetValue(ClassReff);
                                 FieldLabel.Text = ClassRefConverterValue.ToString();
-                                
+
+                            }else
+                            if (Attribute.DropDownItemName != null && Attribute.DropDownValues != null && PropValue != null
+                                && Attribute.DropDownItemName.Length > 0 && Attribute.DropDownValues.Length > 0)
+                            {
+                                string index = PropValue.ToString();
+                                int intindex = 0;
+                                int.TryParse(index, out intindex);
+                                FieldLabel.Text = Attribute.DropDownItemName[intindex].ToString();
                             }
                             else
                             {
@@ -583,13 +602,15 @@ namespace OurLibrary.Web.Admin.Management
                                 EditButton.Click += new EventHandler(BtnEditClick);
                                 EditButton.Text = "Edit";
                                 DeleteButton.Click += new EventHandler(BtnDeleteClick);
-                            }else if (Attribute.FieldType.Equals(AttributeConstant.TYPE_SEARCHLIST))
+                            }
+                            else if (Attribute.FieldType.Equals(AttributeConstant.TYPE_SEARCHLIST))
                             {
                                 string currentURI = Request.Url.AbsoluteUri;
                                 string param = "_OBJ_" + Attribute.ClassReference + "_PROP_" + PropsInfo.Name;
                                 object value = obj.GetType().GetProperty(PropsInfo.Name).GetValue(obj);
                                 EditButton.PostBackUrl = StringUtil.AddURLParam(currentURI, param, value);
                             }
+
                             FieldCell.Controls.Add(FieldLabel);
                             TRow.Controls.Add(FieldCell);
 
@@ -676,6 +697,13 @@ namespace OurLibrary.Web.Admin.Management
                             {
                                 DropDownList DropDown = (DropDownList)TableForm.FindControl(PropsInfo.Name);
                                 InputValue = DropDown.SelectedValue.TrimEnd();
+                               if( PropsInfo.PropertyType == typeof(Nullable<short>))
+                                {
+                                    string strInt = InputValue.ToString();
+                                    short intVal = 0;
+                                    short.TryParse(strInt, out intVal);
+                                    InputValue = intVal;
+                                }
                             }
                             else if (Attribute.FieldType.Equals(AttributeConstant.TYPE_NUMBER))
                             {

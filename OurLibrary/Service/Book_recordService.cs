@@ -27,10 +27,16 @@ namespace OurLibrary.Service
         }
         public override object Update(object Obj)
         {
-            book_record book_record = (book_record)Obj;
-            dbEntities.Entry(book_record).CurrentValues.SetValues(book_record);
-            dbEntities.SaveChanges();
-            return book_record;
+            try
+            {
+                book_record book_record = (book_record)Obj;
+                dbEntities.Entry(book_record).CurrentValues.SetValues(book_record);
+                dbEntities.SaveChanges();
+                return book_record;
+            }catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         public override object GetById(string Id)
@@ -60,6 +66,12 @@ namespace OurLibrary.Service
             dbEntities.SaveChanges();
             return newbook_record;
 
+        }
+
+        public bool IsAvailable(string book_rec_id)
+        {
+            book_record BookRecord =(book_record) GetById(book_rec_id);
+            return BookRecord.available == 1;
         }
 
         public book_record FindByIdFull(string Id)

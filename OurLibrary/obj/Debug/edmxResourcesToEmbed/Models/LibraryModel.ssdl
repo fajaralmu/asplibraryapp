@@ -33,6 +33,8 @@
     <Property Name="issue_id" Type="varchar" MaxLength="10" Nullable="false" />
     <Property Name="qty" Type="int" Nullable="false" />
     <Property Name="ref_issue" Type="nchar" MaxLength="10" />
+    <Property Name="book_return" Type="smallint" />
+    <Property Name="book_issue_id" Type="varchar" MaxLength="10" />
   </EntityType>
   <EntityType Name="book_record">
     <Key>
@@ -42,6 +44,7 @@
     <Property Name="book_code" Type="varchar" MaxLength="100" Nullable="false" />
     <Property Name="book_id" Type="varchar" MaxLength="10" Nullable="false" />
     <Property Name="additional_info" Type="text" />
+    <Property Name="available" Type="smallint" />
   </EntityType>
   <EntityType Name="category">
     <Key>
@@ -145,6 +148,18 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_book_issue_book_issue">
+    <End Role="book_issue" Type="Self.book_issue" Multiplicity="0..1" />
+    <End Role="book_issue1" Type="Self.book_issue" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="book_issue">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="book_issue1">
+        <PropertyRef Name="book_issue_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_book_issue_book_record">
     <End Role="book_record" Type="Self.book_record" Multiplicity="1" />
     <End Role="book_issue" Type="Self.book_issue" Multiplicity="*" />
@@ -240,6 +255,10 @@
     <AssociationSet Name="class_fk" Association="Self.class_fk">
       <End Role="class" EntitySet="class" />
       <End Role="student" EntitySet="student" />
+    </AssociationSet>
+    <AssociationSet Name="FK_book_issue_book_issue" Association="Self.FK_book_issue_book_issue">
+      <End Role="book_issue" EntitySet="book_issue" />
+      <End Role="book_issue1" EntitySet="book_issue" />
     </AssociationSet>
     <AssociationSet Name="FK_book_issue_book_record" Association="Self.FK_book_issue_book_record">
       <End Role="book_record" EntitySet="book_record" />

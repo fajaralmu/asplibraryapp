@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="library_dbModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="library_dbModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="author">
           <Key>
             <PropertyRef Name="id" />
@@ -38,6 +38,8 @@
           <Property Name="issue_id" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="qty" Type="int" Nullable="false" />
           <Property Name="ref_issue" Type="nchar" MaxLength="10" />
+          <Property Name="book_return" Type="smallint" />
+          <Property Name="book_issue_id" Type="varchar" MaxLength="10" />
         </EntityType>
         <EntityType Name="book_record">
           <Key>
@@ -47,6 +49,7 @@
           <Property Name="book_code" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="book_id" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="additional_info" Type="text" />
+          <Property Name="available" Type="smallint" />
         </EntityType>
         <EntityType Name="category">
           <Key>
@@ -150,6 +153,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_book_issue_book_issue">
+          <End Role="book_issue" Type="Self.book_issue" Multiplicity="0..1" />
+          <End Role="book_issue1" Type="Self.book_issue" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="book_issue">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="book_issue1">
+              <PropertyRef Name="book_issue_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_book_issue_book_record">
           <End Role="book_record" Type="Self.book_record" Multiplicity="1" />
           <End Role="book_issue" Type="Self.book_issue" Multiplicity="*" />
@@ -246,6 +261,10 @@
             <End Role="class" EntitySet="class" />
             <End Role="student" EntitySet="student" />
           </AssociationSet>
+          <AssociationSet Name="FK_book_issue_book_issue" Association="Self.FK_book_issue_book_issue">
+            <End Role="book_issue" EntitySet="book_issue" />
+            <End Role="book_issue1" EntitySet="book_issue" />
+          </AssociationSet>
           <AssociationSet Name="FK_book_issue_book_record" Association="Self.FK_book_issue_book_record">
             <End Role="book_record" EntitySet="book_record" />
             <End Role="book_issue" EntitySet="book_issue" />
@@ -271,8 +290,7 @@
             <End Role="book" EntitySet="book" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="library_dbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -316,6 +334,10 @@
           <Property Name="ref_issue" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
           <NavigationProperty Name="book_record" Relationship="Self.FK_book_issue_book_record" FromRole="book_issue" ToRole="book_record" />
           <NavigationProperty Name="issue" Relationship="Self.issue_fk" FromRole="book_issue" ToRole="issue" />
+          <Property Name="book_return" Type="Int16" />
+          <Property Name="book_issue_id" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="book_issue1" Relationship="library_dbModel.FK_book_issue_book_issue" FromRole="book_issue" ToRole="book_issue1" />
+          <NavigationProperty Name="book_issue2" Relationship="library_dbModel.FK_book_issue_book_issue" FromRole="book_issue1" ToRole="book_issue" />
         </EntityType>
         <EntityType Name="book_record">
           <Key>
@@ -327,6 +349,7 @@
           <Property Name="additional_info" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="book" Relationship="Self.FK_book_record_book" FromRole="book_record" ToRole="book" />
           <NavigationProperty Name="book_issue" Relationship="Self.FK_book_issue_book_record" FromRole="book_record" ToRole="book_issue" />
+          <Property Name="available" Type="Int16" />
         </EntityType>
         <EntityType Name="category">
           <Key>
@@ -559,7 +582,23 @@
             <End Role="user" EntitySet="users" />
             <End Role="issue" EntitySet="issues" />
           </AssociationSet>
+          <AssociationSet Name="FK_book_issue_book_issue" Association="library_dbModel.FK_book_issue_book_issue">
+            <End Role="book_issue" EntitySet="book_issue" />
+            <End Role="book_issue1" EntitySet="book_issue" />
+          </AssociationSet>
         </EntityContainer>
+        <Association Name="FK_book_issue_book_issue">
+          <End Type="library_dbModel.book_issue" Role="book_issue" Multiplicity="0..1" />
+          <End Type="library_dbModel.book_issue" Role="book_issue1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="book_issue">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="book_issue1">
+              <PropertyRef Name="book_issue_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -595,6 +634,8 @@
           <EntitySetMapping Name="book_issue">
             <EntityTypeMapping TypeName="library_dbModel.book_issue">
               <MappingFragment StoreEntitySet="book_issue">
+                <ScalarProperty Name="book_issue_id" ColumnName="book_issue_id" />
+                <ScalarProperty Name="book_return" ColumnName="book_return" />
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="book_record_id" ColumnName="book_record_id" />
                 <ScalarProperty Name="issue_id" ColumnName="issue_id" />
@@ -606,6 +647,7 @@
           <EntitySetMapping Name="book_record">
             <EntityTypeMapping TypeName="library_dbModel.book_record">
               <MappingFragment StoreEntitySet="book_record">
+                <ScalarProperty Name="available" ColumnName="available" />
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="book_code" ColumnName="book_code" />
                 <ScalarProperty Name="book_id" ColumnName="book_id" />

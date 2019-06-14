@@ -14,13 +14,24 @@ namespace OurLibrary.Models
     [Serializable]
     public partial class book_issue
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public book_issue()
+        {
+            this.book_issue1 = new HashSet<book_issue>();
+        }
+    
         public string id { get; set; }
         public string book_record_id { get; set; }
         public string issue_id { get; set; }
         public int qty { get; set; }
         public string ref_issue { get; set; }
+        public Nullable<short> book_return { get; set; }
+        public string book_issue_id { get; set; }
     
         public virtual book_record book_record { get; set; }
         public virtual issue issue { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<book_issue> book_issue1 { get; set; }
+        public virtual book_issue book_issue2 { get; set; }
     }
 }

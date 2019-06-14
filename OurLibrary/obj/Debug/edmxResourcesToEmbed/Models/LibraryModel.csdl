@@ -40,6 +40,10 @@
     <Property Name="ref_issue" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
     <NavigationProperty Name="book_record" Relationship="Self.FK_book_issue_book_record" FromRole="book_issue" ToRole="book_record" />
     <NavigationProperty Name="issue" Relationship="Self.issue_fk" FromRole="book_issue" ToRole="issue" />
+    <Property Name="book_return" Type="Int16" />
+    <Property Name="book_issue_id" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="book_issue1" Relationship="library_dbModel.FK_book_issue_book_issue" FromRole="book_issue" ToRole="book_issue1" />
+    <NavigationProperty Name="book_issue2" Relationship="library_dbModel.FK_book_issue_book_issue" FromRole="book_issue1" ToRole="book_issue" />
   </EntityType>
   <EntityType Name="book_record">
     <Key>
@@ -51,6 +55,7 @@
     <Property Name="additional_info" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
     <NavigationProperty Name="book" Relationship="Self.FK_book_record_book" FromRole="book_record" ToRole="book" />
     <NavigationProperty Name="book_issue" Relationship="Self.FK_book_issue_book_record" FromRole="book_record" ToRole="book_issue" />
+    <Property Name="available" Type="Int16" />
   </EntityType>
   <EntityType Name="category">
     <Key>
@@ -283,5 +288,21 @@
       <End Role="user" EntitySet="users" />
       <End Role="issue" EntitySet="issues" />
     </AssociationSet>
+    <AssociationSet Name="FK_book_issue_book_issue" Association="library_dbModel.FK_book_issue_book_issue">
+      <End Role="book_issue" EntitySet="book_issue" />
+      <End Role="book_issue1" EntitySet="book_issue" />
+    </AssociationSet>
   </EntityContainer>
+  <Association Name="FK_book_issue_book_issue">
+    <End Type="library_dbModel.book_issue" Role="book_issue" Multiplicity="0..1" />
+    <End Type="library_dbModel.book_issue" Role="book_issue1" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="book_issue">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="book_issue1">
+        <PropertyRef Name="book_issue_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
 </Schema>
