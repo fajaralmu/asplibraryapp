@@ -76,3 +76,4 @@ C:\Users\fajar\Documents\Visual Studio 2015\Projects\OurLibrary\OurLibrary\bin\M
 C:\Users\fajar\Documents\Visual Studio 2015\Projects\OurLibrary\OurLibrary\bin\Microsoft.Owin.Security.OAuth.xml
 C:\Users\fajar\Documents\Visual Studio 2015\Projects\OurLibrary\OurLibrary\obj\Debug\OurLibrary.dll
 C:\Users\fajar\Documents\Visual Studio 2015\Projects\OurLibrary\OurLibrary\obj\Debug\OurLibrary.pdb
+C:\Users\fajar\Documents\Visual Studio 2015\Projects\OurLibrary\OurLibrary\obj\Debug\OurLibrary.csprojResolveAssemblyReference.cache

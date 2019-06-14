@@ -63,6 +63,8 @@ namespace OurLibrary.Service
             Book_issue.ref_issue = "not used";
             try
             {
+                Book_issue.book_issue2 = null;
+
                 Book_issue.book_record = null;
                 book_issue newclass = dbEntities.book_issue.Add(Book_issue);
                dbEntities.SaveChanges();
@@ -95,6 +97,11 @@ namespace OurLibrary.Service
                 //  return null;
             }
 
+        }
+
+        internal book_issue FindByIdFull(string book_issue_id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

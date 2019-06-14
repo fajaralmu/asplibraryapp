@@ -28,7 +28,6 @@ namespace OurLibrary.Web.Admin.Transaction
             if (Session["user"] == null || !userService.IsValid((user)Session["user"]))
             {
                 Response.Redirect("~/Web/Admin/");
-
             }
             else
             {
@@ -48,8 +47,6 @@ namespace OurLibrary.Web.Admin.Transaction
 
         private void InitPage()
         {
-
-
             if (ViewState["BookIssues"] != null)
             {
                 BookIssues = (List<book_issue>)ViewState["BookIssues"];
@@ -202,7 +199,7 @@ namespace OurLibrary.Web.Admin.Transaction
             book_issue BS = new book_issue();
             BS.id = StringUtil.GenerateRandom(10);
             BS.book_record_id = (TextBoxRecordId.Text.Trim());
-            if (!ExistBookRecord(BS.book_record_id))
+            if (!ExistBookRecord(BS.book_record_id, BookIssues))
             {
                 book_record DBRecord = bookRecordService.FindByIdFull(BS.book_record_id);
                 if (null != DBRecord && DBRecord.available == (1))
@@ -231,7 +228,7 @@ namespace OurLibrary.Web.Admin.Transaction
             InitPage();
         }
 
-        private bool ExistBookRecord(string RecId)
+        public static bool ExistBookRecord(string RecId, List<book_issue> BookIssues)
         {
             foreach (book_issue bs in BookIssues)
             {

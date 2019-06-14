@@ -94,9 +94,11 @@ namespace OurLibrary.Service
         {
 
             string student_id = Params.ContainsKey("student_id") ? (string)Params["student_id"] : "";
+            string type = Params.ContainsKey("type") ? (string)Params["type"] : "";
             string sql = "select * from issue " +
-                "where student_id = '" + student_id + "'";
-           
+                "where student_id = '" + student_id + "'" +
+                "and type like '%" + type + "%'";
+
             return ListWithSql(sql, limit, offset);
         }
 
@@ -109,8 +111,12 @@ namespace OurLibrary.Service
                 Select(issue => new
                 {
                     issue,
-                    book_issue = dbEntities.book_issue.Where(b => b.issue_id.Equals(issue.id)).Select(b => b).ToList(),
-                    });
+                    book_issue = dbEntities.book_issue.Where(b => b.issue_id.Equals(issue.id)).Select(bi => new
+                    {
+                        bi,
+                        book_record = dbEntities.book_record.Where(br => br.id.Equals(bi.book_record_id)).FirstOrDefault()
+                    }).ToList(),
+                });
             if (limit > 0)
             {
                 issues = issues.Skip(offset * limit).Take(limit).ToList();
@@ -128,7 +134,14 @@ namespace OurLibrary.Service
             {
                 issue Issue = new issue();
                 Issue = i.issue;
-                Issue.book_issue = i.book_issue;
+                Issue.book_issue = new List<book_issue>();
+                foreach(var bi in i.book_issue)
+                {
+                    book_issue BookIssue = new book_issue();
+                    BookIssue = bi.bi;
+                    BookIssue.book_record = bi.book_record;
+                    Issue.book_issue.Add(BookIssue);
+                }
                 //   Debug.WriteLine("title:"+Book.title+", cat:"+Book.category.category_name+", auth:"+Book.author.name);
                 issueList.Add(Issue);
             }
