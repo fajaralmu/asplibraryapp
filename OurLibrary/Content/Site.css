@@ -36,3 +36,11 @@ input[type="select"] {
         padding: 0;
     }
 }
+
+
+/* Admin */
+.admin-menu{
+    padding: 7px;
+    margin: 10px;
+    background-color:#9c9999;
+}

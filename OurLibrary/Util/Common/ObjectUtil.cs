@@ -38,7 +38,7 @@ namespace OurLibrary.Util.Common
                 if (Attributes.Length > 0)
                 {
                     FieldAttribute Attribute = (FieldAttribute)Attributes[0];
-                    if (Attribute.FieldType != null && Attribute.FieldType.Equals(AttributeConstant.TYPE_ID))
+                    if (Attribute.FieldType != null && Attribute.FieldType.Contains("id_"))
                     {
                         return PropsInfo.Name;
                     }

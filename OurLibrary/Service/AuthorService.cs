@@ -55,7 +55,7 @@ namespace OurLibrary.Service
         {
             author author = (author)Obj;
             if (author.id == null)
-                author.id = StringUtil.GenerateRandom(7);
+                author.id = StringUtil.GenerateRandomChar(7);
             author newauthor = dbEntities.authors.Add(author);
             dbEntities.SaveChanges();
             return newauthor;

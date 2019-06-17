@@ -54,7 +54,7 @@ namespace OurLibrary.Service
         {
             book_issue Book_issue = (book_issue)Obj;
             if (Book_issue.id == null)
-                Book_issue.id = StringUtil.GenerateRandom(10);
+                Book_issue.id = StringUtil.GenerateRandomChar(10);
             if(Book_issue.qty == null || Book_issue.qty == 0)
             {
                 Book_issue.qty = 1;

@@ -7,6 +7,7 @@ namespace OurLibrary.Util.Common
 {
     public class StringUtil
     {
+        private const string Numbers = "1234567890";
         private const string Chars = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890"; 
 
         private static bool IsItemAlreadyExist(List<string> list, string val)
@@ -70,7 +71,7 @@ namespace OurLibrary.Util.Common
             }
         }
 
-        public static String GenerateRandom(int Length)
+        public static String GenerateRandomChar(int Length)
         {
             if(Length == 0)
             {
@@ -88,7 +89,26 @@ namespace OurLibrary.Util.Common
             }
             return RandomString;
         }
-            
+
+        public static String GenerateRandomNumber(int Length)
+        {
+            if (Length == 0)
+            {
+                return "NULL";
+            }
+
+            string RandomString = "";
+            int Size = Numbers.Length;
+            Random R = new Random();
+            for (int i = 0; i < Length; i++)
+            {
+
+                int Index = R.Next(0, Size);
+                RandomString += Numbers.ElementAt(Index);
+            }
+            return RandomString;
+        }
+
         public static string ToUpperCase(int index, string data)
         {
             string result = "";

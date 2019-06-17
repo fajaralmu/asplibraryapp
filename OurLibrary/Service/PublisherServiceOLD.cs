@@ -46,7 +46,7 @@ namespace OurLibrary.Service
 
         public publisher AddPublisher(publisher Publisher)
         {
-            Publisher.id = StringUtil.GenerateRandom(7);
+            Publisher.id = StringUtil.GenerateRandomChar(7);
             publisher newPublisher = dbEntities.publishers.Add(Publisher);
             try
             {

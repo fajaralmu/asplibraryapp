@@ -55,7 +55,7 @@ namespace OurLibrary.Service
         {
             @class Class = (@class)Obj;
             if(Class.id==null)
-                Class.id = StringUtil.GenerateRandom(7);
+                Class.id = StringUtil.GenerateRandomChar(7);
             @class newclass = dbEntities.classes.Add(Class);
             dbEntities.SaveChanges();
             return newclass;

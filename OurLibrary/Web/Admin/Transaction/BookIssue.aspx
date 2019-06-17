@@ -6,9 +6,10 @@
     </div>
     <asp:UpdatePanel runat="server">
         <ContentTemplate>
+            <div id="info" runat="server">
+            </div>
             <asp:Panel runat="server">
-                <p id="info" runat="server">
-                </p>
+
                 <table class="nav-justified" style="height: 108px">
                     <tr>
                         <td style="width: 124px">Sudent ID</td>
@@ -68,4 +69,10 @@
             </asp:Panel>
         </ContentTemplate>
     </asp:UpdatePanel>
+    <script type="text/javascript">
+        function SetTextInput(input, textId) {
+            let element = document.getElementById(textId);
+            element.value = input;
+        }
+    </script>
 </asp:Content>

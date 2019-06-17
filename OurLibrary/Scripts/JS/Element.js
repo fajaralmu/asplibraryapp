@@ -7,6 +7,11 @@
     }
 }
 
+function SetTextInput(input, textId) {
+    let element = document.getElementById(textId);
+    element.value = input;
+}
+
 function HideElement(id) {
     let element = document.getElementById(id);
     element.style.display = "none";

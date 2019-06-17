@@ -7,7 +7,8 @@ namespace OurLibrary.Annotation
 {
     public class AttributeConstant
     {
-        public const string TYPE_ID = "id";
+        public const string TYPE_ID_STR_NUMB = "id_";
+        public const string TYPE_ID_NUMB = "id_number";
         public const string TYPE_TEXTAREA = "textarea";
         public const string TYPE_TEXTBOX = "textbox";
         public const string TYPE_DROPDOWN = "dropdown";

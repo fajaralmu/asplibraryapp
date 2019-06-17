@@ -176,7 +176,7 @@ namespace OurLibrary.Service
         {
             book book = (book)Obj;
             if (book.id == null)
-                book.id = StringUtil.GenerateRandom(7);
+                book.id = StringUtil.GenerateRandomChar(7);
             book newbook = dbEntities.books.Add(book);
             try
             {

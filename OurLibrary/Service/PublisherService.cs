@@ -52,7 +52,7 @@ namespace OurLibrary.Service
         {
             publisher publisher = (publisher)Obj;
             if (publisher.id == null)
-                publisher.id = StringUtil.GenerateRandom(7);
+                publisher.id = StringUtil.GenerateRandomChar(7);
             publisher newpublisher = dbEntities.publishers.Add(publisher);
             try
             {

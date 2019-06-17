@@ -67,6 +67,7 @@ namespace OurLibrary.Web.Admin.Transaction
             {
                 BookRecord = (book_record)ViewState["CurrentBookRecord"];
             }
+            AlertMessage(null);
         }
 
         private void PopulateBookIssues()
@@ -190,14 +191,21 @@ namespace OurLibrary.Web.Admin.Transaction
             foreach (book_record BR in BookRecords)
             {
                 if (BR.available == 1)
-                    LabelRecordList.Text += BR.id + " | ";
+                {
+                    string[] Attrs = new string[] {
+                        "href=\"#\"",
+                        "onclick=SetTextInput('"+BR.id+"','MainContent_TextBoxRecordId')"
+                    };
+                    string RecButton = ControlUtil.GenerateHtmlTag("a", Attrs, BR.id);
+                    LabelRecordList.Text += RecButton + " | ";
+                }
             }
         }
 
         protected void ButtonSave_Click(object sender, EventArgs e)
         {
             book_issue BS = new book_issue();
-            BS.id = StringUtil.GenerateRandom(10);
+            BS.id = StringUtil.GenerateRandomChar(10);
             BS.book_record_id = (TextBoxRecordId.Text.Trim());
             if (!ExistBookRecord(BS.book_record_id, BookIssues))
             {
@@ -250,7 +258,7 @@ namespace OurLibrary.Web.Admin.Transaction
             student Student = (student)StudentService.GetById(TextBoxStudentID.Text);
             if (Student != null)
             {
-                string IssueID = StringUtil.GenerateRandom(9);
+                string IssueID = StringUtil.GenerateRandomChar(9);
                 issue Issue = new issue();
                 Issue.user_id = LoggedUser.id;
                 Issue.id = IssueID;
@@ -261,7 +269,7 @@ namespace OurLibrary.Web.Admin.Transaction
 
                 if (null == IssueService.Add(Issue))
                 {
-                    info.InnerHtml = "Gagal tambah issue";
+                    AlertMessage("Gagal tambah issue");
                     return;
                 }
                 foreach (book_issue BS in BookIssues)
@@ -270,7 +278,7 @@ namespace OurLibrary.Web.Admin.Transaction
                     BS.issue_id = Issue.id;
                     if (null == BookIssueService.Add(BS))
                     {
-                        info.InnerHtml = "Gagal tambah book_issue";
+                        AlertMessage("Gagal tambah book_issue");
                         break;
                     }
                     book_record BR = (book_record)bookRecordService.GetById(BS.book_record_id);
@@ -278,21 +286,26 @@ namespace OurLibrary.Web.Admin.Transaction
 
                     if (null == bookRecordService.Update(BR))
                     {
-                        info.InnerHtml = "Gagal update book_record ";
+                        AlertMessage("Gagal update book_record ");
                         break;
                     }
 
                 }
-                info.InnerHtml = "Sukses tambah issue";
+                AlertMessage("Sukses tambah issue");
                 ButtonClearList_Click(sender, e);
 
             }
             else
             {
 
-                info.InnerHtml = "Siswa tdk ada";
+                AlertMessage("Siswa tdk ada");
             }
 
+        }
+
+        private void AlertMessage(string Message)
+        {
+            info.InnerHtml = ControlUtil.GenerateHtmlTag("p", null, Message);
         }
 
     }

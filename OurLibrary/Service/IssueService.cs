@@ -54,7 +54,7 @@ namespace OurLibrary.Service
         {
             issue Issue = (issue)Obj;
             if (Issue.id == null)
-                Issue.id = StringUtil.GenerateRandom(9);
+                Issue.id = StringUtil.GenerateRandomChar(9);
             if (Issue.type == null)
             {
                 Issue.type = "default";

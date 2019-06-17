@@ -61,7 +61,7 @@ namespace OurLibrary.Service
         {
             book_record book_record = (book_record)Obj;
             if (book_record.id == null)
-                book_record.id = StringUtil.GenerateRandom(7);
+                book_record.id = StringUtil.GenerateRandomChar(7);
             book_record newbook_record = dbEntities.book_record.Add(book_record);
             dbEntities.SaveChanges();
             return newbook_record;

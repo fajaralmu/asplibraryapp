@@ -11,7 +11,7 @@ namespace OurLibrary.Service
     {
         public StudentService()
         {
-            
+
         }
 
         public override List<object> ObjectList(int offset, int limit)
@@ -55,7 +55,7 @@ namespace OurLibrary.Service
         {
             student student = (student)Obj;
             if (student.id == null)
-                student.id = StringUtil.GenerateRandom(7);
+                student.id = StringUtil.GenerateRandomNumber(7);
             student newstudent = dbEntities.students.Add(student);
             try
             {
@@ -81,6 +81,15 @@ namespace OurLibrary.Service
                 throw raise;
                 //  return null;
             }
+            catch (System.Data.Entity.Infrastructure.DbUpdateException dbEx)
+            {
+
+                Exception raise = new Exception(dbEx.StackTrace);
+
+                throw raise;
+                //  return null;
+            }
+
 
         }
     }

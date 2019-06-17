@@ -4,8 +4,11 @@
     <div>
         <h3>Check Student Issue</h3>
     </div>
+
     <asp:UpdatePanel runat="server">
         <ContentTemplate>
+            <div id="info" runat="server">
+            </div>
             <asp:Panel ID="PanelInput" runat="server">
                 <table>
                     <tr valign="top">
@@ -21,8 +24,8 @@
                             <p>Input Issue Record To Return:</p>
                             <asp:TextBox ID="TextBoxIssueRecordId" runat="server" />
                         </td>
-                        <td rowspan="3" >
-                             <asp:Panel ID="PanelBookIssues" runat="server"></asp:Panel>
+                        <td rowspan="3">
+                            <asp:Panel ID="PanelBookIssues" runat="server"></asp:Panel>
                         </td>
                     </tr>
                     <tr>
@@ -35,13 +38,13 @@
                         </td>
                     </tr>
                     <tr valign="top">
-                        <td>
+                        <td style="padding: 5px">
                             <h4>Issue History</h4>
                             <hr />
                             <asp:Panel ID="PanelIssueLis" runat="server">
                             </asp:Panel>
                         </td>
-                        <td>
+                        <td style="padding: 5px">
                             <h4>Return History</h4>
                             <hr />
                             <asp:Panel ID="PanelIssueReturn" runat="server">
@@ -49,8 +52,13 @@
                         </td>
                     </tr>
                 </table>
-                </asp:Panel>
+            </asp:Panel>
         </ContentTemplate>
     </asp:UpdatePanel>
-
+    <script type="text/javascript">
+        function SetTextInput(input, textId) {
+            let element = document.getElementById(textId);
+            element.value = input;
+        }
+    </script>
 </asp:Content>

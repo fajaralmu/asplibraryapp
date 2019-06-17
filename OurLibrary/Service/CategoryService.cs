@@ -52,7 +52,7 @@ namespace OurLibrary.Service
         {
             category Category = (category)Obj;
             if (Category.id == null)
-                Category.id = StringUtil.GenerateRandom(7);
+                Category.id = StringUtil.GenerateRandomChar(7);
             category newCategory = dbEntities.categories.Add(Category);
             try
             {
