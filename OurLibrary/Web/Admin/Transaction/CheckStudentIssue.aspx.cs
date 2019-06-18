@@ -48,14 +48,16 @@ namespace OurLibrary.Web.Admin.Transaction
 
         private void PopulateIssueList()
         {
+            int No = 0;
             PanelIssueLis.Controls.Clear();
             foreach (issue Issue in Issues) {
                 if(null == Issue.book_issue|| Issue.book_issue.Count==0)
                 {
                     continue;
                 }
+                No++;
                 Panel PanelIssue = new Panel();
-                PanelIssue.Controls.Add(ControlUtil.GenerateLabel("<b>Issue ID: "+Issue.id+ " (" + Issue.type + ")</b><br/>date: "+Issue.date+"<ul>"));
+                PanelIssue.Controls.Add(ControlUtil.GenerateLabel("<b>"+No+". Issue ID: "+Issue.id+ " (" + Issue.type + ")</b><br/>date: "+Issue.date+"<ol>"));
                 Panel PanelIssueItem = new Panel();
                 foreach(book_issue Bs in Issue.book_issue)
                 {
@@ -80,12 +82,12 @@ namespace OurLibrary.Web.Admin.Transaction
                 {
                     Late = true;
                 }
-                PanelIssue.Controls.Add(ControlUtil.GenerateLabel("</ul>Max return: " + MaxReturn+", Late:"+Late+"<hr/>")) ;
+                PanelIssue.Controls.Add(ControlUtil.GenerateLabel("</ol>Max return: " + MaxReturn+", Late:"+Late+"<hr/>")) ;
                 PanelIssueLis.Controls.Add(PanelIssue);
             }
 
             //BOOK RETURNED
-
+            No = 0;
             PanelIssueReturn.Controls.Clear();
             foreach (issue Issue in IssuesReturn)
             {
@@ -93,8 +95,9 @@ namespace OurLibrary.Web.Admin.Transaction
                 {
                     continue;
                 }
+                No++;
                 Panel PanelIssue = new Panel();
-                PanelIssue.Controls.Add(ControlUtil.GenerateLabel("<b>Issue ID: " + Issue.id + " ("+Issue.type+")</b><br/>date: " + Issue.date + "<ul>"));
+                PanelIssue.Controls.Add(ControlUtil.GenerateLabel("<b>"+No+". Issue ID: " + Issue.id + " ("+Issue.type+")</b><br/>date: " + Issue.date + "<ol>"));
                 Panel PanelIssueItem = new Panel();
                 foreach (book_issue Bs in Issue.book_issue)
                 {
@@ -113,13 +116,13 @@ namespace OurLibrary.Web.Admin.Transaction
                             + Bs.book_record_id + " - Returned From Issue Rec Id: "+Bs.book_issue_id+
                             "<br/>" + Bs.book_record.book.title
                             + " - returned: " + (Bs.book_record.available == 1).ToString().ToUpper()
-                            + " <br/> issued: " + Bs.book_issue2.issue.date + " | max return: " + MaxReturn + " - late: " + Late
+                            + "<br/>Issued: " + Bs.book_issue2.issue.date + "<br/>Max return: " + MaxReturn + " - late: " + Late
                             + "</li>"));
                     }
-                                
+                   
                 }
                 PanelIssue.Controls.Add(PanelIssueItem);
-                PanelIssue.Controls.Add(ControlUtil.GenerateLabel("</ul><hr/>"));
+                PanelIssue.Controls.Add(ControlUtil.GenerateLabel("</ol><hr/>"));
                 PanelIssueReturn.Controls.Add(PanelIssue);
             }
         }
@@ -138,8 +141,27 @@ namespace OurLibrary.Web.Admin.Transaction
             Params2.Add("type", "return");
             List<object> ObjList2 = IssueService.SearchAdvanced(Params2);
             IssuesReturn = (List<issue>)ObjectUtil.ConvertList(ObjList2, typeof(List<issue>));
-
+            PopulateStudentDetail(ID);
             PopulateIssueList();
+        }
+
+        private void PopulateStudentDetail(string Id)
+        {
+            studentDetail.InnerHtml = "";
+            student Std = StudentService.GetByIdFull(Id);
+            if (Std != null)
+            {
+                studentDetail.InnerHtml = "<b>Student ID: " + Std.id +
+                    "<br/>Student Name: " + Std.name;
+                if (Std.@class != null)
+                {
+                    studentDetail.InnerHtml += "<br/>Class: " + Std.@class.class_name;
+                }
+                studentDetail.InnerHtml += "</b>";
+            }else
+            {
+                studentDetail.InnerHtml += "Not Found";
+            }
         }
     
         protected void ButtonReturn_Click(object sender, EventArgs e)

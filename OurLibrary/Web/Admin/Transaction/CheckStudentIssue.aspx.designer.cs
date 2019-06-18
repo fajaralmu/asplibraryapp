@@ -94,6 +94,15 @@ namespace OurLibrary.Web.Admin.Transaction {
         protected global::System.Web.UI.WebControls.Button ButtonSubmitReturn;
         
         /// <summary>
+        /// studentDetail control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl studentDetail;
+        
+        /// <summary>
         /// PanelIssueLis control.
         /// </summary>
         /// <remarks>

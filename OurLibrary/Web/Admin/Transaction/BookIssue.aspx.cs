@@ -258,7 +258,7 @@ namespace OurLibrary.Web.Admin.Transaction
             student Student = (student)StudentService.GetById(TextBoxStudentID.Text);
             if (Student != null)
             {
-                string IssueID = StringUtil.GenerateRandomChar(9);
+                string IssueID = StringUtil.GenerateRandomNumber(9);
                 issue Issue = new issue();
                 Issue.user_id = LoggedUser.id;
                 Issue.id = IssueID;

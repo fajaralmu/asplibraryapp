@@ -54,7 +54,7 @@ namespace OurLibrary.Service
         {
             issue Issue = (issue)Obj;
             if (Issue.id == null)
-                Issue.id = StringUtil.GenerateRandomChar(9);
+                Issue.id = StringUtil.GenerateRandomNumber(9);
             if (Issue.type == null)
             {
                 Issue.type = "default";
@@ -97,7 +97,7 @@ namespace OurLibrary.Service
             string type = Params.ContainsKey("type") ? (string)Params["type"] : "";
             string sql = "select * from issue " +
                 "where student_id = '" + student_id + "'" +
-                "and type like '%" + type + "%'";
+                "and type like '%" + type + "%' order by date desc";
 
             return ListWithSql(sql, limit, offset);
         }

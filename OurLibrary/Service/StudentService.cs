@@ -35,7 +35,15 @@ namespace OurLibrary.Service
 
         public override object GetById(string Id)
         {
-            student student = (from c in dbEntities.students where c.id.Equals(Id) select c).SingleOrDefault();
+            student student = (from s in dbEntities.students where s.id.Equals(Id) select s).SingleOrDefault();
+            return student;
+        }
+
+        public student GetByIdFull(string Id)
+        {
+            student student = (from s in dbEntities.students where s.id.Equals(Id) select s).SingleOrDefault();
+            if(student !=null)
+                student.@class = (from c in dbEntities.classes where c.id.Equals(student.class_id) select c).SingleOrDefault();
             return student;
         }
 

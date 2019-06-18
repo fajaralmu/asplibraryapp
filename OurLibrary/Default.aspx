@@ -18,23 +18,24 @@
             </p>
         </div>
         <div class="col-md-4">
-            <h2>Transaction</h2>
+            <h2>Issue Book</h2>
             <p>
-                Perform your book issues more efficiently
+                Issing Book Page
             </p>
             <p>
-                <a class="btn btn-default" href="~/Web/Doc/Transactions.aspx">Learn more &raquo;</a>
+                <a class="btn btn-default" href="/Web/Admin/Transaction/BookIssue.aspx">Enter Page &raquo;</a>
             </p>
         </div>
         <div class="col-md-4">
-            <h2>Monitoring</h2>
+            <h2>Return Book</h2>
             <p>
-                You can easily monitor books stat
+                Returning Book Issued
             </p>
             <p>
-                <a class="btn btn-default" href="~/Web/Doc/Report.aspx">Learn more &raquo;</a>
+                <a class="btn btn-default" href="/Web/Admin/Transaction/CheckStudentIssue.aspx">Enter Page &raquo;</a>
             </p>
         </div>
+
     </div>
 
 </asp:Content>

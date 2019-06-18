@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/LibraryWeb.Master" AutoEventWireup="true" CodeBehind="CheckStudentIssue.aspx.cs" Inherits="OurLibrary.Web.Admin.Transaction.CheckStudentIssue" %>
+﻿<%@ Page Title="Return Book" Language="C#" MasterPageFile="~/LibraryWeb.Master" AutoEventWireup="true" CodeBehind="CheckStudentIssue.aspx.cs" Inherits="OurLibrary.Web.Admin.Transaction.CheckStudentIssue" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <div>
@@ -35,6 +35,15 @@
                         <td>
                             <asp:Button ID="ButtonReturn" runat="server" Text="Add" CssClass="btn btn-default" OnClick="ButtonReturn_Click" />
                             <asp:Button ID="ButtonSubmitReturn" runat="server" CssClass="btn btn-primary" Text="Submit" OnClick="ButtonSubmitReturn_Click" />
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <td colspan="2">
+                            <hr />
+                            <p id="studentDetail" runat="server">
+
+                            </p>
+                            <hr />
                         </td>
                     </tr>
                     <tr valign="top">

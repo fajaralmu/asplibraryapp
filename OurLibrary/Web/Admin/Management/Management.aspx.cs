@@ -276,7 +276,7 @@ namespace OurLibrary.Web.Admin.Management
                                     {
                                         string objPropVal = (string)obj.GetType().GetProperty(Attribute.ClassAttributeConverter).GetValue(obj);
                                         ((TextBox)FieldControl).Text = objPropVal;
-                                        LabelValueObj.Text = ((TextBox)FieldControl).Text;
+                                        LabelValueObj.Text = "<b>" + ((TextBox)FieldControl).Text + "</b>";
                                     }
 
                                 }
@@ -292,7 +292,7 @@ namespace OurLibrary.Web.Admin.Management
 
                                 if (Attribute.DropDownValues != null && Attribute.DropDownItemName != null)
                                 {
-                                    for (int v = 0;v< Attribute.DropDownValues.Length; v++)
+                                    for (int v = 0; v < Attribute.DropDownValues.Length; v++)
                                     {
                                         ListItem Item = new ListItem(Attribute.DropDownItemName[v].ToString(), Attribute.DropDownValues[v].ToString());
                                         ((DropDownList)FieldControl).Items.Add(Item);
@@ -314,7 +314,7 @@ namespace OurLibrary.Web.Admin.Management
                                 }
                                 object[] Params = { 0, 100 };
                                 List<object> ObjList = (List<object>)ClassService.GetType().GetMethod("ObjectList").Invoke(ClassService, Params);
-                               
+
                                 if (ObjectList != null)
                                     foreach (object obj in ObjList)
                                     {
@@ -527,7 +527,7 @@ namespace OurLibrary.Web.Admin.Management
 
                 EditButton.Text = "edit";
                 EditButton.CssClass = "btn btn-warning";
-                
+
                 EditButton.CausesValidation = false;
                 EditButton.UseSubmitBehavior = false;
                 //  EditButton.PostBackUrl = URL + "?id=" + p.id;
@@ -561,7 +561,7 @@ namespace OurLibrary.Web.Admin.Management
                             //LABEL
                             Label FieldLabel = new Label();
                             object PropValue = obj.GetType().GetProperty(PropsInfo.Name).GetValue(obj);
-                            
+
                             if (Attribute.ClassReference != null && Attribute.ClassAttributeConverter != null)
                             {
                                 object ClassService = null;
@@ -581,7 +581,8 @@ namespace OurLibrary.Web.Admin.Management
                                 object ClassRefConverterValue = ClassReff.GetType().GetProperty(Attribute.ClassAttributeConverter).GetValue(ClassReff);
                                 FieldLabel.Text = ClassRefConverterValue.ToString();
 
-                            }else
+                            }
+                            else
                             if (Attribute.DropDownItemName != null && Attribute.DropDownValues != null && PropValue != null
                                 && Attribute.DropDownItemName.Length > 0 && Attribute.DropDownValues.Length > 0)
                             {
@@ -698,7 +699,7 @@ namespace OurLibrary.Web.Admin.Management
                             {
                                 InputValue = StringUtil.GenerateRandomChar(size);
                             }
-                           
+
                         }
                         else
                         {
@@ -706,7 +707,7 @@ namespace OurLibrary.Web.Admin.Management
                             {
                                 DropDownList DropDown = (DropDownList)TableForm.FindControl(PropsInfo.Name);
                                 InputValue = DropDown.SelectedValue.TrimEnd();
-                               if( PropsInfo.PropertyType == typeof(Nullable<short>))
+                                if (PropsInfo.PropertyType == typeof(Nullable<short>))
                                 {
                                     string strInt = InputValue.ToString();
                                     short intVal = 0;
@@ -738,7 +739,8 @@ namespace OurLibrary.Web.Admin.Management
                                     if (objIdFromReq.Contains(","))
                                     {
                                         InputValue = objIdFromReq.Split(',')[0];
-                                    }else
+                                    }
+                                    else
                                     {
                                         InputValue = objIdFromReq;
                                     }
@@ -776,7 +778,7 @@ namespace OurLibrary.Web.Admin.Management
                 object[] Params = { TheObject };
                 object NewObj = Service.GetType().GetMethod("Add").Invoke(Service, Params);
 
-                
+
                 if (NewObj != null)
                 {
                     // status = "Success Adding New Publisher: " + NewPublisher.name + "(" + NewPublisher.id + ")";
@@ -797,7 +799,7 @@ namespace OurLibrary.Web.Admin.Management
                     goto Fail;
                 object[] Params = { TheObject };
                 object UpdateObject = Service.GetType().GetMethod("Update").Invoke(Service, Params);
-                
+
                 if (UpdateObject != null)
                 {
                     ClearField();
@@ -810,7 +812,7 @@ namespace OurLibrary.Web.Admin.Management
                 }
             }
             Fail:
-            if(OBJ == null)
+            if (OBJ == null)
                 status = "Failed Adding New Object";
             LabelStatus.Text = status;
             ButtonReset_Click(sender, e);
@@ -925,7 +927,8 @@ namespace OurLibrary.Web.Admin.Management
                                 Image ImageView = (Image)TableForm.FindControl(PropsInfo.Name + "_IMG_VIEW");
                                 ImageView.ImageUrl = "~/Assets/Image/" + StringUtil.ToUpperCase(0, ObjectName) + "/" + Value;
                                 ImageView.Visible = Value != null && Value.GetType() == typeof(string) && !Value.Equals("");
-                            }else if (Attribute.FieldType.Equals(AttributeConstant.TYPE_SEARCHLIST))
+                            }
+                            else if (Attribute.FieldType.Equals(AttributeConstant.TYPE_SEARCHLIST))
                             {
                                 string objIdFromReq = Request.QueryString["_OBJ_" + Attribute.ClassReference + "_PROP_" + PropsInfo.Name];
                                 if (objIdFromReq != null && objIdFromReq != "")
@@ -952,7 +955,7 @@ namespace OurLibrary.Web.Admin.Management
                                     {
                                         string objPropVal = (string)obj.GetType().GetProperty(Attribute.ClassAttributeConverter).GetValue(obj);
                                         ((TextBox)PanelForm.FindControl(PropsInfo.Name)).Text = objPropVal;
-                                        ((Label)PanelForm.FindControl("LABEL_VALUE_"+PropsInfo.Name)).Text = objPropVal;
+                                        ((Label)PanelForm.FindControl("LABEL_VALUE_" + PropsInfo.Name)).Text = objPropVal;
                                     }
 
                                 }

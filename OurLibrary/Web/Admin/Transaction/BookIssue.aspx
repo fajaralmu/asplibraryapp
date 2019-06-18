@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/LibraryWeb.Master" AutoEventWireup="true" CodeBehind="BookIssue.aspx.cs" Inherits="OurLibrary.Web.Admin.Transaction.BookIssue" %>
+﻿<%@ Page Title="Book Issue" Language="C#" MasterPageFile="~/LibraryWeb.Master" AutoEventWireup="true" CodeBehind="BookIssue.aspx.cs" Inherits="OurLibrary.Web.Admin.Transaction.BookIssue" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <div>
