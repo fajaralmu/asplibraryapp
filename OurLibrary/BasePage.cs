@@ -10,7 +10,7 @@ using OurLibrary.Service;
 
 namespace OurLibrary
 {
-    public class BasePage :System.Web.UI.Page
+    public class BasePage : System.Web.UI.Page
     {
         protected static UserService userService = new UserService();
         protected user LoggedUser;
@@ -65,13 +65,28 @@ namespace OurLibrary
 
         protected virtual void UpdateList()
         {
-            
+
         }
 
-        protected void ClearPagingSession()
+        protected void ClearPagingSession(string ObjectName = "")
         {
             Session[PageParameter.PagingLimit] = null;
             Session[PageParameter.PagingOffset] = null;
+            if (!ObjectName.Equals(""))
+            {
+                Session["OrderBy_MNG_" + ObjectName] = null;
+                Session["OrderType_MNG_" + ObjectName] = null;
+            }
+            System.Collections.Specialized.NameObjectCollectionBase.KeysCollection Keys = Session.Keys;
+            foreach (string Key in Keys)
+            {
+               
+                if (Key.ToString().Contains("OrderBy_MNG_") ||
+                    Key.ToString().Contains("OrderType_MNG_"))
+                {
+                  //  Session[Key.ToString()] = null;
+                }
+            }
         }
 
     }

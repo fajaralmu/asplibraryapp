@@ -26,6 +26,8 @@
         <AssociationConnector Association="library_dbModel.FK_student_issue" ManuallyRouted="false" />
         <AssociationConnector Association="library_dbModel.FK_user_issue" ManuallyRouted="false" />
         <AssociationConnector Association="library_dbModel.FK_book_issue_book_issue" />
+        <EntityTypeShape EntityType="library_dbModel.visit" Width="1.5" PointX="5.25" PointY="8.625" />
+        <AssociationConnector Association="library_dbModel.FK_visit_student" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -2,6 +2,7 @@
 using OurLibrary.Util.Common;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 
@@ -25,6 +26,7 @@ namespace OurLibrary.Service
             }
             return ObjList;
         }
+
         public override object Update(object Obj)
         {
             student student = (student)Obj;
@@ -100,5 +102,82 @@ namespace OurLibrary.Service
 
 
         }
+
+        private List<object> ListWithSql(string sql, int limit = 0, int offset = 0)
+        {
+            List<object> studentList = new List<object>();
+            var students = dbEntities.students
+                .SqlQuery(sql
+                ).
+                Select(student => new
+                {
+                    student,
+                    @class = dbEntities.classes.Where(c => c.id.Equals(student.class_id)).Select(c => c).FirstOrDefault()
+                });
+            if (limit > 0)
+            {
+                students = students.Skip(offset * limit).Take(limit).ToList();
+            }
+            else
+            {
+                students = students.ToList();
+            }
+            /*  where b.author.name.Contains(val)
+               || b.name.Contains(val) || b.review.Contains(val) || b.author.name.Contains(val)
+
+            || b.category.category_name.Contains(val) || b.publisher.name.Contains(val)
+               select b;*/
+            foreach (var s in students)
+            {
+                student student = new student();
+                student = s.student;
+                student.@class = s.@class;
+                //   Debug.WriteLine("name:"+student.name+", cat:"+student.category.category_name+", auth:"+student.author.name);
+                studentList.Add(student);
+            }
+
+            return studentList;
+        }
+
+        public override List<object> SearchAdvanced(Dictionary<string, object> Params, int limit = 0, int offset = 0)
+        {
+
+            string name = Params.ContainsKey("name") ? (string)Params["name"] : "";
+            string email = Params.ContainsKey("email") ? (string)Params["email"] : "";
+            string address = Params.ContainsKey("address") ? (string)Params["address"] : "";
+            string @class = Params.ContainsKey("class_name") ? (string)Params["class_name"] : "";
+            string orderby = Params.ContainsKey("orderby") ? (string)Params["orderby"] : "";
+            string ordertype = Params.ContainsKey("ordertype") ? (string)Params["ordertype"] : "";
+
+            string sql = "select * from student " +
+               "left join class on class.id = student.class_id " +
+                "where student.name like '%" + name + "%'" +
+               " and student.email like '%" + email + "%'" +
+               " and student.address like '%" + address + "%'" +
+               " and class.class_name like  '%" + @class + "%'";
+            if (!orderby.Equals(""))
+            {
+                sql += " ORDER BY " + orderby;
+                if (!ordertype.Equals(""))
+                {
+                    sql += " " + ordertype;
+                }
+            }
+            count = countSQL(sql, dbEntities.students);
+            return ListWithSql(sql, limit, offset);
+        }
+
+        public override int countSQL(string sql, object dbSet)
+        {
+            try
+            {
+                return ((DbSet<student>)dbSet)
+                    .SqlQuery(sql).Count();
+            }catch(Exception e)
+            {
+                return 0;
+            }
+        }
+
     }
 }

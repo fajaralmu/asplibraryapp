@@ -291,8 +291,9 @@ namespace OurLibrary.Web.Admin.Transaction
                     }
 
                 }
-                AlertMessage("Sukses tambah issue");
+                
                 ButtonClearList_Click(sender, e);
+                AlertMessage("Sukses tambah issue");
 
             }
             else

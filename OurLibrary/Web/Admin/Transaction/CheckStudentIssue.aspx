@@ -39,11 +39,11 @@
                     </tr>
                     <tr valign="top">
                         <td colspan="2">
-                            <hr />
-                            <p id="studentDetail" runat="server">
+                            <br />
+                            <p style="text-align:center">Student Info</p>
+                            <div id="studentDetail" runat="server">
 
-                            </p>
-                            <hr />
+                            </div>
                         </td>
                     </tr>
                     <tr valign="top">

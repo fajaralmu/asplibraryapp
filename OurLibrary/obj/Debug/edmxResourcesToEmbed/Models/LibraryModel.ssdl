@@ -32,7 +32,7 @@
     <Property Name="book_record_id" Type="varchar" MaxLength="10" Nullable="false" />
     <Property Name="issue_id" Type="varchar" MaxLength="10" Nullable="false" />
     <Property Name="qty" Type="int" Nullable="false" />
-    <Property Name="ref_issue" Type="nchar" MaxLength="10" />
+    <Property Name="ref_issue" Type="nchar" MaxLength="10" Nullable="false" />
     <Property Name="book_return" Type="smallint" />
     <Property Name="book_issue_id" Type="varchar" MaxLength="10" />
   </EntityType>
@@ -67,7 +67,7 @@
     <Property Name="id" Type="varchar" MaxLength="10" Nullable="false" />
     <Property Name="date" Type="datetime" Nullable="false" />
     <Property Name="user_id" Type="varchar" MaxLength="10" Nullable="false" />
-    <Property Name="student_id" Type="varchar" MaxLength="10" Nullable="false" />
+    <Property Name="student_id" Type="varchar" MaxLength="30" Nullable="false" />
     <Property Name="addtional_info" Type="text" />
     <Property Name="type" Type="nchar" MaxLength="10" Nullable="false" />
   </EntityType>
@@ -84,7 +84,7 @@
     <Key>
       <PropertyRef Name="id" />
     </Key>
-    <Property Name="id" Type="varchar" MaxLength="10" Nullable="false" />
+    <Property Name="id" Type="varchar" MaxLength="30" Nullable="false" />
     <Property Name="name" Type="nchar" MaxLength="100" Nullable="false" />
     <Property Name="bod" Type="nchar" MaxLength="100" Nullable="false" />
     <Property Name="class_id" Type="varchar" MaxLength="10" Nullable="false" />
@@ -111,6 +111,15 @@
     <Property Name="name" Type="varchar" MaxLength="100" Nullable="false" />
     <Property Name="admin" Type="tinyint" Nullable="false" />
     <Property Name="username" Type="varchar" MaxLength="100" Nullable="false" />
+  </EntityType>
+  <EntityType Name="visit">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="student_id" Type="varchar" MaxLength="30" Nullable="false" />
+    <Property Name="date" Type="datetime" Nullable="false" />
+    <Property Name="info" Type="text" />
   </EntityType>
   <Association Name="author_fk">
     <End Role="author" Type="Self.author" Multiplicity="1" />
@@ -208,6 +217,18 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_visit_student">
+    <End Role="student" Type="Self.student" Multiplicity="1" />
+    <End Role="visit" Type="Self.visit" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="student">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="visit">
+        <PropertyRef Name="student_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="issue_fk">
     <End Role="issue" Type="Self.issue" Multiplicity="1" />
     <End Role="book_issue" Type="Self.book_issue" Multiplicity="*" />
@@ -244,6 +265,7 @@
     <EntitySet Name="student" EntityType="Self.student" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="user" EntityType="Self.user" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="visit" EntityType="Self.visit" Schema="dbo" store:Type="Tables" />
     <AssociationSet Name="author_fk" Association="Self.author_fk">
       <End Role="author" EntitySet="author" />
       <End Role="book" EntitySet="book" />
@@ -275,6 +297,10 @@
     <AssociationSet Name="FK_user_issue" Association="Self.FK_user_issue">
       <End Role="user" EntitySet="user" />
       <End Role="issue" EntitySet="issue" />
+    </AssociationSet>
+    <AssociationSet Name="FK_visit_student" Association="Self.FK_visit_student">
+      <End Role="student" EntitySet="student" />
+      <End Role="visit" EntitySet="visit" />
     </AssociationSet>
     <AssociationSet Name="issue_fk" Association="Self.issue_fk">
       <End Role="issue" EntitySet="issue" />

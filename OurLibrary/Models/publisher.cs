@@ -27,7 +27,7 @@ namespace OurLibrary.Models
         [FieldAttribute(Required = false, FieldType = AttributeConstant.TYPE_TEXTAREA)]
 
         public string address { get; set; }
-        [FieldAttribute(Required = true, FieldType = AttributeConstant.TYPE_TEXTBOX)]
+        [FieldAttribute(Required = true, FieldType = AttributeConstant.TYPE_TEXTAREA)]
         public string contact { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

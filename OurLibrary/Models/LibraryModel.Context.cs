@@ -36,5 +36,6 @@ namespace OurLibrary.Models
         public virtual DbSet<student> students { get; set; }
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<user> users { get; set; }
+        public virtual DbSet<visit> visits { get; set; }
     }
 }

@@ -124,5 +124,15 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="visits">
+      <EntityTypeMapping TypeName="library_dbModel.visit">
+        <MappingFragment StoreEntitySet="visit">
+          <ScalarProperty Name="info" ColumnName="info" />
+          <ScalarProperty Name="date" ColumnName="date" />
+          <ScalarProperty Name="student_id" ColumnName="student_id" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

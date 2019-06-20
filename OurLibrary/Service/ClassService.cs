@@ -2,6 +2,7 @@
 using OurLibrary.Util.Common;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 
@@ -25,6 +26,7 @@ namespace OurLibrary.Service
             }
             return ObjList;
         }
+
         public override object Update(object Obj)
         {
             @class Class = (@class)Obj;
@@ -61,5 +63,58 @@ namespace OurLibrary.Service
             return newclass;
 
         }
+
+        private List<object> ListWithSql(string sql, int limit = 0, int offset = 0)
+        {
+            List<object> classList = new List<object>();
+            var classes = dbEntities.classes
+                .SqlQuery(sql
+                ).
+                Select(c => new
+                {
+                    c
+                });
+            if (limit > 0)
+            {
+                classes = classes.Skip(offset * limit).Take(limit).ToList();
+            }
+            else
+            {
+                classes = classes.ToList();
+            }
+            foreach (var c in classes)
+            {
+                @class Class = c.c;
+                classList.Add(Class);
+            }
+
+            return classList;
+        }
+
+        public override List<object> SearchAdvanced(Dictionary<string, object> Params, int limit = 0, int offset = 0)
+        {
+
+            string orderby = Params.ContainsKey("orderby") ? (string)Params["orderby"] : "";
+            string ordertype = Params.ContainsKey("ordertype") ? (string)Params["ordertype"] : "";
+
+            string sql = "select * from class ";
+            if (!orderby.Equals(""))
+            {
+                sql += " ORDER BY " + orderby;
+                if (!ordertype.Equals(""))
+                {
+                    sql += " " + ordertype;
+                }
+            }
+            count = countSQL(sql, dbEntities.classes);
+            return ListWithSql(sql, limit, offset);
+        }
+
+        public override int countSQL(string sql, object dbSet)
+        {
+            return ((DbSet<@class>)dbSet)
+                .SqlQuery(sql).Count();
+        }
+
     }
 }

@@ -234,6 +234,7 @@
     <Content Include="Web\Catalog\Default.aspx" />
     <Content Include="LibraryWeb.Master" />
     <Content Include="App_Browsers\adapter.browser" />
+    <Content Include="Web\Stat\Visit.aspx" />
     <EntityDeploy Include="Models\LibraryModel.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>LibraryModel.Designer.cs</LastGenOutput>
@@ -486,6 +487,9 @@
     <Compile Include="Models\user.cs">
       <DependentUpon>LibraryModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\visit.cs">
+      <DependentUpon>LibraryModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Parameter\ModelParameter.cs" />
     <Compile Include="Parameter\PageParameter.cs" />
     <Compile Include="Parameter\TransactionParameter.cs" />
@@ -495,6 +499,7 @@
     <Compile Include="Service\Book_recordService.cs" />
     <Compile Include="Service\BookService.cs" />
     <Compile Include="Service\PublisherService.cs" />
+    <Compile Include="Service\VisitService.cs" />
     <Compile Include="Service\StudentService.cs" />
     <Compile Include="Service\ClassService.cs" />
     <Compile Include="Service\BaseService.cs" />
@@ -585,6 +590,13 @@
     </Compile>
     <Compile Include="Web\Catalog\Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Web\Stat\Visit.aspx.cs">
+      <DependentUpon>Visit.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Web\Stat\Visit.aspx.designer.cs">
+      <DependentUpon>Visit.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

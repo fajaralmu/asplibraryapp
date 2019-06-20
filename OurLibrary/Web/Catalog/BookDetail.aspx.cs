@@ -75,26 +75,31 @@ namespace OurLibrary.Web.Catalog
                 LabelAvailabilityStatus.ForeColor = System.Drawing.Color.Red;
                 return;
             }
+            
+            List<object[]> BookInfos = new List<object[]>();
+            string[] RecordIds = new string[BookRecords.Count+1];
+            string[] BookCodes = new string[BookRecords.Count+1];
+            RecordIds[0] = "Record Id";
+            BookCodes[0] = "Book Codes";
+            int Index = 1;
             foreach (book_record BR in BookRecords)
             {
                 LabelAvailabilityStatus.Text = "Available";
                 LabelAvailabilityStatus.ForeColor = System.Drawing.Color.Green;
                 System.Drawing.Color LabelColor = System.Drawing.Color.Blue;
                 string text;
-                if (BR.available == 1)
+                RecordIds[Index] = BR.id;
+                BookCodes[Index] = BR.book_code;
+                if (BR.available != 1)
                 {
-                    
-                    text = "Record Id: " + BR.id + " | Book Code: " + BR.book_code + " <br/>";
+                    BookCodes[Index] = BR.book_code + " (unavailable)";
                 }
-                else
-                {
-                    LabelColor = System.Drawing.Color.Black;
-                    text = "Record Id: " + BR.id + " | Book Code: " + BR.book_code + " (unavailable) <br/>";
-                }
-                
-                Label RecordDetail = ControlUtil.GenerateLabel(text, LabelColor);
-                PanelAvailabilityDetail.Controls.Add(RecordDetail);
+                Index++;
             }
+            BookInfos.Add(RecordIds);
+            BookInfos.Add(BookCodes);
+            Table BookDetailInfo = ControlUtil.GenerateTableFromArray(BookInfos);
+            PanelAvailabilityDetail.Controls.Add(BookDetailInfo);
         }
     }
 }

@@ -9,15 +9,15 @@
     </div>
 
     <div class="row">
-        <div class="col-md-4">
-            <h2>Adding new Book Record</h2>
+        <div class="col-md-3">
+            <h2>Book Record</h2>
             <p>
                 Record new book to library </p>
             <p>
                 <a class="btn btn-default" href="~/Web/Admin/Management/Management.aspx?object=book_record">Go &raquo;</a>
             </p>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <h2>Issue Book</h2>
             <p>
                 Issing Book Page
@@ -26,7 +26,7 @@
                 <a class="btn btn-default" href="/Web/Admin/Transaction/BookIssue.aspx">Enter Page &raquo;</a>
             </p>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <h2>Return Book</h2>
             <p>
                 Returning Book Issued
@@ -35,7 +35,15 @@
                 <a class="btn btn-default" href="/Web/Admin/Transaction/CheckStudentIssue.aspx">Enter Page &raquo;</a>
             </p>
         </div>
-
+        <div class="col-md-3">
+            <h2>Visitor</h2>
+            <p>
+                Visitor Page Recording
+            </p>
+            <p>
+                <a class="btn btn-default" href="/Web/Stat/Visit.aspx">Enter Page &raquo;</a>
+            </p>
+        </div>
     </div>
 
 </asp:Content>

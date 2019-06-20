@@ -37,7 +37,7 @@
           <Property Name="book_record_id" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="issue_id" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="qty" Type="int" Nullable="false" />
-          <Property Name="ref_issue" Type="nchar" MaxLength="10" />
+          <Property Name="ref_issue" Type="nchar" MaxLength="10" Nullable="false" />
           <Property Name="book_return" Type="smallint" />
           <Property Name="book_issue_id" Type="varchar" MaxLength="10" />
         </EntityType>
@@ -72,7 +72,7 @@
           <Property Name="id" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="date" Type="datetime" Nullable="false" />
           <Property Name="user_id" Type="varchar" MaxLength="10" Nullable="false" />
-          <Property Name="student_id" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="student_id" Type="varchar" MaxLength="30" Nullable="false" />
           <Property Name="addtional_info" Type="text" />
           <Property Name="type" Type="nchar" MaxLength="10" Nullable="false" />
         </EntityType>
@@ -89,7 +89,7 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="id" Type="varchar" MaxLength="30" Nullable="false" />
           <Property Name="name" Type="nchar" MaxLength="100" Nullable="false" />
           <Property Name="bod" Type="nchar" MaxLength="100" Nullable="false" />
           <Property Name="class_id" Type="varchar" MaxLength="10" Nullable="false" />
@@ -116,6 +116,15 @@
           <Property Name="name" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="admin" Type="tinyint" Nullable="false" />
           <Property Name="username" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="visit">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="student_id" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="date" Type="datetime" Nullable="false" />
+          <Property Name="info" Type="text" />
         </EntityType>
         <Association Name="author_fk">
           <End Role="author" Type="Self.author" Multiplicity="1" />
@@ -213,6 +222,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_visit_student">
+          <End Role="student" Type="Self.student" Multiplicity="1" />
+          <End Role="visit" Type="Self.visit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="student">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="visit">
+              <PropertyRef Name="student_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="issue_fk">
           <End Role="issue" Type="Self.issue" Multiplicity="1" />
           <End Role="book_issue" Type="Self.book_issue" Multiplicity="*" />
@@ -249,6 +270,7 @@
           <EntitySet Name="student" EntityType="Self.student" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="user" EntityType="Self.user" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="visit" EntityType="Self.visit" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="author_fk" Association="Self.author_fk">
             <End Role="author" EntitySet="author" />
             <End Role="book" EntitySet="book" />
@@ -280,6 +302,10 @@
           <AssociationSet Name="FK_user_issue" Association="Self.FK_user_issue">
             <End Role="user" EntitySet="user" />
             <End Role="issue" EntitySet="issue" />
+          </AssociationSet>
+          <AssociationSet Name="FK_visit_student" Association="Self.FK_visit_student">
+            <End Role="student" EntitySet="student" />
+            <End Role="visit" EntitySet="visit" />
           </AssociationSet>
           <AssociationSet Name="issue_fk" Association="Self.issue_fk">
             <End Role="issue" EntitySet="issue" />
@@ -331,7 +357,7 @@
           <Property Name="book_record_id" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="issue_id" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="qty" Type="Int32" Nullable="false" />
-          <Property Name="ref_issue" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="ref_issue" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
           <NavigationProperty Name="book_record" Relationship="Self.FK_book_issue_book_record" FromRole="book_issue" ToRole="book_record" />
           <NavigationProperty Name="issue" Relationship="Self.issue_fk" FromRole="book_issue" ToRole="issue" />
           <Property Name="book_return" Type="Int16" />
@@ -374,7 +400,7 @@
           <Property Name="id" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="date" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="user_id" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="student_id" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="student_id" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="addtional_info" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="type" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
           <NavigationProperty Name="book_issue" Relationship="Self.issue_fk" FromRole="issue" ToRole="book_issue" />
@@ -403,6 +429,7 @@
           <Property Name="address" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="class" Relationship="Self.class_fk" FromRole="student" ToRole="class" />
           <NavigationProperty Name="issues" Relationship="Self.FK_student_issue" FromRole="student" ToRole="issue" />
+          <NavigationProperty Name="visits" Relationship="library_dbModel.FK_visit_student" FromRole="student" ToRole="visit" />
         </EntityType>
         <EntityType Name="sysdiagram">
           <Key>
@@ -586,6 +613,11 @@
             <End Role="book_issue" EntitySet="book_issue" />
             <End Role="book_issue1" EntitySet="book_issue" />
           </AssociationSet>
+          <EntitySet Name="visits" EntityType="library_dbModel.visit" />
+          <AssociationSet Name="FK_visit_student" Association="library_dbModel.FK_visit_student">
+            <End Role="student" EntitySet="students" />
+            <End Role="visit" EntitySet="visits" />
+          </AssociationSet>
         </EntityContainer>
         <Association Name="FK_book_issue_book_issue">
           <End Type="library_dbModel.book_issue" Role="book_issue" Multiplicity="0..1" />
@@ -596,6 +628,28 @@
             </Principal>
             <Dependent Role="book_issue1">
               <PropertyRef Name="book_issue_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="visit">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="student_id" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="info" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="student" Relationship="library_dbModel.FK_visit_student" FromRole="visit" ToRole="student" />
+        </EntityType>
+        <Association Name="FK_visit_student">
+          <End Type="library_dbModel.student" Role="student" Multiplicity="1" />
+          <End Type="library_dbModel.visit" Role="visit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="student">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="visit">
+              <PropertyRef Name="student_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -725,6 +779,16 @@
                 <ScalarProperty Name="name" ColumnName="name" />
                 <ScalarProperty Name="admin" ColumnName="admin" />
                 <ScalarProperty Name="username" ColumnName="username" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="visits">
+            <EntityTypeMapping TypeName="library_dbModel.visit">
+              <MappingFragment StoreEntitySet="visit">
+                <ScalarProperty Name="info" ColumnName="info" />
+                <ScalarProperty Name="date" ColumnName="date" />
+                <ScalarProperty Name="student_id" ColumnName="student_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

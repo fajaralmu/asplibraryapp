@@ -25,6 +25,7 @@ namespace OurLibrary.Service
             }
             return ObjList;
         }
+
         public override object Update(object Obj)
         {
             try
@@ -124,5 +125,27 @@ namespace OurLibrary.Service
 
             return book_recordsList;
         }
+
+        public override List<object> SearchAdvanced(Dictionary<string, object> Params, int limit = 0, int offset = 0)
+        {
+
+            string orderby = Params.ContainsKey("orderby") ? (string)Params["orderby"] : "";
+            string ordertype = Params.ContainsKey("ordertype") ? (string)Params["ordertype"] : "";
+
+            string sql = "select * from book_record " +
+               "left join book on book.id = book_record.book_id ";
+            if (!orderby.Equals(""))
+            {
+                sql += " ORDER BY " + orderby;
+                if (!ordertype.Equals(""))
+                {
+                    sql += " " + ordertype;
+                }
+            }
+            count = countSQL(sql, dbEntities.book_record);
+            return ListWithSql(sql, limit, offset);
+        }
+
+
     }
 }

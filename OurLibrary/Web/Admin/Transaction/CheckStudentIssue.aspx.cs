@@ -12,7 +12,7 @@ namespace OurLibrary.Web.Admin.Transaction
 {
     public partial class CheckStudentIssue : BasePage
     {
-        private book_issueService BookIssueService=new book_issueService();
+        private book_issueService BookIssueService = new book_issueService();
         private Book_recordService BookRecordService = new Book_recordService();
         private Book_recordService bookRecordService = new Book_recordService();
         private StudentService StudentService = new StudentService();
@@ -41,7 +41,7 @@ namespace OurLibrary.Web.Admin.Transaction
             {
                 BookIssuesReturn = (List<book_issue>)ViewState["BookIssuesReturn"];
                 PopulateBookIssues();
-               
+
             }
             AlertMessage(null);
         }
@@ -50,19 +50,20 @@ namespace OurLibrary.Web.Admin.Transaction
         {
             int No = 0;
             PanelIssueLis.Controls.Clear();
-            foreach (issue Issue in Issues) {
-                if(null == Issue.book_issue|| Issue.book_issue.Count==0)
+            foreach (issue Issue in Issues)
+            {
+                if (null == Issue.book_issue || Issue.book_issue.Count == 0)
                 {
                     continue;
                 }
                 No++;
                 Panel PanelIssue = new Panel();
-                PanelIssue.Controls.Add(ControlUtil.GenerateLabel("<b>"+No+". Issue ID: "+Issue.id+ " (" + Issue.type + ")</b><br/>date: "+Issue.date+"<ol>"));
+                PanelIssue.Controls.Add(ControlUtil.GenerateLabel("<b>" + No + ". Issue ID: " + Issue.id + " (" + Issue.type + ")</b><br/>date: " + Issue.date + "<ol>"));
                 Panel PanelIssueItem = new Panel();
-                foreach(book_issue Bs in Issue.book_issue)
+                foreach (book_issue Bs in Issue.book_issue)
                 {
-                    string labelHtml = "<li> Issue Rec Id: " + Bs.id + "<br/>Book Rec Id: " + Bs.book_record_id + "<br/>" + Bs.book_record.book.title + " - returned: " + (Bs.book_record.available == 1).ToString().ToUpper() ;
-                    if(Bs.book_record.available != 1)
+                    string labelHtml = "<li> Issue Rec Id: " + Bs.id + "<br/>Book Rec Id: " + Bs.book_record_id + "<br/>" + Bs.book_record.book.title + " - returned: " + (Bs.book_record.available == 1).ToString().ToUpper();
+                    if (Bs.book_record.available != 1)
                     {
                         string[] Attrs = new string[]
                         {
@@ -82,7 +83,7 @@ namespace OurLibrary.Web.Admin.Transaction
                 {
                     Late = true;
                 }
-                PanelIssue.Controls.Add(ControlUtil.GenerateLabel("</ol>Max return: " + MaxReturn+", Late:"+Late+"<hr/>")) ;
+                PanelIssue.Controls.Add(ControlUtil.GenerateLabel("</ol>Max return: " + MaxReturn + ", Late:" + Late + "<hr/>"));
                 PanelIssueLis.Controls.Add(PanelIssue);
             }
 
@@ -97,11 +98,11 @@ namespace OurLibrary.Web.Admin.Transaction
                 }
                 No++;
                 Panel PanelIssue = new Panel();
-                PanelIssue.Controls.Add(ControlUtil.GenerateLabel("<b>"+No+". Issue ID: " + Issue.id + " ("+Issue.type+")</b><br/>date: " + Issue.date + "<ol>"));
+                PanelIssue.Controls.Add(ControlUtil.GenerateLabel("<b>" + No + ". Issue ID: " + Issue.id + " (" + Issue.type + ")</b><br/>date: " + Issue.date + "<ol>"));
                 Panel PanelIssueItem = new Panel();
                 foreach (book_issue Bs in Issue.book_issue)
                 {
-                    
+
                     Bs.book_issue2 = (book_issue)BookIssueService.GetById(Bs.book_issue_id);
                     if (null != Bs.book_issue2)
                     {
@@ -113,13 +114,13 @@ namespace OurLibrary.Web.Admin.Transaction
                         }
                         Bs.book_issue2.issue = (issue)IssueService.GetById(Bs.book_issue2.issue_id);
                         PanelIssueItem.Controls.Add(ControlUtil.GenerateLabel("<li> Return Rec Id: " + Bs.id + "<br/>Book Rec Id: "
-                            + Bs.book_record_id + " - Returned From Issue Rec Id: "+Bs.book_issue_id+
+                            + Bs.book_record_id + " - Returned From Issue Rec Id: " + Bs.book_issue_id +
                             "<br/>" + Bs.book_record.book.title
                             + " - returned: " + (Bs.book_record.available == 1).ToString().ToUpper()
                             + "<br/>Issued: " + Bs.book_issue2.issue.date + "<br/>Max return: " + MaxReturn + " - late: " + Late
                             + "</li>"));
                     }
-                   
+
                 }
                 PanelIssue.Controls.Add(PanelIssueItem);
                 PanelIssue.Controls.Add(ControlUtil.GenerateLabel("</ol><hr/>"));
@@ -147,38 +148,42 @@ namespace OurLibrary.Web.Admin.Transaction
 
         private void PopulateStudentDetail(string Id)
         {
+
             studentDetail.InnerHtml = "";
             student Std = StudentService.GetByIdFull(Id);
             if (Std != null)
             {
-                studentDetail.InnerHtml = "<b>Student ID: " + Std.id +
-                    "<br/>Student Name: " + Std.name;
+                Dictionary<string, object> StudentInfo = new Dictionary<string, object>();
+                StudentInfo.Add("Student ID", Std.id);
+                StudentInfo.Add("Student Name", Std.name);
+
                 if (Std.@class != null)
                 {
-                    studentDetail.InnerHtml += "<br/>Class: " + Std.@class.class_name;
+                    StudentInfo.Add("Student Class", Std.@class.class_name);
                 }
-                studentDetail.InnerHtml += "</b>";
-            }else
+                studentDetail.Controls.Add(ControlUtil.GenerateTableFromMap(StudentInfo));
+            }
+            else
             {
-                studentDetail.InnerHtml += "Not Found";
+                studentDetail.InnerHtml += "~<i>Student Not Found</i>";
             }
         }
-    
+
         protected void ButtonReturn_Click(object sender, EventArgs e)
         {
             book_issue BS = new book_issue();
             BS.id = StringUtil.GenerateRandomChar(10);
             BS.book_issue_id = (TextBoxIssueRecordId.Text.Trim());
             book_issue reffBookIssue = (book_issue)BookIssueService.GetById(BS.book_issue_id);
-           
+
             if (!BookIssue.ExistBookRecord(BS.book_record_id, BookIssuesReturn) && null != reffBookIssue)
             {
                 BS.book_record_id = reffBookIssue.book_record.id;
                 BS.book_record = reffBookIssue.book_record;
                 //Check book_isue where book_rec_id = rec book_return != null || 0 and issue.student_id = std_id
                 string StudentId = TextBoxStudentID.Text;
-               
-                
+
+
                 if (null != reffBookIssue && reffBookIssue.book_record.available == (0))
                 {
                     BS.book_issue2 = reffBookIssue;
@@ -213,7 +218,7 @@ namespace OurLibrary.Web.Admin.Transaction
 
                 if (null == IssueService.Add(Issue))
                 {
-                    AlertMessage( "Gagal tambah issue");
+                    AlertMessage("Gagal tambah issue");
                     return;
                 }
                 foreach (book_issue BS in BookIssuesReturn)
@@ -226,7 +231,7 @@ namespace OurLibrary.Web.Admin.Transaction
                     }
                     book_record BR = (book_record)bookRecordService.GetById(BS.book_record_id);
                     BR.available = 1;
-                    BS.book_issue2 =(book_issue)BookIssueService.GetById(BS.book_issue_id);
+                    BS.book_issue2 = (book_issue)BookIssueService.GetById(BS.book_issue_id);
                     BS.book_issue2.book_return = 1;
 
                     if (null == bookRecordService.Update(BR) || null == BookIssueService.Update(BS.book_issue2))
@@ -248,7 +253,7 @@ namespace OurLibrary.Web.Admin.Transaction
             else
             {
 
-                AlertMessage ("Siswa tdk ada");
+                AlertMessage("Siswa tdk ada");
             }
         }
 
@@ -297,7 +302,7 @@ namespace OurLibrary.Web.Admin.Transaction
 
         private void AlertMessage(string Message)
         {
-            info.InnerHtml = ControlUtil.GenerateHtmlTag("p", null,Message);
+            info.InnerHtml = ControlUtil.GenerateHtmlTag("p", null, Message);
         }
     }
 }

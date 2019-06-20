@@ -3,22 +3,24 @@ using OurLibrary.Util.Common;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Web;
 
 namespace OurLibrary.Service
 {
-    public class PublisherService : BaseService
+    public class VisitService : BaseService
     {
+        public VisitService()
+        {
 
+        }
 
         public override List<object> ObjectList(int offset, int limit)
         {
             List<object> ObjList = new List<object>();
-            var Sql = (from p in dbEntities.publishers orderby p.name select p);
-            List<publisher> List = Sql.Skip(offset * limit).Take(limit).ToList();
-            foreach (publisher c in List)
+            var Sql = (from p in dbEntities.visits orderby p.date descending select p);
+            List<visit> List = Sql.Skip(offset * limit).Take(limit).ToList();
+            foreach (visit c in List)
             {
                 ObjList.Add(c);
             }
@@ -26,40 +28,44 @@ namespace OurLibrary.Service
         }
         public override object Update(object Obj)
         {
-            publisher publisher = (publisher)Obj;
-            dbEntities.Entry(publisher).CurrentValues.SetValues(publisher);
+            visit visit = (visit)Obj;
+            dbEntities.Entry(visit).CurrentValues.SetValues(visit);
             dbEntities.SaveChanges();
-            return publisher;
+            return visit;
         }
 
         public override object GetById(string Id)
         {
-            publisher publisher = (from c in dbEntities.publishers where c.id.Equals(Id) select c).SingleOrDefault();
-            return publisher;
+            int IdInt = 0;
+            int.TryParse(Id, out IdInt);
+            visit visit = (from s in dbEntities.visits where s.id.Equals(IdInt) select s).SingleOrDefault();
+            return visit;
         }
+
+      
 
         public override void Delete(object Obj)
         {
-            publisher publisher = (publisher)Obj;
-            dbEntities.publishers.Remove(publisher);
+            visit visit = (visit)Obj;
+            dbEntities.visits.Remove(visit);
             dbEntities.SaveChanges();
         }
 
         public override int ObjectCount()
         {
-            return dbEntities.publishers.Count();
+            return dbEntities.visits.Count();
         }
 
         public override object Add(object Obj)
         {
-            publisher publisher = (publisher)Obj;
-            if (publisher.id == null)
-                publisher.id = StringUtil.GenerateRandomChar(7);
-            publisher newpublisher = dbEntities.publishers.Add(publisher);
+            visit visit = (visit)Obj;
+            /*if (visit.id == null)
+                visit.id = StringUtil.GenerateRandomNumber(7);*/
+            visit newvisit = dbEntities.visits.Add(visit);
             try
             {
                 dbEntities.SaveChanges();
-                return newpublisher;
+                return newvisit;
             }
             catch (System.Data.Entity.Validation.DbEntityValidationException dbEx)
             {
@@ -80,34 +86,39 @@ namespace OurLibrary.Service
                 throw raise;
                 //  return null;
             }
-
+            catch (System.Data.Entity.Infrastructure.DbUpdateException dbEx)
+            {
+                Exception raise = new Exception(dbEx.StackTrace);
+                throw raise;
+                //  return null;
+            }
         }
 
         private List<object> ListWithSql(string sql, int limit = 0, int offset = 0)
         {
-            List<object> publisherList = new List<object>();
-            var publishers = dbEntities.publishers
+            List<object> visitList = new List<object>();
+            var visits = dbEntities.visits
                 .SqlQuery(sql
                 ).
-                Select(p => new
+                Select(v => new
                 {
-                    p
+                    v
                 });
             if (limit > 0)
             {
-                publishers = publishers.Skip(offset * limit).Take(limit).ToList();
+                visits = visits.Skip(offset * limit).Take(limit).ToList();
             }
             else
             {
-                publishers = publishers.ToList();
+                visits = visits.ToList();
             }
-            foreach (var p in publishers)
+            foreach (var v in visits)
             {
-                publisher Pub = p.p;
-                publisherList.Add(Pub);
+                visit Visit = v.v;
+                visitList.Add(Visit);
             }
 
-            return publisherList;
+            return visitList;
         }
 
         public override List<object> SearchAdvanced(Dictionary<string, object> Params, int limit = 0, int offset = 0)
@@ -116,7 +127,7 @@ namespace OurLibrary.Service
             string orderby = Params.ContainsKey("orderby") ? (string)Params["orderby"] : "";
             string ordertype = Params.ContainsKey("ordertype") ? (string)Params["ordertype"] : "";
 
-            string sql = "select * from publisher ";
+            string sql = "select * from visit ";
             if (!orderby.Equals(""))
             {
                 sql += " ORDER BY " + orderby;
@@ -125,17 +136,14 @@ namespace OurLibrary.Service
                     sql += " " + ordertype;
                 }
             }
-            count = countSQL(sql, dbEntities.publishers);
+            count = countSQL(sql, dbEntities.visits);
             return ListWithSql(sql, limit, offset);
         }
 
         public override int countSQL(string sql, object dbSet)
         {
-            DbSqlQuery<publisher> DbPub= ((DbSet<publisher>)dbSet)
-                .SqlQuery(sql);
-
-            return DbPub.Count();
+            return ((DbSet<visit>)dbSet)
+                .SqlQuery(sql).Count();
         }
-
     }
 }

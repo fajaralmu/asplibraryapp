@@ -2,6 +2,7 @@
 using OurLibrary.Util.Common;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 
@@ -60,6 +61,69 @@ namespace OurLibrary.Service
             dbEntities.SaveChanges();
             return newauthor;
 
+        }
+
+        public override List<object> SearchAdvanced(Dictionary<string, object> Params, int limit = 0, int offset = 0)
+        {
+
+            string name = Params.ContainsKey("name") ? (string)Params["name"] : "";
+            string email = Params.ContainsKey("email") ? (string)Params["email"] : "";
+            string address = Params.ContainsKey("address") ? (string)Params["address"] : "";
+            string orderby = Params.ContainsKey("orderby") ? (string)Params["orderby"] : "";
+            string ordertype = Params.ContainsKey("ordertype") ? (string)Params["ordertype"] : "";
+
+            string sql = "select * from author " +
+                "where author.name like '%" + name + "%'" +
+               " and author.email like '%" + email + "%'" +
+               " and author.address like '%" + address + "%'";
+            if (!orderby.Equals(""))
+            {
+                sql += " ORDER BY " + orderby;
+                if (!ordertype.Equals(""))
+                {
+                    sql += " " + ordertype;
+                }
+            }
+            count = countSQL(sql, dbEntities.authors);
+            return ListWithSql(sql, limit, offset);
+        }
+
+        public override int countSQL(string sql, object dbSet)
+        {
+            return ((DbSet<author>)dbSet)
+                .SqlQuery(sql).Count();
+        }
+
+        private List<object> ListWithSql(string sql, int limit = 0, int offset = 0)
+        {
+            List<object> authorList = new List<object>();
+            var authors = dbEntities.authors
+                .SqlQuery(sql
+                ).
+                Select(author => new
+                {
+                    author
+                });
+            if (limit > 0)
+            {
+                authors = authors.Skip(offset * limit).Take(limit).ToList();
+            }
+            else
+            {
+                authors = authors.ToList();
+            }
+            /*  where b.author.name.Contains(val)
+               || b.name.Contains(val) || b.review.Contains(val) || b.author.name.Contains(val)
+
+            || b.category.category_name.Contains(val) || b.publisher.name.Contains(val)
+               select b;*/
+            foreach (var a in authors)
+            {
+                author Auhtor = a.author;
+                authorList.Add(Auhtor);
+            }
+
+            return authorList;
         }
     }
 }

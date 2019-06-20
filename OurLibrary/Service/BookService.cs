@@ -11,7 +11,7 @@ namespace OurLibrary.Service
 {
     public class BookService : BaseService
     {
-        private int count = 0;
+        
 
         public BookService()
         {
@@ -116,6 +116,9 @@ namespace OurLibrary.Service
             string publisher = Params.ContainsKey("publisher")  ? (string)Params["publisher"] : "";
             string category = Params.ContainsKey("category")  ? (string)Params["category"] : "";
             string author = Params.ContainsKey("author")  ? (string)Params["author"] : "";
+            string orderby = Params.ContainsKey("orderby") ? (string)Params["orderby"] : "";
+            string ordertype = Params.ContainsKey("ordertype") ? (string)Params["ordertype"] : "";
+
             string sql = "select * from book " +
                "left join author on author.id = book.author_id " +
                "left join publisher on publisher.id = book.publisher_id " +
@@ -124,7 +127,15 @@ namespace OurLibrary.Service
                " and publisher.name like '%" + publisher + "%'" +
                " and category.category_name like '%" +category + "%'" +
                " and author.name like  '%" + author + "%'";
-            count = countSQL(sql);
+            if (!orderby.Equals(""))
+            {
+                sql += " ORDER BY " + orderby;
+                if (!ordertype.Equals(""))
+                {
+                    sql += " " + ordertype;
+                }
+            }
+            count = countSQL(sql, dbEntities.books);
             return ListWithSql(sql, limit, offset);
         }
 
@@ -139,19 +150,8 @@ namespace OurLibrary.Service
                 " or publisher.name like '%" + val + "%'" +
                 " or category.category_name like '%" + val + "%'" +
                 " or author.name like  '%" + val + "%'";
-            count = countSQL(sql);
+            count = countSQL(sql, dbEntities.books);
             return ListWithSql(sql, limit, offset);
-        }
-
-        public int getCountSearch()
-        {
-            return count;
-        }
-
-        public int countSQL(string sql)
-        {
-            return dbEntities.books
-                .SqlQuery(sql).Count();
         }
 
         public override object GetById(string Id)
@@ -203,6 +203,12 @@ namespace OurLibrary.Service
                 //  return null;
             }
 
+        }
+
+        public override int countSQL(string sql, object dbSet)
+        {
+            return ((DbSet<book>)dbSet)
+                .SqlQuery(sql).Count();
         }
     }
 }
