@@ -48,7 +48,7 @@
                     </tr>
                     <tr valign="top">
                         <td style="padding: 5px">
-                            <h4>Issue History</h4>
+                            <h4>Issue History <small> Still issued: <span id="issueCount" runat="server"></span> Book(s)</small></h4>
                             <hr />
                             <asp:Panel ID="PanelIssueLis" runat="server">
                             </asp:Panel>
@@ -68,6 +68,16 @@
         function SetTextInput(input, textId) {
             let element = document.getElementById(textId);
             element.value = input;
+        }
+        function ScrollToElement(id) {
+            let book_issue_items = document.getElementsByClassName("book_issue-item");
+            for (let i = 0; i < book_issue_items.length; i++) {
+                book_issue_items[i].style.backgroundColor = "white";
+            }
+
+            let element = document.getElementById(id);
+            element.style.backgroundColor = "yellow";
+            element.scrollIntoView(true);
         }
     </script>
 </asp:Content>

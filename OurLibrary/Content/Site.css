@@ -44,3 +44,19 @@ input[type="select"] {
     margin: 10px;
     background-color:#9c9999;
 }
+
+/*Common*/
+.pointerable{
+    color:blue;
+}
+.pointerable:hover{
+    color:Highlight;
+    cursor:pointer;
+}
+.loading-info{
+    position:fixed;
+    margin-top:20%;
+    margin-left:40%;
+    background-color:azure;
+    font-size:large;
+}

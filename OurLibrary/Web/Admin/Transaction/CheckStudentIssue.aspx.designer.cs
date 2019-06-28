@@ -103,6 +103,15 @@ namespace OurLibrary.Web.Admin.Transaction {
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl studentDetail;
         
         /// <summary>
+        /// issueCount control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl issueCount;
+        
+        /// <summary>
         /// PanelIssueLis control.
         /// </summary>
         /// <remarks>

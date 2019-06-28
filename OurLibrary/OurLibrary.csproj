@@ -230,6 +230,7 @@
     <Content Include="Web\Admin\Management\PublisherManagement.aspx" />
     <Content Include="Web\Admin\Transaction\BookIssue.aspx" />
     <Content Include="Web\Admin\Transaction\CheckStudentIssue.aspx" />
+    <Content Include="Web\API\VisitInfo.aspx" />
     <Content Include="Web\Catalog\BookDetail.aspx" />
     <Content Include="Web\Catalog\Default.aspx" />
     <Content Include="LibraryWeb.Master" />
@@ -525,6 +526,7 @@
     <Compile Include="Testing\Object Property.cs" />
     <Compile Include="Util\Common\ControlUtil.cs" />
     <Compile Include="Util\Common\DateUtil.cs" />
+    <Compile Include="Util\Common\JSONUtil.cs" />
     <Compile Include="Util\Common\ObjectUtil.cs" />
     <Compile Include="Util\Common\StringUtil.cs" />
     <Compile Include="Util\ControlAdapter\LinkButtonControlAdapter.cs" />
@@ -577,6 +579,13 @@
     <Compile Include="Web\Admin\Transaction\CheckStudentIssue.aspx.designer.cs">
       <DependentUpon>CheckStudentIssue.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Web\API\VisitInfo.aspx.cs">
+      <DependentUpon>VisitInfo.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Web\API\VisitInfo.aspx.designer.cs">
+      <DependentUpon>VisitInfo.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Web\Catalog\BookDetail.aspx.cs">
       <DependentUpon>BookDetail.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -602,7 +611,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Assets\Image\Book\" />
-    <Folder Include="Web\API\" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

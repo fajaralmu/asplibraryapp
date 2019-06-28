@@ -30,14 +30,21 @@ namespace OurLibrary.Util.Common
             return Days;
         }
 
+        public static DateTime Now()
+        {
+            return DateTime.Now;
+        }
+
         public static DateTime PlusDay(DateTime date, int day)
         {
+            
             int[] Days = new int[12];
             int DD = date.Day;
             int MM = date.Month;
             int YY = date.Year;
 
             Days = construcDays(YY);
+            
             for (int i = 1; i <= day; i++)
             {
                 int MaxDay = Days[MM - 1];

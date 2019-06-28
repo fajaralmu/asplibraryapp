@@ -24,7 +24,7 @@ namespace OurLibrary.Models
         [FieldAttribute(FieldType = AttributeConstant.TYPE_READONLY)]
 
         public System.DateTime date { get; set; }
-        [FieldAttribute( FieldType = AttributeConstant.TYPE_READONLY)]
+        [FieldAttribute( FieldType = AttributeConstant.TYPE_TEXTAREA)]
 
         public string info { get; set; }
     

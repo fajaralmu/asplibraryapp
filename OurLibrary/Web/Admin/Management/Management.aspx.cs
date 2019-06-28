@@ -3,6 +3,7 @@ using OurLibrary.Models;
 using OurLibrary.Parameter;
 using OurLibrary.Service;
 using OurLibrary.Util.Common;
+using OurLibrary.Web.Admin.Transaction;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -17,6 +18,8 @@ namespace OurLibrary.Web.Admin.Management
 {
     public partial class CategoryManagement : BasePage
     {
+      
+
         protected object TheObject;
         protected object Service;
         private List<object> ObjectList = new List<object>();

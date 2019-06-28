@@ -21,6 +21,7 @@ namespace OurLibrary.Web.Admin.Transaction
         private book Book;
         private book_record BookRecord;
         private List<string> strings = new List<string>();
+        private string TitleKeyWord = "";
         private List<book_issue> BookIssues = new List<book_issue>();
 
         protected void Page_Load(object sender, EventArgs e)
@@ -34,14 +35,16 @@ namespace OurLibrary.Web.Admin.Transaction
                 LoggedUser = (user)Session["user"];
                 info.InnerText = "Postback: " + Page.IsPostBack;
                 InitPage();
-                if (Page.IsPostBack)
+                if (Request.QueryString["book_master_id"] != null && !((string)Request.QueryString["book_master_id"]).Equals(""))
                 {
-                    if (ViewState["GenerateListBook"] != null && ((bool)ViewState["GenerateListBook"]) == true)
-                    {
-                        generateListBook();
-                        ViewState["GenerateListBook"] = false;
-                    }
+                    ShowCurrentBook((string)Request.QueryString["book_master_id"]);
                 }
+                //if (ViewState["GenerateListBook"] != null && ((bool)ViewState["GenerateListBook"]) == true)
+                //{
+                //    generateListBook();
+                //    ViewState["GenerateListBook"] = false;
+                //}
+
             }
         }
 
@@ -53,16 +56,16 @@ namespace OurLibrary.Web.Admin.Transaction
                 PopulateBookIssues();
 
             }
-            if (ViewState["CurrentBook"] != null)
-            {
-                Book = (book)ViewState["CurrentBook"];
-                InputMasterBook.Text = Book.title;
-                LabelCurrentBook.Text = Book.title + " by " + Book.author.name;
-            }
-            else
-            {
-                LabelCurrentBook.Text = "";
-            }
+            //if (ViewState["CurrentBook"] != null)
+            //{
+            //    Book = (book)ViewState["CurrentBook"];
+            //    InputMasterBook.Text = Book.title;
+            //    LabelCurrentBook.Text = Book.title + " by " + Book.author.name;
+            //}
+            //else
+            //{
+            //    LabelCurrentBook.Text = "";
+            //}
             if (ViewState["CurrentBookRecord"] != null)
             {
                 BookRecord = (book_record)ViewState["CurrentBookRecord"];
@@ -118,7 +121,8 @@ namespace OurLibrary.Web.Admin.Transaction
             ViewState["CurrentBook"] = null;
             Book = null;
             ViewState["GenerateListBook"] = true;
-
+            TitleKeyWord = InputMasterBook.Text;
+            GenerateListBook();
             if (BookList == null || BookList.Count <= 0)
             {
                 PanelBookList.Controls.Add(ControlUtil.GenerateLabel("Book Not Found", System.Drawing.Color.Orange));
@@ -127,38 +131,35 @@ namespace OurLibrary.Web.Admin.Transaction
 
         }
 
-        protected void BtnBookClick(object sender, EventArgs e)
+        protected void ShowCurrentBook(string id)
         {
             PanelBookList.Controls.Clear();
-            Button Btn = (Button)sender;
-            if (Btn != null)
+            if (id != null && !id.Equals(""))
             {
-                string id = Btn.CommandArgument;
-                if (!id.Equals(""))
+
+                Book = (book)bookService.GetCompleteBook(id);
+                if (Book == null)
                 {
-
-                    Book = (book)bookService.GetById(id);
-                    InputMasterBook.Text = Book.title;
-                    LabelCurrentBook.Text = Book.title + " by " + Book.author.name;
-                    ViewState["CurrentBook"] = Book;
-                    CheckAvailability();
+                    return;
                 }
-                else
-                {
-
-                }
-
+                //  InputMasterBook.Text = Book.title;
+                LabelCurrentBook.Text = Book.title + " by " + Book.author.name;
+                ViewState["CurrentBook"] = Book;
+                CheckAvailability();
             }
+            Book = null;
+
+
         }
 
-        private void generateListBook()
+        private void GenerateListBook()
         {
             Dictionary<string, object> Params = new Dictionary<string, object>();
-            if (InputMasterBook.Text.Equals(""))
+            if (TitleKeyWord.Equals(""))
             {
                 return;
             }
-            Params.Add("title", InputMasterBook.Text);
+            Params.Add("title", TitleKeyWord);
             List<object> ObjList = bookService.SearchAdvanced(Params, 10);
             BookList = (List<book>)ObjectUtil.ConvertList(ObjList, typeof(List<book>));
 
@@ -169,11 +170,14 @@ namespace OurLibrary.Web.Admin.Transaction
                 btnBook.CausesValidation = false;
                 btnBook.Text = b.title + " | author: " + b.author.name;
                 btnBook.CommandArgument = b.id;
-                btnBook.Click += new EventHandler(BtnBookClick);
+                btnBook.PostBackUrl = "/Web/Admin/Transaction/BookIssue.aspx?book_master_id=" + b.id;
+                //   btnBook.Click += new EventHandler(BtnBookClick);
                 btnBook.CssClass = "btn btn-success";
                 btnBook.ID = "BOOK_" + b.id;
                 PanelBookList.Controls.Add(btnBook);
             }
+            //    InputMasterBook.Text = TitleKeyWord;
+            TitleKeyWord = "";
         }
 
         private void CheckAvailability()
@@ -234,13 +238,16 @@ namespace OurLibrary.Web.Admin.Transaction
             PanelBookIssues.Controls.Clear();
             PanelBookList.Controls.Clear();
             InitPage();
+            ShowCurrentBook("");
+            LabelRecordList.Text = "";
+
         }
 
-        public static bool ExistBookRecord(string RecId, List<book_issue> BookIssues)
+        public static bool ExistBookRecord(string IssId, List<book_issue> BookIssues)
         {
             foreach (book_issue bs in BookIssues)
             {
-                if (bs.book_record_id.Equals(RecId))
+                if (bs.book_issue_id.Equals(IssId))
                 {
                     return true;
                 }
@@ -291,9 +298,9 @@ namespace OurLibrary.Web.Admin.Transaction
                     }
 
                 }
-                
+
                 ButtonClearList_Click(sender, e);
-                AlertMessage("Sukses tambah issue");
+                AlertMessage("Sukses tambah issue "+ IssueID);
 
             }
             else
