@@ -892,6 +892,8 @@ namespace OurLibrary.Web.Admin.Management
                 {
                     string SessionVal = FieldName + "~" + FilterBox.Text;
                     Session[SEARCH_BY + ObjectName] = SessionVal;
+                    Offset = 0;
+                    Session[PageParameter.PagingOffset] = Offset;
                     PopulateListTable();
                     PopulateNavigation();
                 }
