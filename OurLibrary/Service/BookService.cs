@@ -112,18 +112,25 @@ namespace OurLibrary.Service
         public override List<object> SearchAdvanced(Dictionary<string, object> Params, int limit=0, int offset =0)
         {
 
+            string id = Params.ContainsKey("id") ? (string)Params["id"] : "";
             string title = Params.ContainsKey("title")  ? (string) Params["title"] : "";
             string publisher = Params.ContainsKey("publisher")  ? (string)Params["publisher"] : "";
             string category = Params.ContainsKey("category")  ? (string)Params["category"] : "";
             string author = Params.ContainsKey("author")  ? (string)Params["author"] : "";
+            string page = Params.ContainsKey("page") ? (string)Params["page"] : "";
+            string review = Params.ContainsKey("review") ? (string)Params["review"] : "";
             string orderby = Params.ContainsKey("orderby") ? (string)Params["orderby"] : "";
             string ordertype = Params.ContainsKey("ordertype") ? (string)Params["ordertype"] : "";
-
+            int pageInt = 0;
+            int.TryParse(page, out pageInt);
             string sql = "select * from book " +
                "left join author on author.id = book.author_id " +
                "left join publisher on publisher.id = book.publisher_id " +
                "left join category on category.id = book.category_id " +
                "where book.title like '%" + title + "%'" +
+            //    " and book.page =" + pageInt +
+                " and book.id like '%" + id + "%'" +
+                " and book.review like '%" + review + "%'" +
                " and publisher.name like '%" + publisher + "%'" +
                " and category.category_name like '%" +category + "%'" +
                " and author.name like  '%" + author + "%'";

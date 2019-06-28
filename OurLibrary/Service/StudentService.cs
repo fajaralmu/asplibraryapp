@@ -141,7 +141,7 @@ namespace OurLibrary.Service
 
         public override List<object> SearchAdvanced(Dictionary<string, object> Params, int limit = 0, int offset = 0)
         {
-
+            string id = Params.ContainsKey("id") ? (string)Params["id"] : "";
             string name = Params.ContainsKey("name") ? (string)Params["name"] : "";
             string email = Params.ContainsKey("email") ? (string)Params["email"] : "";
             string address = Params.ContainsKey("address") ? (string)Params["address"] : "";
@@ -152,6 +152,7 @@ namespace OurLibrary.Service
             string sql = "select * from student " +
                "left join class on class.id = student.class_id " +
                 "where student.name like '%" + name + "%'" +
+                 " and student.id like '%" + id + "%'" +
                " and student.email like '%" + email + "%'" +
                " and student.address like '%" + address + "%'" +
                " and class.class_name like  '%" + @class + "%'";

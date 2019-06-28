@@ -42,7 +42,7 @@ namespace OurLibrary.Service
             return visit;
         }
 
-      
+
 
         public override void Delete(object Obj)
         {
@@ -123,11 +123,15 @@ namespace OurLibrary.Service
 
         public override List<object> SearchAdvanced(Dictionary<string, object> Params, int limit = 0, int offset = 0)
         {
-
+            string id = Params.ContainsKey("id") ? (string)Params["id"] : "";
+            string info = Params.ContainsKey("info") ? (string)Params["info"] : "";
+            string student_id = Params.ContainsKey("student_id") ? (string)Params["student_id"] : "";
             string orderby = Params.ContainsKey("orderby") ? (string)Params["orderby"] : "";
             string ordertype = Params.ContainsKey("ordertype") ? (string)Params["ordertype"] : "";
 
-            string sql = "select * from visit ";
+            string sql = "select * from visit where id like '%" + id + "%'" +
+                " and student_id like '%" + student_id + "%' " +
+                " and info like '%" + info + "'" ;
             if (!orderby.Equals(""))
             {
                 sql += " ORDER BY " + orderby;

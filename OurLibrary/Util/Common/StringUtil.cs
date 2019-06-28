@@ -8,7 +8,7 @@ namespace OurLibrary.Util.Common
     public class StringUtil
     {
         private const string Numbers = "1234567890";
-        private const string Chars = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890"; 
+        private const string Chars = "qwertyuiopasdfghjklzxcvbnm1234567890"; 
 
         private static bool IsItemAlreadyExist(List<string> list, string val)
         {

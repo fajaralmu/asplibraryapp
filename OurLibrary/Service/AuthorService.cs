@@ -65,16 +65,19 @@ namespace OurLibrary.Service
 
         public override List<object> SearchAdvanced(Dictionary<string, object> Params, int limit = 0, int offset = 0)
         {
-
+            string id = Params.ContainsKey("id") ? (string)Params["id"] : "";
             string name = Params.ContainsKey("name") ? (string)Params["name"] : "";
             string email = Params.ContainsKey("email") ? (string)Params["email"] : "";
+            string phone = Params.ContainsKey("phone") ? (string)Params["phone"] : "";
             string address = Params.ContainsKey("address") ? (string)Params["address"] : "";
             string orderby = Params.ContainsKey("orderby") ? (string)Params["orderby"] : "";
             string ordertype = Params.ContainsKey("ordertype") ? (string)Params["ordertype"] : "";
 
             string sql = "select * from author " +
-                "where author.name like '%" + name + "%'" +
+               "where author.name like '%" + name + "%'" +
+               " and author.id like '%" + id + "%'" +
                " and author.email like '%" + email + "%'" +
+               " and author.phone like '%" + phone + "%'" +
                " and author.address like '%" + address + "%'";
             if (!orderby.Equals(""))
             {

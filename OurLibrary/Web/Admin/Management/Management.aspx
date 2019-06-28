@@ -49,14 +49,24 @@
             <asp:Label ID="LabelStatus" runat="server"></asp:Label>
             <br />
             <asp:Panel runat="server" ID="ListPanel" Width="800px">
-                <p class="form-control-static" style="width: 326px">
-                    Item to show:
-            <asp:TextBox ID="TextBoxLimit" CssClass="form-control" OnTextChanged="TextBoxLimit_TextChanged" runat="server" CausesValidation="false" TextMode="Number" AutoPostBack="True">5</asp:TextBox>
+                <table>
+                    <tr>
+                        <td>
+                            <p class="form-control-static" style="width: 326px">
+                                Item to show:
+                                <asp:TextBox ID="TextBoxLimit" CssClass="form-control" OnTextChanged="TextBoxLimit_TextChanged" runat="server" CausesValidation="false" TextMode="Number" AutoPostBack="True">5</asp:TextBox>
+                            </p>
+                            <p id="nav_info" runat="server" style="width: 200px">
+                                &nbsp;
+                            </p>
+                        </td>
+                        <td>
+                            <p>Search Field: <span id="search_field_info" runat="server"></span></p>
+                            <p>Search Value: <span id="search_value" runat="server"></span></p>
+                        </td>
+                    </tr>
+                </table>
 
-                </p>
-                <p id="nav_info" runat="server" style="width: 200px">
-                    &nbsp;
-                </p>
                 <asp:Panel ID="PanelNavigation" runat="server" CssClass="btn-group btn-group-sm">
                 </asp:Panel>
                 <asp:Table ID="TableList" CssClass="table table-striped" runat="server" Width="800px">

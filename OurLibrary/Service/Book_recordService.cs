@@ -34,7 +34,8 @@ namespace OurLibrary.Service
                 dbEntities.Entry(book_record).CurrentValues.SetValues(book_record);
                 dbEntities.SaveChanges();
                 return book_record;
-            }catch (Exception e)
+            }
+            catch (Exception e)
             {
                 throw e;
             }
@@ -71,7 +72,7 @@ namespace OurLibrary.Service
 
         public bool IsAvailable(string book_rec_id)
         {
-            book_record BookRecord =(book_record) GetById(book_rec_id);
+            book_record BookRecord = (book_record)GetById(book_rec_id);
             return BookRecord.available == 1;
         }
 
@@ -79,16 +80,16 @@ namespace OurLibrary.Service
         {
             string sql = "select * from book_record where id = '" + Id + "'";
             List<book_record> book_record = (List<book_record>)ObjectUtil.ConvertList(ListWithSql(sql), typeof(List<book_record>));
-            if(book_record.Count>0)
+            if (book_record.Count > 0)
                 return book_record[0];
             return null;
         }
 
         public List<book_record> FindByBookId(string Id)
         {
-            string sql = "select * from book_record where book_id = '"+Id+"'";
-            List<book_record> book_record= (List < book_record > )ObjectUtil.ConvertList(ListWithSql(sql), typeof(List<book_record>));
-            return  book_record;
+            string sql = "select * from book_record where book_id = '" + Id + "'";
+            List<book_record> book_record = (List<book_record>)ObjectUtil.ConvertList(ListWithSql(sql), typeof(List<book_record>));
+            return book_record;
         }
 
         private List<object> ListWithSql(string sql, int limit = 0, int offset = 0)
@@ -100,7 +101,8 @@ namespace OurLibrary.Service
                 Select(book_record => new
                 {
                     book_record,
-                    book = dbEntities.books.Where(b => b.id.Equals(book_record.book_id)).Select(p => p).FirstOrDefault()   });
+                    book = dbEntities.books.Where(b => b.id.Equals(book_record.book_id)).Select(p => p).FirstOrDefault()
+                });
             if (limit > 0)
             {
                 book_records = book_records.Skip(offset * limit).Take(limit).ToList();
@@ -128,12 +130,19 @@ namespace OurLibrary.Service
 
         public override List<object> SearchAdvanced(Dictionary<string, object> Params, int limit = 0, int offset = 0)
         {
-
+            string id = Params.ContainsKey("id") ? (string)Params["id"] : "";
+            string book_code = Params.ContainsKey("book_code") ? (string)Params["book_code"] : "";
+            string book = Params.ContainsKey("book") ? (string)Params["book"] : "";
+            string additional_info = Params.ContainsKey("additional_info") ? (string)Params["additional_info"] : "";
             string orderby = Params.ContainsKey("orderby") ? (string)Params["orderby"] : "";
             string ordertype = Params.ContainsKey("ordertype") ? (string)Params["ordertype"] : "";
 
             string sql = "select * from book_record " +
-               "left join book on book.id = book_record.book_id ";
+               "left join book on book.id = book_record.book_id " +
+             " where book_record.id like '%" + id + "%'" +
+                " and book.title like '%" + book + "%'" +
+                 " and book_record.book_code like '%" + book_code + "%'" +
+                  " and book_record.additional_info like '%" + additional_info + "%'";
             if (!orderby.Equals(""))
             {
                 sql += " ORDER BY " + orderby;

@@ -112,10 +112,13 @@ namespace OurLibrary.Service
         public override List<object> SearchAdvanced(Dictionary<string, object> Params, int limit = 0, int offset = 0)
         {
 
+            string id = Params.ContainsKey("id") ? (string)Params["id"] : "";
+            string cat_name = Params.ContainsKey("category_name") ? (string)Params["category_name"] : "";
             string orderby = Params.ContainsKey("orderby") ? (string)Params["orderby"] : "";
             string ordertype = Params.ContainsKey("ordertype") ? (string)Params["ordertype"] : "";
 
-            string sql = "select * from category ";
+            string sql = "select * from category where id like '%"+id+"%'"+
+                " and category_name like '%"+ cat_name + "%'";
             if (!orderby.Equals(""))
             {
                 sql += " ORDER BY " + orderby;

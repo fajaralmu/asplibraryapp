@@ -148,6 +148,24 @@ namespace OurLibrary.Web.Admin.Management {
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl nav_info;
         
         /// <summary>
+        /// search_field_info control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl search_field_info;
+        
+        /// <summary>
+        /// search_value control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl search_value;
+        
+        /// <summary>
         /// PanelNavigation control.
         /// </summary>
         /// <remarks>

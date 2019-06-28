@@ -18,7 +18,9 @@ namespace OurLibrary.Web.Admin.Management
 {
     public partial class CategoryManagement : BasePage
     {
-      
+        private const string ORDER_BY = "OrderBy_MNG_";
+        private const string ORDER_TYPE = "OrderType_MNG_";
+        private const string SEARCH_BY = "SearchBy_MNG_";
 
         protected object TheObject;
         protected object Service;
@@ -61,6 +63,19 @@ namespace OurLibrary.Web.Admin.Management
             InitNavigation();
             GenerateForm();
             PopulateListTable();
+            
+        }
+
+        private void FillSearchInfo()
+        {
+            if (null != Session[SEARCH_BY + ObjectName] && Session[SEARCH_BY + ObjectName].GetType() == typeof(string))
+            {
+                string SessionSearch = (string)Session[SEARCH_BY + ObjectName];
+
+                string[] SearchInfos = SessionSearch.Split('~');
+                search_field_info.InnerHtml = SearchInfos[0] == null ? "" : SearchInfos[0];
+                search_value.InnerHtml = SearchInfos[1] == null ? "" : SearchInfos[1];
+            }
         }
 
         private void InitNavigation()
@@ -512,33 +527,50 @@ namespace OurLibrary.Web.Admin.Management
                         HeaderCell.Controls.Add(LabelHeader);
                         HeaderCell.Controls.Add(FilterBox);
 
+                        /** search button **/
+                        LinkButton SearchButton = new LinkButton();
+                        SearchButton.Text = "&#128269;";
+                        string SearchByField = PropsInfo.Name;
+                        if (Attribute.ClassReference != null && Attribute.ClassAttributeConverter != null)
+                        {
+                            SearchByField = Attribute.ClassReference + "." + Attribute.ClassAttributeConverter;
+                        }
+                        SearchButton.ID = "search_" + SearchByField;
+                        SearchButton.CausesValidation = false;
+                        string FieldToSearch = Attribute.ClassReference == null ? PropsInfo.Name : Attribute.ClassReference;
+
+                        SearchButton.CommandArgument = FieldToSearch + "~" + FilterBox.ID;
+                        SearchButton.Click += new EventHandler(SearchButtonClick);
+                        /** end construct search button **/
+
                         if (!Attribute.FieldType.Equals(AttributeConstant.TYPE_TEXTAREA))
                         {
-                            Button ASCButton = new Button();
-                            Button DESCButton = new Button();
-                            ASCButton.Text = "asc";
-                            DESCButton.Text = "desc";
-
+                            LinkButton ASCButton = new LinkButton();
+                            LinkButton DESCButton = new LinkButton();
+                           
+                            ASCButton.Text = "&#8657;";
+                            DESCButton.Text = "&#8659;";
+                           
                             string OrderByField = ObjectName.ToLower() + "." + PropsInfo.Name;
-
-                            if (Attribute.ClassReference != null && Attribute.ClassAttributeConverter != null)
-                            {
-                                OrderByField = Attribute.ClassReference + "." + Attribute.ClassAttributeConverter;
-                            }
-
+    
                             ASCButton.ID = "asc_" + OrderByField;
                             DESCButton.ID = "desc_" + OrderByField;
-
+                            
                             ASCButton.CausesValidation = false;
                             DESCButton.CausesValidation = false;
-
+                            
                             ASCButton.CommandArgument = "asc~" + OrderByField;
                             DESCButton.CommandArgument = "desc~" + OrderByField;
+                                                       
                             ASCButton.Click += new EventHandler(ButtonOrderClick);
                             DESCButton.Click += new EventHandler(ButtonOrderClick);
+                            
                             HeaderCell.Controls.Add(ASCButton);
                             HeaderCell.Controls.Add(DESCButton);
+                           
                         }
+
+                        HeaderCell.Controls.Add(SearchButton);
 
                         HeaderRow.Controls.Add(HeaderCell);
                     }
@@ -554,23 +586,36 @@ namespace OurLibrary.Web.Admin.Management
             //BODY//
             ObjectList.Clear();
             object[] Params = { Offset, Limit };
-            if (Session["OrderBy_MNG_" + ObjectName] != null && Session["OrderBy_MNG_" + ObjectName] != "")
+            Dictionary<string, object> ParamsAdvance = new Dictionary<string, object>();
+            string FetchMethod = "ObjectList";
+
+            if (Session[ORDER_BY + ObjectName] != null && Session[ORDER_BY + ObjectName] != "")
             {
-                string OrderType = Session["OrderType_MNG_" + ObjectName].ToString();
-                Dictionary<string, object> ParamsAdvance = new Dictionary<string, object>();
-                ParamsAdvance.Add("orderby", Session["OrderBy_MNG_" + ObjectName]);
+                string OrderType = Session[ORDER_TYPE + ObjectName].ToString();
+                ParamsAdvance.Add("orderby", Session[ORDER_BY + ObjectName]);
                 if (null != OrderType)
                 {
                     ParamsAdvance.Add("ordertype", OrderType);
                 }
                 object[] ParamsAdv = { ParamsAdvance, Limit, Offset };
-                ObjectList = (List<object>)Service.GetType().GetMethod("SearchAdvanced").Invoke(Service, ParamsAdv);
+                Params = ParamsAdv;
+                FetchMethod = "SearchAdvanced";
+               
+            }
 
-            }
-            else
+            if(Session[SEARCH_BY + ObjectName] != null && Session[SEARCH_BY + ObjectName].GetType() == typeof(string))
             {
-                ObjectList = (List<object>)Service.GetType().GetMethod("ObjectList").Invoke(Service, Params);
+                string[] SearchKeys = ((string)Session[SEARCH_BY + ObjectName]).Split('~');
+                string FieldName = SearchKeys[0];
+                string Keyword = SearchKeys[1] == null ? "" : SearchKeys[1];
+                ParamsAdvance.Add(FieldName, Keyword);
+                object[] ParamsAdv = { ParamsAdvance, Limit, Offset };
+                Params = ParamsAdv;
+                FetchMethod = "SearchAdvanced";
             }
+
+            ObjectList = (List<object>)Service.GetType().GetMethod(FetchMethod).Invoke(Service, Params);
+
             int No = Offset * Limit;
             foreach (object obj in ObjectList)
             {
@@ -693,6 +738,7 @@ namespace OurLibrary.Web.Admin.Management
                 TableList.Controls.Add(TRow);
 
             }
+            FillSearchInfo();
         }
 
         protected override void UpdateList()
@@ -828,9 +874,28 @@ namespace OurLibrary.Web.Admin.Management
             return TheObject;
         }
 
+        protected void SearchButtonClick(object sender, EventArgs e)
+        {
+            LinkButton Btn = (LinkButton)sender;
+            if (Btn != null)
+            {
+                string Input = Btn.CommandArgument;
+                string[] Inputs = Input.Split('~');
+                string FieldName = Inputs[0];
+                string TextBoxId = Inputs[1];
+               TextBox FilterBox = (TextBox) TableList.FindControl(TextBoxId);
+                if (null != FilterBox)
+                {
+                    string SessionVal = FieldName + "~" + FilterBox.Text;
+                    Session[SEARCH_BY + ObjectName] = SessionVal;
+                    PopulateListTable();
+                }
+            }
+        }
+
         protected void ButtonOrderClick(object sender, EventArgs e)
         {
-            Button Btn = (Button)sender;
+            LinkButton Btn = (LinkButton)sender;
             if (Btn != null)
             {
                 string Input = Btn.CommandArgument;
@@ -842,13 +907,13 @@ namespace OurLibrary.Web.Admin.Management
                 switch (Inputs[0])
                 {
                     case "asc":
-                        Session["OrderType_MNG_" + ObjectName] = "ASC";
+                        Session[ORDER_TYPE + ObjectName] = "ASC";
                         break;
                     case "desc":
-                        Session["OrderType_MNG_" + ObjectName] = "DESC";
+                        Session[ORDER_TYPE + ObjectName] = "DESC";
                         break;
                 }
-                Session["OrderBy_MNG_" + ObjectName] = Inputs[1];
+                Session[ORDER_BY + ObjectName] = Inputs[1];
                 PopulateListTable();
             }
         }

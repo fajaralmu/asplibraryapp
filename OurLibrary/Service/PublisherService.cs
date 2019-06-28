@@ -112,11 +112,18 @@ namespace OurLibrary.Service
 
         public override List<object> SearchAdvanced(Dictionary<string, object> Params, int limit = 0, int offset = 0)
         {
+            string id = Params.ContainsKey("id") ? (string)Params["id"] : "";
+            string name = Params.ContainsKey("name") ? (string)Params["name"] : "";
+            string address = Params.ContainsKey("address") ? (string)Params["address"] : "";
+            string contact = Params.ContainsKey("contact") ? (string)Params["contact"] : "";
 
             string orderby = Params.ContainsKey("orderby") ? (string)Params["orderby"] : "";
             string ordertype = Params.ContainsKey("ordertype") ? (string)Params["ordertype"] : "";
 
-            string sql = "select * from publisher ";
+            string sql = "select * from publisher where id like '%" + id + "%'" +
+                " and name like '%" + name + "%'" +
+            " and address like '%" + address + "%'" +
+            " and contact like '%" + contact + "%'";
             if (!orderby.Equals(""))
             {
                 sql += " ORDER BY " + orderby;
@@ -131,7 +138,7 @@ namespace OurLibrary.Service
 
         public override int countSQL(string sql, object dbSet)
         {
-            DbSqlQuery<publisher> DbPub= ((DbSet<publisher>)dbSet)
+            DbSqlQuery<publisher> DbPub = ((DbSet<publisher>)dbSet)
                 .SqlQuery(sql);
 
             return DbPub.Count();
