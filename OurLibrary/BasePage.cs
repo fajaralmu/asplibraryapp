@@ -77,6 +77,7 @@ namespace OurLibrary
             {
                 Session["OrderBy_MNG_" + ObjectName] = null;
                 Session["OrderType_MNG_" + ObjectName] = null;
+                Session["SearchBy_MNG_" + ObjectName] = null;
             }
             System.Collections.Specialized.NameObjectCollectionBase.KeysCollection Keys = Session.Keys;
             foreach (string Key in Keys)

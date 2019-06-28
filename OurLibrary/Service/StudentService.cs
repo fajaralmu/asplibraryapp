@@ -24,6 +24,7 @@ namespace OurLibrary.Service
             {
                 ObjList.Add(c);
             }
+            count = dbEntities.students.Count();
             return ObjList;
         }
 
@@ -58,7 +59,7 @@ namespace OurLibrary.Service
 
         public override int ObjectCount()
         {
-            return dbEntities.students.Count();
+            return count;// dbEntities.students.Count();
         }
 
         public override object Add(object Obj)

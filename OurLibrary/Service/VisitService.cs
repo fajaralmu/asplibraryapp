@@ -24,8 +24,10 @@ namespace OurLibrary.Service
             {
                 ObjList.Add(c);
             }
+            count = dbEntities.visits.Count();
             return ObjList;
         }
+
         public override object Update(object Obj)
         {
             visit visit = (visit)Obj;
@@ -53,7 +55,7 @@ namespace OurLibrary.Service
 
         public override int ObjectCount()
         {
-            return dbEntities.visits.Count();
+            return count;// dbEntities.visits.Count();
         }
 
         public override object Add(object Obj)
@@ -125,13 +127,15 @@ namespace OurLibrary.Service
         {
             string id = Params.ContainsKey("id") ? (string)Params["id"] : "";
             string info = Params.ContainsKey("info") ? (string)Params["info"] : "";
+            string date = Params.ContainsKey("date") ? (string)Params["date"] : "";
             string student_id = Params.ContainsKey("student_id") ? (string)Params["student_id"] : "";
             string orderby = Params.ContainsKey("orderby") ? (string)Params["orderby"] : "";
             string ordertype = Params.ContainsKey("ordertype") ? (string)Params["ordertype"] : "";
 
             string sql = "select * from visit where id like '%" + id + "%'" +
                 " and student_id like '%" + student_id + "%' " +
-                " and info like '%" + info + "'" ;
+                " and info like '%" + info + "'" +
+                " and date like '%" + date + "'";
             if (!orderby.Equals(""))
             {
                 sql += " ORDER BY " + orderby;

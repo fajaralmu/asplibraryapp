@@ -2,6 +2,7 @@
 using OurLibrary.Util.Common;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 
@@ -23,6 +24,7 @@ namespace OurLibrary.Service
             {
                 ObjList.Add(c);
             }
+            count = dbEntities.book_record.Count();
             return ObjList;
         }
 
@@ -56,7 +58,7 @@ namespace OurLibrary.Service
 
         public override int ObjectCount()
         {
-            return dbEntities.book_record.Count();
+            return count;//dbEntities.book_record.Count();
         }
 
         public override object Add(object Obj)
@@ -153,6 +155,12 @@ namespace OurLibrary.Service
             }
             count = countSQL(sql, dbEntities.book_record);
             return ListWithSql(sql, limit, offset);
+        }
+
+        public override int countSQL(string sql, object dbSet)
+        {
+            return ((DbSet<book_record>)dbSet)
+                .SqlQuery(sql).Count();
         }
 
 

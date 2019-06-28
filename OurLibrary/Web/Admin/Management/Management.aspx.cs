@@ -63,7 +63,8 @@ namespace OurLibrary.Web.Admin.Management
             InitNavigation();
             GenerateForm();
             PopulateListTable();
-            
+            PopulateNavigation();
+
         }
 
         private void FillSearchInfo()
@@ -97,7 +98,7 @@ namespace OurLibrary.Web.Admin.Management
 
                 Offset = (int)Session[PageParameter.PagingOffset];
             }
-            PopulateNavigation();
+            
         }
 
         private void PopulateNavigation()
@@ -338,6 +339,8 @@ namespace OurLibrary.Web.Admin.Management
                                 }
                                 object[] Params = { 0, 100 };
                                 List<object> ObjList = (List<object>)ClassService.GetType().GetMethod("ObjectList").Invoke(ClassService, Params);
+
+                                Total = (int)Service.GetType().GetMethod("ObjectCount").Invoke(Service, null);
 
                                 if (ObjectList != null)
                                     foreach (object obj in ObjList)
@@ -615,7 +618,7 @@ namespace OurLibrary.Web.Admin.Management
             }
 
             ObjectList = (List<object>)Service.GetType().GetMethod(FetchMethod).Invoke(Service, Params);
-
+            Total = (int)Service.GetType().GetMethod("ObjectCount").Invoke(Service, null);
             int No = Offset * Limit;
             foreach (object obj in ObjectList)
             {
@@ -744,8 +747,9 @@ namespace OurLibrary.Web.Admin.Management
         protected override void UpdateList()
         {
             nav_info.InnerText = "Offset:" + Offset + ", Limit:" + Limit + ", from updateList";
-            UpdateNavigation();
+           
             PopulateListTable();
+            UpdateNavigation();
         }
 
         protected void UpdateNavigation()
@@ -889,6 +893,7 @@ namespace OurLibrary.Web.Admin.Management
                     string SessionVal = FieldName + "~" + FilterBox.Text;
                     Session[SEARCH_BY + ObjectName] = SessionVal;
                     PopulateListTable();
+                    PopulateNavigation();
                 }
             }
         }

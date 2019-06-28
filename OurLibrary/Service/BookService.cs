@@ -27,8 +27,10 @@ namespace OurLibrary.Service
             {
                 ObjList.Add(c);
             }
+            count = dbEntities.books.Count();
             return ObjList;
         }
+
         public override object Update(object Obj)
         {
             book book = (book)Obj;
@@ -176,7 +178,7 @@ namespace OurLibrary.Service
 
         public override int ObjectCount()
         {
-            return dbEntities.books.Count();
+            return count;//dbEntities.books.Count();
         }
 
         public override object Add(object Obj)

@@ -22,8 +22,10 @@ namespace OurLibrary.Service
             {
                 ObjList.Add(c);
             }
+            count = dbEntities.publishers.Count();
             return ObjList;
         }
+
         public override object Update(object Obj)
         {
             publisher publisher = (publisher)Obj;
@@ -47,7 +49,7 @@ namespace OurLibrary.Service
 
         public override int ObjectCount()
         {
-            return dbEntities.publishers.Count();
+            return count;// dbEntities.publishers.Count();
         }
 
         public override object Add(object Obj)

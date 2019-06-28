@@ -21,6 +21,7 @@ namespace OurLibrary.Service
             {
                 ObjList.Add(c);
             }
+            count = dbEntities.categories.Count();
             return ObjList;
         }
         public override object Update(object Obj)
@@ -46,7 +47,7 @@ namespace OurLibrary.Service
 
         public override int ObjectCount()
         {
-            return dbEntities.categories.Count();
+            return count;// dbEntities.categories.Count();
         }
 
         public override object Add(object Obj)
