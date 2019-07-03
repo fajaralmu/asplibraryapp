@@ -67,6 +67,15 @@ namespace OurLibrary.Web.Admin.Transaction {
         protected global::System.Web.UI.WebControls.Panel PanelBookIssues;
         
         /// <summary>
+        /// PanelTest control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel PanelTest;
+        
+        /// <summary>
         /// ButtonSearch control.
         /// </summary>
         /// <remarks>

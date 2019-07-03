@@ -7,7 +7,7 @@ using System.Web;
 
 namespace OurLibrary.Service
 {
-    public class book_issueService :BaseService
+    public class book_issueService : BaseService
     {
         public book_issueService()
         {
@@ -45,6 +45,68 @@ namespace OurLibrary.Service
             dbEntities.SaveChanges();
         }
 
+        private List<object> ListWithSql(string sql, int limit = 0, int offset = 0)
+        {
+            List<object> book_IssuesList = new List<object>();
+            var book_issues = dbEntities.book_issue
+                .SqlQuery(sql
+                ).
+                Select(book_issue => book_issue);
+            if (limit > 0)
+            {
+                book_issues = book_issues.Skip(offset * limit).Take(limit).ToList();
+            }
+            else
+            {
+                book_issues = book_issues.ToList();
+            }
+            foreach (var bs in book_issues)
+            {
+                book_issue BookIssue = bs;
+                book_IssuesList.Add(BookIssue);
+            }
+            /*  where b.author.name.Contains(val)
+               || b.title.Contains(val) || b.review.Contains(val) || b.author.name.Contains(val)
+
+            || b.category.category_name.Contains(val) || b.publisher.name.Contains(val)
+               select b;*/
+
+            return book_IssuesList;
+        }
+
+        public override List<object> SearchAdvanced(Dictionary<string, object> Params, int limit = 0, int offset = 0)
+        {
+            string id = Params.ContainsKey("id") ? (string)Params["id"] : "";
+            string book_issue_id = Params.ContainsKey("book_issue_id") ? (string)Params["book_issue_id"] : "";
+            string orderby = Params.ContainsKey("orderby") ? (string)Params["orderby"] : "";
+            string ordertype = Params.ContainsKey("ordertype") ? (string)Params["ordertype"] : "";
+
+            string sql = "select * from book_issue " +
+               "left join issue on issue.id = book_issue.issue_id " +
+             " where issue.type ='return'" +
+                " and book_issue.id like '%" + id + "%'" +
+                 " and book_issue.book_issue_id = '" + book_issue_id + "'";
+            if (!orderby.Equals(""))
+            {
+                sql += " ORDER BY " + orderby;
+                if (!ordertype.Equals(""))
+                {
+                    sql += " " + ordertype;
+                }
+            }
+            count = countSQL(sql, dbEntities.book_record);
+            return ListWithSql(sql, limit, offset);
+        }
+
+        public List<book_issue> GetByBookIssueIdReturned(string id)
+        {
+            Dictionary<string, object> Params = new Dictionary<string, object>();
+            Params.Add("book_issue_id", id);
+            List<object> ReturnedBookIssues = SearchAdvanced(Params);
+            return (List<book_issue>)ObjectUtil.ConvertList(ReturnedBookIssues, typeof(List<book_issue>));
+        }
+
+
         public override int ObjectCount()
         {
             return dbEntities.book_issue.Count();
@@ -55,7 +117,7 @@ namespace OurLibrary.Service
             book_issue Book_issue = (book_issue)Obj;
             if (Book_issue.id == null)
                 Book_issue.id = StringUtil.GenerateRandomChar(10);
-            if(Book_issue.qty == null || Book_issue.qty == 0)
+            if (Book_issue.qty == null || Book_issue.qty == 0)
             {
                 Book_issue.qty = 1;
 
@@ -67,7 +129,7 @@ namespace OurLibrary.Service
 
                 Book_issue.book_record = null;
                 book_issue newclass = dbEntities.book_issue.Add(Book_issue);
-               dbEntities.SaveChanges();
+                dbEntities.SaveChanges();
                 return newclass;
             }
             catch (System.Data.Entity.Validation.DbEntityValidationException dbEx)
@@ -88,11 +150,12 @@ namespace OurLibrary.Service
                 }
                 throw raise;
                 //  return null;
-            }catch(System.Data.Entity.Infrastructure.DbUpdateException dbEx)
+            }
+            catch (System.Data.Entity.Infrastructure.DbUpdateException dbEx)
             {
 
                 Exception raise = new Exception(dbEx.StackTrace);
-                
+
                 throw raise;
                 //  return null;
             }

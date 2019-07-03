@@ -63,23 +63,36 @@ namespace OurLibrary.Web.Admin.Transaction
                 Panel PanelIssueItem = new Panel();
                 foreach (book_issue Bs in Issue.book_issue)
                 {
-                    string labelHtml = "<li class=\"book_issue-item\" id=\"Book_Issue_Rec_"+ Bs.id + "\"> Issue Rec Id: " + Bs.id + "<br/>Book Rec Id: " + Bs.book_record_id + "<br/>" + Bs.book_record.book.title + " - returned: " + (Bs.book_record.available == 1).ToString().ToUpper();
-                    if (Bs.book_record.available != 1)
+                    List<book_issue> BooksReturned = BookIssueService.GetByBookIssueIdReturned(Bs.id);
+                    bool BookReturned = BooksReturned.Count == 1;
+                    string labelHtml = "<li class=\"book_issue-item\" id=\"Book_Issue_Rec_" + Bs.id
+                        + "\"> Issue Rec Id: " + Bs.id + "<br/>Book Rec Id: "
+                        + Bs.book_record_id + "<br/>"
+                        + Bs.book_record.book.title + " - returned: " + BookReturned;
+
+                    if (!BookReturned)
                     {
                         string[] Attrs = new string[]
                         {
                             "href=\"#\"",
                             "onclick=SetTextInput('"+Bs.id+"','MainContent_TextBoxIssueRecordId')"
                         };
-                        string buttonHtml = ControlUtil.GenerateHtmlTag("a", Attrs, " return now ");
-                        labelHtml += buttonHtml;
+                        string anchor = ControlUtil.GenerateHtmlTag("a", Attrs, " return now ");
+                        labelHtml +=  "<br/>"+anchor;
+                        BookStillIssued++;
+                    }
+                    else
+                    {
+                        string[] Attrs = new string[] {
+                            "class=\"pointerable\"",
+                            "onclick=\"ScrollToElement('Book_Return_Rec_" + BooksReturned[0].id + "')\""
+                        };
+                        string anchor = ControlUtil.GenerateHtmlTag("span", Attrs, BooksReturned[0].id);
+                        labelHtml += "<br/> Return ref: " + anchor;
                     }
                     labelHtml += "</li>";
                     PanelIssueItem.Controls.Add(ControlUtil.GenerateLabel(labelHtml));
-                    if (Bs.book_record.available != 1)
-                    {
-                        BookStillIssued++;
-                    }
+
                 }
                 PanelIssue.Controls.Add(PanelIssueItem);
                 DateTime MaxReturn = DateUtil.PlusDay(Issue.date, int.Parse(TextBoxDuration.Text));
@@ -91,9 +104,9 @@ namespace OurLibrary.Web.Admin.Transaction
                 PanelIssue.Controls.Add(ControlUtil.GenerateLabel("</ol>Max return: " + MaxReturn + ", Late:" + Late + "<hr/>"));
                 PanelIssueLis.Controls.Add(PanelIssue);
             }
-           
+
             issueCount.InnerHtml = BookStillIssued.ToString();
-            
+           
             //BOOK RETURNED
             No = 0;
             PanelIssueReturn.Controls.Clear();
@@ -108,44 +121,44 @@ namespace OurLibrary.Web.Admin.Transaction
                 Panel PanelIssue = new Panel();
                 PanelIssue.Controls.Add(ControlUtil.GenerateLabel("<b>" + No + ". Issue ID: " + Issue.id + " (" + Issue.type + ")</b><br/>date: " + Issue.date + "<ol>"));
                 Panel PanelIssueItem = new Panel();
-               
-              foreach (book_issue Bs in Issue.book_issue)
+                
+                foreach (book_issue Bs in Issue.book_issue)
                 {
                    
                     Bs.book_issue2 = (book_issue)BookIssueService.GetById(Bs.book_issue_id);
                     if (null != Bs.book_issue2)
                     {
-                       
-                        DateTime MaxReturn = DateUtil. PlusDay(Bs.book_issue2.issue.date, int.Parse(TextBoxDuration.Text));
-                       
+
+
+                        book_issue BookIssueRef = Bs.book_issue2;
+                        issue IssueRef = (issue)IssueService.GetById(BookIssueRef.issue_id);
+                        DateTime IssuedDate = IssueRef.date;
+                        DateTime MaxReturn = DateUtil.PlusDay(IssuedDate, int.Parse(TextBoxDuration.Text));
+                      
                         bool Late = false;
                         if (Issue.date.CompareTo(MaxReturn) > 0)
                         {
                             Late = true;
                         }
-
+                        
                         string[] Attrs = new string[] {
                             "class=\"pointerable\"",
                             "onclick=\"ScrollToElement('Book_Issue_Rec_" + Bs.book_issue_id + "')\""
                         };
                         string anchor = ControlUtil.GenerateHtmlTag("span", Attrs, Bs.book_issue_id);
-                       
-                        Bs.book_issue2.issue = (issue)IssueService.GetById(Bs.book_issue2.issue_id);
-
-                       
-
-                        PanelIssueItem.Controls.Add(ControlUtil.GenerateLabel("<li> Return Rec Id: " + Bs.id + "<br/>Book Rec Id: "
+                      
+                        PanelIssueItem.Controls.Add(ControlUtil.GenerateLabel("<li class=\"book_issue-item\" id=\"Book_Return_Rec_" + Bs.id
+                        + "\"> Return Rec Id: " + Bs.id + "<br/>Book Rec Id: "
                             + Bs.book_record_id + " - Returned From Issue Rec Id: " + anchor +
                             "<br/>" + Bs.book_record.book.title
-                            + " - returned: " + (Bs.book_record.available == 1).ToString().ToUpper()
-                            + "<br/>Issued: " + Bs.book_issue2.issue.date + "<br/>Max return: " + MaxReturn + " - late: " + Late
+                            + "<br/>Issued: " + IssuedDate + "<br/>Max return: " + MaxReturn + " - late: " + Late
                             + "</li>"));
-                        
+
 
                     }
-                   
+
                 }
-               
+
 
                 PanelIssue.Controls.Add(PanelIssueItem);
                 PanelIssue.Controls.Add(ControlUtil.GenerateLabel("</ol><hr/>"));
@@ -155,6 +168,7 @@ namespace OurLibrary.Web.Admin.Transaction
 
         protected void ButtonSearch_Click(object sender, EventArgs e)
         {
+
             string ID = TextBoxStudentID.Text;
             Dictionary<string, object> ParamsIssue = new Dictionary<string, object>();
             ParamsIssue.Add("student_id", ID);
@@ -194,10 +208,11 @@ namespace OurLibrary.Web.Admin.Transaction
             }
         }
 
-        
+
 
         protected void ButtonReturn_Click(object sender, EventArgs e)
         {
+           
             book_issue BS = new book_issue();
             BS.id = StringUtil.GenerateRandomChar(10);
             BS.book_issue_id = (TextBoxIssueRecordId.Text.Trim());
@@ -211,20 +226,20 @@ namespace OurLibrary.Web.Admin.Transaction
                 string StudentId = TextBoxStudentID.Text;
 
 
-                if (null != reffBookIssue && reffBookIssue.book_record.available == (0))
+                if (null != reffBookIssue && BookIssueService.GetByBookIssueIdReturned(reffBookIssue.id).Count == 0)
                 {
-                   
+
                     BS.book_issue2 = reffBookIssue;
                     BS.book_record = reffBookIssue.book_record;
                     BookIssuesReturn.Add(BS);
                 }
 
             }
-            ButtonSearch_Click(sender, e);
 
+            ButtonSearch_Click(sender, e);
             ViewState["BookIssuesReturn"] = BookIssuesReturn;
             PopulateBookIssues();
-           
+
         }
 
         protected void ButtonSubmitReturn_Click(object sender, EventArgs e)
@@ -276,7 +291,7 @@ namespace OurLibrary.Web.Admin.Transaction
                 IssuesReturn = new List<issue>();
                 BookIssuesReturn = new List<book_issue>();
                 PopulateBookIssues();
-                AlertMessage("Sukses mengembalikan buku "+IssueID);
+                AlertMessage("Sukses mengembalikan buku " + IssueID);
                 //ButtonClearList_Click(sender, e);
 
             }
@@ -290,7 +305,7 @@ namespace OurLibrary.Web.Admin.Transaction
         private void PopulateBookIssues()
         {
             PanelBookIssues.Controls.Clear();
-
+           // PanelBookIssues.Controls.Add(ControlUtil.GenerateLabel("test"));
             foreach (book_issue b in BookIssuesReturn)
             {
                 Panel PanelItem = new Panel();
@@ -303,6 +318,7 @@ namespace OurLibrary.Web.Admin.Transaction
                 DeleteButton.CommandArgument = b.id;
                 DeleteButton.Click += new EventHandler(DeleteReturnItem);
                 PanelItem.Controls.Add(DeleteButton);
+              //  PanelBookIssues.Controls.Add(PanelItem);
                 PanelBookIssues.Controls.Add(PanelItem);
             }
 

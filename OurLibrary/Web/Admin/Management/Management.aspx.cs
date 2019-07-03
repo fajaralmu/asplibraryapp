@@ -98,7 +98,7 @@ namespace OurLibrary.Web.Admin.Management
 
                 Offset = (int)Session[PageParameter.PagingOffset];
             }
-            
+
         }
 
         private void PopulateNavigation()
@@ -550,27 +550,27 @@ namespace OurLibrary.Web.Admin.Management
                         {
                             LinkButton ASCButton = new LinkButton();
                             LinkButton DESCButton = new LinkButton();
-                           
+
                             ASCButton.Text = "&#8657;";
                             DESCButton.Text = "&#8659;";
-                           
+
                             string OrderByField = ObjectName.ToLower() + "." + PropsInfo.Name;
-    
+
                             ASCButton.ID = "asc_" + OrderByField;
                             DESCButton.ID = "desc_" + OrderByField;
-                            
+
                             ASCButton.CausesValidation = false;
                             DESCButton.CausesValidation = false;
-                            
+
                             ASCButton.CommandArgument = "asc~" + OrderByField;
                             DESCButton.CommandArgument = "desc~" + OrderByField;
-                                                       
+
                             ASCButton.Click += new EventHandler(ButtonOrderClick);
                             DESCButton.Click += new EventHandler(ButtonOrderClick);
-                            
+
                             HeaderCell.Controls.Add(ASCButton);
                             HeaderCell.Controls.Add(DESCButton);
-                           
+
                         }
 
                         HeaderCell.Controls.Add(SearchButton);
@@ -603,10 +603,10 @@ namespace OurLibrary.Web.Admin.Management
                 object[] ParamsAdv = { ParamsAdvance, Limit, Offset };
                 Params = ParamsAdv;
                 FetchMethod = "SearchAdvanced";
-               
+
             }
 
-            if(Session[SEARCH_BY + ObjectName] != null && Session[SEARCH_BY + ObjectName].GetType() == typeof(string))
+            if (Session[SEARCH_BY + ObjectName] != null && Session[SEARCH_BY + ObjectName].GetType() == typeof(string))
             {
                 string[] SearchKeys = ((string)Session[SEARCH_BY + ObjectName]).Split('~');
                 string FieldName = SearchKeys[0];
@@ -628,22 +628,22 @@ namespace OurLibrary.Web.Admin.Management
                 TRow.TableSection = TableRowSection.TableBody;
                 TableCell TCellNo = new TableCell();
                 TableCell TCellOption = new TableCell();
-                Button EditButton = new Button();
-                Button DeleteButton = new Button();
+                LinkButton EditButton = new LinkButton();
+                LinkButton DeleteButton = new LinkButton();
 
-                EditButton.Text = "edit";
+                EditButton.Text = "<span class=\"glyphicon glyphicon-edit\"></span>";
                 EditButton.CssClass = "btn btn-warning";
 
                 EditButton.CausesValidation = false;
-                EditButton.UseSubmitBehavior = false;
+                // EditButton.UseSubmitBehavior = false;
                 //  EditButton.PostBackUrl = URL + "?id=" + p.id;
                 //EditButton.CommandArgument = obj.id;
 
 
-                DeleteButton.Text = "delete";
+                DeleteButton.Text = "<span class=\"glyphicon glyphicon-trash\"></span>";
                 DeleteButton.CssClass = "btn btn-danger";
                 DeleteButton.CausesValidation = false;
-                DeleteButton.UseSubmitBehavior = false;
+                //   DeleteButton.UseSubmitBehavior = false;
                 //DeleteButton.CommandArgument = obj.id;
 
 
@@ -708,7 +708,6 @@ namespace OurLibrary.Web.Admin.Management
                                 EditButton.CommandArgument = PropValue.ToString();
                                 DeleteButton.CommandArgument = PropValue.ToString();
                                 EditButton.Click += new EventHandler(BtnEditClick);
-                                EditButton.Text = "Edit";
                                 DeleteButton.Click += new EventHandler(BtnDeleteClick);
                             }
                             else if (Attribute.FieldType.Equals(AttributeConstant.TYPE_SEARCHLIST))
@@ -747,7 +746,7 @@ namespace OurLibrary.Web.Admin.Management
         protected override void UpdateList()
         {
             nav_info.InnerText = "Offset:" + Offset + ", Limit:" + Limit + ", from updateList";
-           
+
             PopulateListTable();
             UpdateNavigation();
         }
@@ -887,7 +886,7 @@ namespace OurLibrary.Web.Admin.Management
                 string[] Inputs = Input.Split('~');
                 string FieldName = Inputs[0];
                 string TextBoxId = Inputs[1];
-               TextBox FilterBox = (TextBox) TableList.FindControl(TextBoxId);
+                TextBox FilterBox = (TextBox)TableList.FindControl(TextBoxId);
                 if (null != FilterBox)
                 {
                     string SessionVal = FieldName + "~" + FilterBox.Text;
@@ -990,7 +989,7 @@ namespace OurLibrary.Web.Admin.Management
         private void BtnEditClick(object sender, EventArgs e)
         {
             System.Diagnostics.Debug.WriteLine("BtnEdit");
-            Button Btn = (Button)sender;
+            LinkButton Btn = (LinkButton)sender;
             if (Btn != null)
             {
                 string Id = Btn.CommandArgument;
@@ -1011,7 +1010,7 @@ namespace OurLibrary.Web.Admin.Management
         private void BtnDeleteClick(object sender, EventArgs e)
         {
             //  Request.Params["id"]
-            Button Btn = (Button)sender;
+            LinkButton Btn = (LinkButton)sender;
             if (Btn != null)
             {
                 string Id = Btn.CommandArgument;

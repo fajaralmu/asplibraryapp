@@ -26,6 +26,8 @@
                         </td>
                         <td rowspan="3">
                             <asp:Panel ID="PanelBookIssues" runat="server"></asp:Panel>
+                             <asp:Panel ID="PanelTest" runat="server">
+                            </asp:Panel>
                         </td>
                     </tr>
                     <tr>
@@ -58,10 +60,12 @@
                             <hr />
                             <asp:Panel ID="PanelIssueReturn" runat="server">
                             </asp:Panel>
+
                         </td>
                     </tr>
                 </table>
             </asp:Panel>
+           
         </ContentTemplate>
     </asp:UpdatePanel>
     <script type="text/javascript">
