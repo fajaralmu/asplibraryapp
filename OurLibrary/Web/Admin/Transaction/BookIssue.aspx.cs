@@ -3,6 +3,7 @@ using OurLibrary.Service;
 using OurLibrary.Util.Common;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -23,7 +24,7 @@ namespace OurLibrary.Web.Admin.Transaction
         private List<string> strings = new List<string>();
         private string TitleKeyWord = "";
         private List<book_issue> BookIssues = new List<book_issue>();
-
+        private student CurrentStudent;
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Session["user"] == null || !userService.IsValid((user)Session["user"]))
@@ -34,31 +35,44 @@ namespace OurLibrary.Web.Admin.Transaction
             {
                 LoggedUser = (user)Session["user"];
                 info.InnerText = "Postback: " + Page.IsPostBack;
-                InitPage();
+                 InitPage();
+               
+               
+
                 if (Request.QueryString["book_master_id"] != null && !((string)Request.QueryString["book_master_id"]).Equals(""))
                 {
                     ShowCurrentBook((string)Request.QueryString["book_master_id"]);
                 }
-                //if (ViewState["GenerateListBook"] != null && ((bool)ViewState["GenerateListBook"]) == true)
+                //if (Session["GenerateListBook"] != null && ((bool)Session["GenerateListBook"]) == true)
                 //{
                 //    generateListBook();
-                //    ViewState["GenerateListBook"] = false;
+                //    Session["GenerateListBook"] = false;
                 //}
 
             }
         }
 
+        private bool IsStudentValid()
+        {
+            return Session["Student_Id"] != null && !Session["Student_Id"].GetType().Equals(typeof(student));
+        }
+
         private void InitPage()
         {
-            if (ViewState["BookIssues"] != null)
+            if (!IsStudentValid())
             {
-                BookIssues = (List<book_issue>)ViewState["BookIssues"];
+                return;
+            }
+            CurrentStudent = ((student)Session["Student_Id"]);
+            if (Session["BookIssues_"+CurrentStudent.id] != null)
+            {
+                BookIssues = (List<book_issue>)Session["BookIssues_"+CurrentStudent.id];
                 PopulateBookIssues();
 
             }
-            //if (ViewState["CurrentBook"] != null)
+            //if (Session["CurrentBook_"+CurrentStudent.id]!= null)
             //{
-            //    Book = (book)ViewState["CurrentBook"];
+            //    Book = (book)Session["CurrentBook"];
             //    InputMasterBook.Text = Book.title;
             //    LabelCurrentBook.Text = Book.title + " by " + Book.author.name;
             //}
@@ -66,10 +80,12 @@ namespace OurLibrary.Web.Admin.Transaction
             //{
             //    LabelCurrentBook.Text = "";
             //}
-            if (ViewState["CurrentBookRecord"] != null)
+            if (Session["CurrentBookRecord_"+CurrentStudent.id] != null)
             {
-                BookRecord = (book_record)ViewState["CurrentBookRecord"];
+                BookRecord = (book_record)Session["CurrentBookRecord_"+CurrentStudent.id];
             }
+          //  TextBoxStudentID.Text = CurrentStudent.id;
+            idStd.InnerHtml = "id: " + CurrentStudent.id + " name: " + CurrentStudent.name;
             AlertMessage(null);
         }
 
@@ -96,6 +112,9 @@ namespace OurLibrary.Web.Admin.Transaction
 
         protected void DeleteIssueItem(object sender, EventArgs e)
         {
+            if(!IsStudentValid()){
+                return;
+            }
             Button Btn = (Button)sender;
             if (Btn != null)
             {
@@ -112,15 +131,19 @@ namespace OurLibrary.Web.Admin.Transaction
                     }
                 }
             }
-            ViewState["BookIssues"] = BookIssues;
+            Session["BookIssues_"+CurrentStudent.id] = BookIssues;
             PopulateBookIssues();
         }
 
         protected void ButtonSearchMasterBook_Click(object sender, EventArgs e)
         {
-            ViewState["CurrentBook"] = null;
+            if (!IsStudentValid())
+            {
+                return;
+            }
+            Session["CurrentBook_"+CurrentStudent.id]= null;
             Book = null;
-            ViewState["GenerateListBook"] = true;
+            Session["GenerateListBook"] = true;
             TitleKeyWord = InputMasterBook.Text;
             GenerateListBook();
             if (BookList == null || BookList.Count <= 0)
@@ -133,6 +156,10 @@ namespace OurLibrary.Web.Admin.Transaction
 
         protected void ShowCurrentBook(string id)
         {
+            if (!IsStudentValid())
+            {
+                return;
+            }
             PanelBookList.Controls.Clear();
             if (id != null && !id.Equals(""))
             {
@@ -144,7 +171,7 @@ namespace OurLibrary.Web.Admin.Transaction
                 }
                 //  InputMasterBook.Text = Book.title;
                 LabelCurrentBook.Text = Book.title + " by " + Book.author.name;
-                ViewState["CurrentBook"] = Book;
+                Session["CurrentBook_"+CurrentStudent.id]= Book;
                 CheckAvailability();
             }
             Book = null;
@@ -208,6 +235,10 @@ namespace OurLibrary.Web.Admin.Transaction
 
         protected void ButtonSave_Click(object sender, EventArgs e)
         {
+            if (!IsStudentValid())
+            {
+                return;
+            }
             book_issue BS = new book_issue();
             BS.id = StringUtil.GenerateRandomChar(10);
             BS.book_record_id = (TextBoxRecordId.Text.Trim());
@@ -222,18 +253,42 @@ namespace OurLibrary.Web.Admin.Transaction
 
             }
 
-            ViewState["BookIssues"] = BookIssues;
+            Session["BookIssues_"+CurrentStudent.id] = BookIssues;
             PopulateBookIssues();
         }
 
         protected void ButtonClearList_Click(object sender, EventArgs e)
         {
+            Session["Student_Id"] = null;
             BookIssues = new List<book_issue>();
-            ViewState["BookIssues"] = null;
+            NameObjectCollectionBase.KeysCollection Keys = Session.Keys;
+            for (int i = 0;i<  Keys.Count;i++)
+            {
+                string key = Keys[i];
+                if (key.Contains("BookIssues_"))
+                {
+                    Session[key] = null;
+                    Book = null;
+                }
+
+                if (key.Contains("CurrentBook_"))
+                {
+                    Session[key] = null;
+                    BookRecord = null;
+                }
+
+                if (key.Contains("CurrentBookRecord_"))
+                {
+                    Session[key] = null;
+                   
+                }
+               
+            }
+            /*Session["BookIssues_"+CurrentStudent.id] = null;
             Book = null;
-            ViewState["CurrentBook"] = null;
+            Session["CurrentBook_"+CurrentStudent.id]= null;
             BookRecord = null;
-            ViewState["CurrentBookRecord"] = null;
+            Session["CurrentBookRecord_"+CurrentStudent.id] = null;*/
             TextBoxStudentID.Text = "";
             PanelBookIssues.Controls.Clear();
             PanelBookList.Controls.Clear();
@@ -247,14 +302,13 @@ namespace OurLibrary.Web.Admin.Transaction
         {
             foreach (book_issue bs in BookIssues)
             {
-                if (bs.book_issue_id.Equals(IssId))
+                if (bs.book_issue_id!=null && bs.book_issue_id.Equals(IssId))
                 {
                     return true;
                 }
             }
             return false;
         }
-
         protected void ButtonSaveIssue_Click(object sender, EventArgs e)
         {
             if (BookIssues == null || BookIssues.Count == 0)
@@ -316,5 +370,19 @@ namespace OurLibrary.Web.Admin.Transaction
             info.InnerHtml = ControlUtil.GenerateHtmlTag("p", null, Message);
         }
 
+        protected void ButtonSearchStd_Click(object sender, EventArgs e)
+        {
+            string StudentID = TextBoxStudentID.Text;
+            if (!StudentID.Equals(""))
+            {
+                student STD =(student) StudentService.GetById(StudentID);
+                if(STD != null)
+                {
+                    Session["Student_Id"] = STD;
+                    CurrentStudent = STD;
+                    idStd.InnerHtml = "id: "+STD.id + " name: " + STD.name;
+                }
+            }
+        }
     }
 }

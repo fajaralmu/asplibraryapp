@@ -11,7 +11,7 @@ namespace OurLibrary.Service
 {
     public class BookService : BaseService
     {
-        
+
 
         public BookService()
         {
@@ -41,7 +41,6 @@ namespace OurLibrary.Service
 
         public book GetCompleteBook(string ID)
         {
-
             try
             {
                 var DBBook = dbEntities.books
@@ -73,7 +72,7 @@ namespace OurLibrary.Service
             }
         }
 
-        private List<object> ListWithSql(string sql, int limit =0, int offset = 0)
+        private List<object> ListWithSql(string sql, int limit = 0, int offset = 0)
         {
             List<object> bookList = new List<object>();
             var books = dbEntities.books
@@ -86,9 +85,11 @@ namespace OurLibrary.Service
                     author = dbEntities.authors.Where(a => a.id.Equals(book.author_id)).Select(p => p).FirstOrDefault(),
                     category = dbEntities.categories.Where(c => c.id.Equals(book.category_id)).Select(p => p).FirstOrDefault()
                 });
-            if (limit > 0) {
-               books = books.Skip(offset*limit).Take(limit) .ToList();
-            }else
+            if (limit > 0)
+            {
+                books = books.Skip(offset * limit).Take(limit).ToList();
+            }
+            else
             {
                 books = books.ToList();
             }
@@ -108,23 +109,25 @@ namespace OurLibrary.Service
                 bookList.Add(Book);
             }
 
-            return  bookList;
+            return bookList;
         }
 
-        public override List<object> SearchAdvanced(Dictionary<string, object> Params, int limit=0, int offset =0)
+        public override List<object> SearchAdvanced(Dictionary<string, object> Params, int limit = 0, int offset = 0)
         {
 
             string id = Params.ContainsKey("id") ? (string)Params["id"] : "";
-            string title = Params.ContainsKey("title")  ? (string) Params["title"] : "";
-            string publisher = Params.ContainsKey("publisher")  ? (string)Params["publisher"] : "";
-            string category = Params.ContainsKey("category")  ? (string)Params["category"] : "";
-            string author = Params.ContainsKey("author")  ? (string)Params["author"] : "";
+            string title = Params.ContainsKey("title") ? (string)Params["title"] : "";
+            string publisher = Params.ContainsKey("publisher") ? (string)Params["publisher"] : "";
+            string category = Params.ContainsKey("category") ? (string)Params["category"] : "";
+            string author = Params.ContainsKey("author") ? (string)Params["author"] : "";
             string page = Params.ContainsKey("page") ? (string)Params["page"] : "";
             string review = Params.ContainsKey("review") ? (string)Params["review"] : "";
             string orderby = Params.ContainsKey("orderby") ? (string)Params["orderby"] : "";
             string ordertype = Params.ContainsKey("ordertype") ? (string)Params["ordertype"] : "";
+
             int pageInt = 0;
             int.TryParse(page, out pageInt);
+
             string sql = "select * from book " +
                "left join author on author.id = book.author_id " +
                "left join publisher on publisher.id = book.publisher_id " +
@@ -134,7 +137,7 @@ namespace OurLibrary.Service
                 " and book.id like '%" + id + "%'" +
                 " and book.review like '%" + review + "%'" +
                " and publisher.name like '%" + publisher + "%'" +
-               " and category.category_name like '%" +category + "%'" +
+               " and category.category_name like '%" + category + "%'" +
                " and author.name like  '%" + author + "%'";
             if (!orderby.Equals(""))
             {
@@ -148,7 +151,7 @@ namespace OurLibrary.Service
             return ListWithSql(sql, limit, offset);
         }
 
-        public List<object> SearchBookUniversal(string val, int limit=0, int offset=0)
+        public List<object> SearchBookUniversal(string val, int limit = 0, int offset = 0)
         {
             string sql = "select * from book " +
                 "left join author on author.id = book.author_id " +

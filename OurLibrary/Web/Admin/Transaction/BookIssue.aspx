@@ -12,9 +12,10 @@
 
                 <table class="nav-justified" style="height: 108px">
                     <tr>
-                        <td style="width: 124px">Sudent ID</td>
+                        <td style="width: 124px">Sudent ID (<span id="idStd" runat="server"></span>)</td>
                         <td style="width: 174px">
                             <asp:TextBox ID="TextBoxStudentID" runat="server"></asp:TextBox>
+                            <asp:Button UseSubmitBehavior="false" CausesValidation="false" ID="ButtonSearchStd" runat="server" OnClick="ButtonSearchStd_Click" Text="Search Student" />
                         </td>
                         <td style="width: 275px">
                             <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" ControlToValidate="TextBoxStudentID" ErrorMessage="Student Id Required" ForeColor="Red"></asp:RequiredFieldValidator>

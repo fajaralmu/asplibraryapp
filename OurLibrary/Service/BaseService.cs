@@ -34,7 +34,7 @@ namespace OurLibrary.Service
 
         public virtual int ObjectCount()
         {
-            return 0;
+            return count;
         }
 
         public virtual object Add(object Obj)
@@ -49,7 +49,7 @@ namespace OurLibrary.Service
 
         public virtual int countSQL(string sql, object dbSet)
         {
-            return 0;
+            return count;
         }
 
         public virtual int getCountSearch()

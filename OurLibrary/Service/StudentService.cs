@@ -146,7 +146,7 @@ namespace OurLibrary.Service
             string name = Params.ContainsKey("name") ? (string)Params["name"] : "";
             string email = Params.ContainsKey("email") ? (string)Params["email"] : "";
             string address = Params.ContainsKey("address") ? (string)Params["address"] : "";
-            string @class = Params.ContainsKey("class_name") ? (string)Params["class_name"] : "";
+            string @class = Params.ContainsKey("class") ? (string)Params["class"] : "";
             string orderby = Params.ContainsKey("orderby") ? (string)Params["orderby"] : "";
             string ordertype = Params.ContainsKey("ordertype") ? (string)Params["ordertype"] : "";
 

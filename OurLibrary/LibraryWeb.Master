@@ -70,7 +70,7 @@
             </asp:ContentPlaceHolder>
             <hr />
             <footer>
-                <p>&copy;<%: DateTime.Now.Year %> - ASP.NET Application</p>
+                <p>&copy;<%: DateTime.Now.Year %> - Created By ASP.NET Application</p>
             </footer>
         </div>
     </form>

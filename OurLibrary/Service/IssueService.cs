@@ -2,6 +2,7 @@
 using OurLibrary.Util.Common;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 
@@ -16,12 +17,13 @@ namespace OurLibrary.Service
         public override List<object> ObjectList(int offset, int limit)
         {
             List<object> ObjList = new List<object>();
-            var Sql = (from p in dbEntities.issues select p);
+            var Sql = (from issue in dbEntities.issues orderby issue.id select issue);
             List<issue> List = Sql.Skip(offset * limit).Take(limit).ToList();
-            foreach (issue c in List)
+            foreach (issue issue in List)
             {
-                ObjList.Add(c);
+                ObjList.Add(issue);
             }
+            count = dbEntities.issues.Count();
             return ObjList;
         }
         public override object Update(object Obj)
@@ -47,7 +49,7 @@ namespace OurLibrary.Service
 
         public override int ObjectCount()
         {
-            return dbEntities.issues.Count();
+            return count;
         }
 
         public override object Add(object Obj)
@@ -92,13 +94,42 @@ namespace OurLibrary.Service
 
         public override List<object> SearchAdvanced(Dictionary<string, object> Params, int limit = 0, int offset = 0)
         {
-
+            bool exactSearch = false;
+            if(Params.ContainsKey("exact")  && Params["exact"].GetType().Equals(typeof(bool))){
+                if(((bool) Params["exact"])){
+                    exactSearch = true;
+                }
+            }
+            string id = Params.ContainsKey("id") ? (string)Params["id"] : "";
+            string date = Params.ContainsKey("date") ? (string)Params["date"] : "";
+            string user_id = Params.ContainsKey("user_id") ? (string)Params["user_id"] : "";
+            string additional_info = Params.ContainsKey("additional_info") ? (string)Params["additional_info"] : "";
             string student_id = Params.ContainsKey("student_id") ? (string)Params["student_id"] : "";
             string type = Params.ContainsKey("type") ? (string)Params["type"] : "";
-            string sql = "select * from issue " +
-                "where student_id = '" + student_id + "'" +
-                "and type like '%" + type + "%' order by date desc";
+            string orderby = Params.ContainsKey("orderby") ? (string)Params["orderby"] : "";
+            string ordertype = Params.ContainsKey("ordertype") ? (string)Params["ordertype"] : "";
 
+            string filter_student_sql = exactSearch ? " student_id = '" + student_id + "'" : " student_id like '%" + student_id + "%'";
+
+
+            string sql = "select * from issue " +
+                "where "+
+                    filter_student_sql+
+                " and id like '%" + id + "%'" +
+                " and user_id like '%" + user_id + "%'" +
+                " and date like '%" + date + "%'" +
+                " and addtional_info like '%" + additional_info + "%'" +
+                " and type like '%" + type + "%' ";
+
+            if (!orderby.Equals(""))
+            {
+                sql += " ORDER BY " + orderby;
+                if (!ordertype.Equals(""))
+                {
+                    sql += " " + ordertype;
+                }
+            }
+            count = countSQL(sql, dbEntities.issues);
             return ListWithSql(sql, limit, offset);
         }
 
@@ -135,7 +166,7 @@ namespace OurLibrary.Service
                 issue Issue = new issue();
                 Issue = i.issue;
                 Issue.book_issue = new List<book_issue>();
-                foreach(var bi in i.book_issue)
+                foreach (var bi in i.book_issue)
                 {
                     book_issue BookIssue = new book_issue();
                     BookIssue = bi.bi;
@@ -147,6 +178,12 @@ namespace OurLibrary.Service
             }
 
             return issueList;
+        }
+
+        public override int countSQL(string sql, object dbSet)
+        {
+            return ((DbSet<issue>)dbSet)
+                .SqlQuery(sql).Count();
         }
 
     }

@@ -22,6 +22,15 @@ namespace OurLibrary.Web.Admin.Transaction {
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl info;
         
         /// <summary>
+        /// idStd control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl idStd;
+        
+        /// <summary>
         /// TextBoxStudentID control.
         /// </summary>
         /// <remarks>
@@ -29,6 +38,15 @@ namespace OurLibrary.Web.Admin.Transaction {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox TextBoxStudentID;
+        
+        /// <summary>
+        /// ButtonSearchStd control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button ButtonSearchStd;
         
         /// <summary>
         /// RequiredFieldValidator2 control.

@@ -172,12 +172,14 @@ namespace OurLibrary.Web.Admin.Transaction
             string ID = TextBoxStudentID.Text;
             Dictionary<string, object> ParamsIssue = new Dictionary<string, object>();
             ParamsIssue.Add("student_id", ID);
+            ParamsIssue.Add("exact", true);
             ParamsIssue.Add("type", "issue");
             List<object> ObjList = IssueService.SearchAdvanced(ParamsIssue);
             Issues = (List<issue>)ObjectUtil.ConvertList(ObjList, typeof(List<issue>));
 
             Dictionary<string, object> ParamsReturn = new Dictionary<string, object>();
             ParamsReturn.Add("student_id", ID);
+            ParamsReturn.Add("exact", true);
             ParamsReturn.Add("type", "return");
             List<object> ObjList2 = IssueService.SearchAdvanced(ParamsReturn);
             IssuesReturn = (List<issue>)ObjectUtil.ConvertList(ObjList2, typeof(List<issue>));

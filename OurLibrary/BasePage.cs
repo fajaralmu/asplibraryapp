@@ -80,13 +80,13 @@ namespace OurLibrary
                 Session["SearchBy_MNG_" + ObjectName] = null;
             }
             System.Collections.Specialized.NameObjectCollectionBase.KeysCollection Keys = Session.Keys;
-            foreach (string Key in Keys)
+            for(int i =0;i<Keys.Count;i++)
             {
-               
-                if (Key.ToString().Contains("OrderBy_MNG_") ||
-                    Key.ToString().Contains("OrderType_MNG_"))
+                string Key = Keys[i];
+                if (Key.Contains("OrderBy_MNG_") ||
+                    Key.Contains("OrderType_MNG_"))
                 {
-                  //  Session[Key.ToString()] = null;
+                    Session[Key] = null;
                 }
             }
         }

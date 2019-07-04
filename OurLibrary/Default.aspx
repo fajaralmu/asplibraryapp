@@ -5,7 +5,7 @@
     <div class="jumbotron">
         <h1>Library</h1>
         <p class="lead">A Library Management System is a software built to handle the primary housekeeping functions of a library</p>
-        <p><a  href="~/Web/Doc/Home.aspx"class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+        <p><a  href="/Web/Doc/Home.aspx"class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
     </div>
 
     <div class="row">
