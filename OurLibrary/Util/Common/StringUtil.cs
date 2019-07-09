@@ -124,6 +124,21 @@ namespace OurLibrary.Util.Common
             return result;
         }
 
-       
+        public static bool NotNullAndNotBlank(object Obj)
+        {
+            if(Obj != null && !Obj.ToString().Equals(""))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public static bool NotNullAndNotBlankAndTypeOf(object Obj, Type t)
+        {
+            if (NotNullAndNotBlank(Obj) && Obj.GetType().Equals((t))){
+                return true;
+            }
+            return false;
+        }
     }
 }

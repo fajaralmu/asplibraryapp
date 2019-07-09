@@ -22,7 +22,15 @@ namespace OurLibrary.Service
         {
             List<object> ObjList = new List<object>();
             var Sql = (from p in dbEntities.books orderby p.title select p);
-            List<book> List = Sql.Skip(offset * limit).Take(limit).ToList();
+            List<book> List;
+            if (limit > 0)
+            {
+                List = Sql.Skip(offset * limit).Take(limit).ToList();
+            }
+            else
+            {
+                List= Sql.ToList();
+            }
             foreach (book c in List)
             {
                 ObjList.Add(c);

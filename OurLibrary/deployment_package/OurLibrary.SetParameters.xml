@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <setParameter name="IIS Web Application Name" value="Our Library" />
+  <setParameter name="DefaultConnection-Web.config Connection String" value="Data Source=(LocalDb)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\aspnet-OurLibrary-20190520123404.mdf;Initial Catalog=aspnet-OurLibrary-20190520123404;Integrated Security=True" />
+  <setParameter name="library_dbEntities-Web.config Connection String" value="metadata=res://*/Models.LibraryModel.csdl|res://*/Models.LibraryModel.ssdl|res://*/Models.LibraryModel.msl;provider=System.Data.SqlClient;provider connection string=&quot;data source=FAJAR-PC\SQLEXPRESS;initial catalog=library_db;persist security info=True;user id=sa;password=fjrmnwwr;MultipleActiveResultSets=True;App=EntityFramework&quot;" />
+  <setParameter name="library_dbEntities1-Web.config Connection String" value="metadata=res://*/Models.LibraryModel.csdl|res://*/Models.LibraryModel.ssdl|res://*/Models.LibraryModel.msl;provider=System.Data.SqlClient;provider connection string=&quot;data source=FAJAR-PC\SQLEXPRESS;initial catalog=library_db;persist security info=True;user id=sa;password=fjrmnwwr;multipleactiveresultsets=True;application name=EntityFramework&quot;" />
+  <setParameter name="LibraryEntities-Web.config Connection String" value="metadata=res://*/Models.LibraryModel.csdl|res://*/Models.LibraryModel.ssdl|res://*/Models.LibraryModel.msl;provider=System.Data.SqlClient;provider connection string=&quot;data source=FAJAR-PC\SQLEXPRESS;initial catalog=library_db;persist security info=True;user id=sa;password=fjrmnwwr;multipleactiveresultsets=True;application name=EntityFramework&quot;" />
+</parameters>

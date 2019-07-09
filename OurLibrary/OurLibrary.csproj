@@ -76,6 +76,10 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -120,10 +124,6 @@
     <Reference Include="Antlr3.Runtime">
       <Private>True</Private>
       <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <Private>True</Private>
-      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.Web.Optimization.WebForms">
       <Private>True</Private>
@@ -230,6 +230,8 @@
     <Content Include="Web\Admin\Management\PublisherManagement.aspx" />
     <Content Include="Web\Admin\Transaction\BookIssue.aspx" />
     <Content Include="Web\Admin\Transaction\CheckStudentIssue.aspx" />
+    <Content Include="Web\API\CheckUser.aspx" />
+    <Content Include="Web\API\Info.aspx" />
     <Content Include="Web\API\VisitInfo.aspx" />
     <Content Include="Web\Catalog\BookDetail.aspx" />
     <Content Include="Web\Catalog\Default.aspx" />
@@ -243,6 +245,7 @@
     <Content Include="Models\LibraryModel.edmx.diagram">
       <DependentUpon>LibraryModel.edmx</DependentUpon>
     </Content>
+    <None Include="Properties\PublishProfiles\Library App.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\ai.0.22.9-build00167.js" />
     <Content Include="Scripts\ai.0.22.9-build00167.min.js" />
@@ -578,6 +581,20 @@
     </Compile>
     <Compile Include="Web\Admin\Transaction\CheckStudentIssue.aspx.designer.cs">
       <DependentUpon>CheckStudentIssue.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Web\API\CheckUser.aspx.cs">
+      <DependentUpon>CheckUser.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Web\API\CheckUser.aspx.designer.cs">
+      <DependentUpon>CheckUser.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Web\API\Info.aspx.cs">
+      <DependentUpon>Info.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Web\API\Info.aspx.designer.cs">
+      <DependentUpon>Info.aspx</DependentUpon>
     </Compile>
     <Compile Include="Web\API\VisitInfo.aspx.cs">
       <DependentUpon>VisitInfo.aspx</DependentUpon>
