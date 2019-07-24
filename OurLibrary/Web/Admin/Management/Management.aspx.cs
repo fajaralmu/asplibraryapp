@@ -16,7 +16,7 @@ using System.Web.UI.WebControls;
 
 namespace OurLibrary.Web.Admin.Management
 {
-    public partial class CategoryManagement : BasePage
+    public partial class Management : BasePage
     {
         private const string ORDER_BY = "OrderBy_MNG_";
         private const string ORDER_TYPE = "OrderType_MNG_";

@@ -12,7 +12,7 @@ namespace OurLibrary.Service
     {
         public IssueService()
         {
-
+           
         }
         public override List<object> ObjectList(int offset, int limit)
         {
@@ -106,20 +106,23 @@ namespace OurLibrary.Service
             string additional_info = Params.ContainsKey("additional_info") ? (string)Params["additional_info"] : "";
             string student_id = Params.ContainsKey("student_id") ? (string)Params["student_id"] : "";
             string type = Params.ContainsKey("type") ? (string)Params["type"] : "";
+            string book_issue_id = Params.ContainsKey("book_issue") ? (string)Params["book_issue"] : "";
             string orderby = Params.ContainsKey("orderby") ? (string)Params["orderby"] : "";
             string ordertype = Params.ContainsKey("ordertype") ? (string)Params["ordertype"] : "";
 
             string filter_student_sql = exactSearch ? " student_id = '" + student_id + "'" : " student_id like '%" + student_id + "%'";
 
 
-            string sql = "select * from issue " +
-                "where "+
+            string sql = "select  distinct(issue.id), issue.addtional_info, issue.date, issue.student_id, issue.type, issue.user_id "+
+                " from issue left join book_issue on book_issue.issue_id = issue.id " +
+                " where "+
                     filter_student_sql+
-                " and id like '%" + id + "%'" +
-                " and user_id like '%" + user_id + "%'" +
-                " and date like '%" + date + "%'" +
-                " and addtional_info like '%" + additional_info + "%'" +
-                " and type like '%" + type + "%' ";
+                " and issue.id like '%" + id + "%'" +
+                " and issue.user_id like '%" + user_id + "%'" +
+                " and issue.date like '%" + date + "%'" +
+                " and issue.addtional_info like '%" + additional_info + "%'" +
+                " and issue.type like '%" + type + "%' "+
+                 " and book_issue.id like '%" + book_issue_id + "%' " ;
 
             if (!orderby.Equals(""))
             {

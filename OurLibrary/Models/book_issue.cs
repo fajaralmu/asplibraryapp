@@ -18,6 +18,7 @@ namespace OurLibrary.Models
         public book_issue()
         {
             this.book_issue1 = new HashSet<book_issue>();
+          //  book_return = 0;
         }
     
         public string id { get; set; }
@@ -25,7 +26,7 @@ namespace OurLibrary.Models
         public string issue_id { get; set; }
         public int qty { get; set; }
         public string ref_issue { get; set; }
-        public Nullable<short> book_return { get; set; }
+        public short book_return { get; set; }
         public string book_issue_id { get; set; }
     
         public virtual book_record book_record { get; set; }

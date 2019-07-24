@@ -78,14 +78,19 @@ namespace OurLibrary.Service
         {
             string id = Params.ContainsKey("id") ? (string)Params["id"] : "";
             string book_issue_id = Params.ContainsKey("book_issue_id") ? (string)Params["book_issue_id"] : "";
+            string student_id = Params.ContainsKey("student_id") ? (string)Params["student_id"] : "";
+            string book_return = Params.ContainsKey("book_return") ? (string)Params["book_return"] : "";
+            string issue_type = Params.ContainsKey("issue_type") ? (string)Params["issue_type"] : "";
+
             string orderby = Params.ContainsKey("orderby") ? (string)Params["orderby"] : "";
             string ordertype = Params.ContainsKey("ordertype") ? (string)Params["ordertype"] : "";
 
             string sql = "select * from book_issue " +
                "left join issue on issue.id = book_issue.issue_id " +
-             " where issue.type ='return'" +
-                " and book_issue.id like '%" + id + "%'" +
-                 " and book_issue.book_issue_id = '" + book_issue_id + "'";
+             " where book_issue.id like '%" + id + "%'" +
+                (book_issue_id != null && book_issue_id != ""?" and book_issue.book_issue_id like '%" + book_issue_id + "%' " : "")+
+                 " and issue.student_id like '%" + student_id + "%' " +
+                 " and issue.type like '%" + issue_type + "%' " + (book_return != null && book_return != "" ? " and book_issue.book_return = " + book_return : " ");
             if (!orderby.Equals(""))
             {
                 sql += " ORDER BY " + orderby;
@@ -125,9 +130,14 @@ namespace OurLibrary.Service
             Book_issue.ref_issue = "not used";
             try
             {
-                Book_issue.book_issue2 = null;
-
-                Book_issue.book_record = null;
+                //Book_issue.book_issue2 = null;
+                //Book_issue.issue = null;
+                //Book_issue.book_issue1 = null;
+                //Book_issue.book_record = null;
+                if(Book_issue.book_return == null)
+                {
+                    Book_issue.book_return = 0;
+                }
                 book_issue newclass = dbEntities.book_issue.Add(Book_issue);
                 dbEntities.SaveChanges();
                 return newclass;
@@ -152,6 +162,14 @@ namespace OurLibrary.Service
                 //  return null;
             }
             catch (System.Data.Entity.Infrastructure.DbUpdateException dbEx)
+            {
+
+                Exception raise = new Exception(dbEx.StackTrace);
+
+                throw raise;
+                //  return null;
+            }
+            catch (System.Exception dbEx)
             {
 
                 Exception raise = new Exception(dbEx.StackTrace);

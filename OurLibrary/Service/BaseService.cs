@@ -10,7 +10,7 @@ namespace OurLibrary.Service
     public class BaseService
     {
         public int count = 0;
-        protected LibraryEntities dbEntities = new LibraryEntities();
+        protected static LibraryEntities dbEntities = new LibraryEntities();
 
         public virtual List<object> ObjectList(int offset, int limit)
         {

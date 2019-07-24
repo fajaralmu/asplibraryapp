@@ -8,11 +8,11 @@ namespace OurLibrary.Util.Common
     public class StringUtil
     {
         private const string Numbers = "1234567890";
-        private const string Chars = "qwertyuiopasdfghjklzxcvbnm1234567890"; 
+        private const string Chars = "qwertyuiopasdfghjklzxcvbnm1234567890";
 
         private static bool IsItemAlreadyExist(List<string> list, string val)
         {
-            foreach(string s in list)
+            foreach (string s in list)
             {
                 if (s.Equals(val))
                 {
@@ -27,11 +27,11 @@ namespace OurLibrary.Util.Common
             string[] paramAndValue = CurrentQueryString.Split('&');
             string result = "";
             List<string> queryKeys = new List<string>();
-            for(int i = 0; i < paramAndValue.Length; i++)
+            for (int i = 0; i < paramAndValue.Length; i++)
             {
                 string itemParamValue = paramAndValue[i];
                 string itemParam = itemParamValue.Split('=')[0];
-                if(IsItemAlreadyExist(queryKeys, itemParam))
+                if (IsItemAlreadyExist(queryKeys, itemParam))
                 {
                     continue;
                 }
@@ -61,11 +61,13 @@ namespace OurLibrary.Util.Common
                     string[] urlAndParam = CurrentURL.Split('?');
                     string paramNew = ReplaceParamValue(urlAndParam[1], param, value);
                     return urlAndParam[0] + "?" + paramNew;
-                }else
+                }
+                else
                 {
                     return CurrentURL + "&" + param + "=" + value;
                 }
-            }else
+            }
+            else
             {
                 return CurrentURL + "?" + param + "=" + value;
             }
@@ -73,7 +75,7 @@ namespace OurLibrary.Util.Common
 
         public static String GenerateRandomChar(int Length)
         {
-            if(Length == 0)
+            if (Length == 0)
             {
                 return "NULL";
             }
@@ -83,9 +85,9 @@ namespace OurLibrary.Util.Common
             Random R = new Random();
             for (int i = 0; i < Length; i++)
             {
-                
-                int Index = R.Next(0,Size);
-                RandomString+=Chars.ElementAt(Index);
+
+                int Index = R.Next(0, Size);
+                RandomString += Chars.ElementAt(Index);
             }
             return RandomString;
         }
@@ -112,7 +114,7 @@ namespace OurLibrary.Util.Common
         public static string ToUpperCase(int index, string data)
         {
             string result = "";
-            for(int i = 0; i < data.Length; i++)
+            for (int i = 0; i < data.Length; i++)
             {
                 char Char = data[i];
                 if (i == index)
@@ -126,7 +128,7 @@ namespace OurLibrary.Util.Common
 
         public static bool NotNullAndNotBlank(object Obj)
         {
-            if(Obj != null && !Obj.ToString().Equals(""))
+            if (Obj != null && !Obj.ToString().Equals(""))
             {
                 return true;
             }
@@ -135,10 +137,31 @@ namespace OurLibrary.Util.Common
 
         public static bool NotNullAndNotBlankAndTypeOf(object Obj, Type t)
         {
-            if (NotNullAndNotBlank(Obj) && Obj.GetType().Equals((t))){
+            if (NotNullAndNotBlank(Obj) && Obj.GetType().Equals((t)))
+            {
                 return true;
             }
             return false;
+        }
+
+        public static Dictionary<string, object> QUeryStringToDict(string q)
+        {
+            Dictionary<string, object> Map = new Dictionary<string, object>();
+            try
+            {
+                string[] Params = q.Split('&');
+                foreach (string Param in Params)
+                {
+                    string[] Prop = Param.Split('=');
+                    Map.Add(Prop[0], Prop[1]);
+                }
+                return Map;
+
+            }
+            catch (Exception e)
+            {
+                return new Dictionary<string, object>();
+            }
         }
     }
 }

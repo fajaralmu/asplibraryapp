@@ -147,6 +147,7 @@ namespace OurLibrary.Service
                " and publisher.name like '%" + publisher + "%'" +
                " and category.category_name like '%" + category + "%'" +
                " and author.name like  '%" + author + "%'";
+            count = countSQL(sql, dbEntities.books);
             if (!orderby.Equals(""))
             {
                 sql += " ORDER BY " + orderby;
@@ -155,7 +156,7 @@ namespace OurLibrary.Service
                     sql += " " + ordertype;
                 }
             }
-            count = countSQL(sql, dbEntities.books);
+           
             return ListWithSql(sql, limit, offset);
         }
 

@@ -10,7 +10,7 @@
 namespace OurLibrary.Web.Admin.Management {
     
     
-    public partial class CategoryManagement {
+    public partial class Management {
         
         /// <summary>
         /// LabelObjectName control.

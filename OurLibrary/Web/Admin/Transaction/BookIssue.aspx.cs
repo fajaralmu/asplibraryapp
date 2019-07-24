@@ -96,7 +96,7 @@ namespace OurLibrary.Web.Admin.Transaction
             foreach (book_issue b in BookIssues)
             {
                 Panel PanelItem = new Panel();
-                PanelItem.Controls.Add(ControlUtil.GenerateLabel(b.id + " | " + b.book_record.book.title + "(" + b.book_record_id + ")" + " "));
+                PanelItem.Controls.Add(ControlUtil.GenerateLabel(b.id + " | " + (b.book_record == null?"-":b.book_record.book.title) + "(" + b.book_record_id + ")" + " "));
                 Button DeleteButton = new Button()
                 ;
                 DeleteButton.CssClass = "btn btn-danger";
