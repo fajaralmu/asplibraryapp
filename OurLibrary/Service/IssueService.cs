@@ -63,7 +63,12 @@ namespace OurLibrary.Service
             }
             try
             {
-                issue newclass = dbEntities.issues.Add(Issue);
+                Issue.student = null;
+                Issue.book_issue = null;
+                Issue.user = null;
+
+                issue NewIssue = new issue() { id = Issue.id, type = Issue.type, student_id = Issue.student_id, date = Issue.date, addtional_info = Issue.addtional_info, user_id = Issue.user_id };
+                issue newclass = dbEntities.issues.Add(NewIssue);
                 dbEntities.SaveChanges();
                 return newclass;
             }

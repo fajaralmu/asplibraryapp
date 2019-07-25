@@ -375,6 +375,7 @@ namespace OurLibrary.Web.API
         {
             if (StringUtil.NotNullAndNotBlank(Request.Form["Id"]))
             {
+                studentService = new StudentService();
                 student Std = studentService.GetByIdFull(Request.Form["Id"].ToString());
                 if (Std == null)
                 {

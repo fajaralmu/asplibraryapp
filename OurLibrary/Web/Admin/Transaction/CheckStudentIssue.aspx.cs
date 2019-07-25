@@ -40,7 +40,7 @@ namespace OurLibrary.Web.Admin.Transaction
             if (ViewState["BookIssuesReturn"] != null)
             {
                 BookIssuesReturn = (List<book_issue>)ViewState["BookIssuesReturn"];
-                PopulateBookIssues();
+                PopulateBooksToReturn();
 
             }
             AlertMessage(null);
@@ -68,7 +68,7 @@ namespace OurLibrary.Web.Admin.Transaction
                     string labelHtml = "<li class=\"book_issue-item\" id=\"Book_Issue_Rec_" + Bs.id
                         + "\"> Issue Rec Id: " + Bs.id + "<br/>Book Rec Id: "
                         + Bs.book_record_id + "<br/>"
-                        + Bs.book_record.book.title + " - returned: " + BookReturned;
+                        + Bs.book_record.book.title + " - returned: " + BookReturned + DateTime.Now.ToString();
 
                     if (!BookReturned)
                     {
@@ -214,33 +214,50 @@ namespace OurLibrary.Web.Admin.Transaction
 
         protected void ButtonReturn_Click(object sender, EventArgs e)
         {
-           
-            book_issue BS = new book_issue();
-            BS.id = StringUtil.GenerateRandomChar(10);
-            BS.book_issue_id = (TextBoxIssueRecordId.Text.Trim());
-            book_issue reffBookIssue = (book_issue)BookIssueService.GetById(BS.book_issue_id);
-
-            if (!BookIssue.ExistBookRecord(BS.book_issue_id, BookIssuesReturn) && null != reffBookIssue)
+            try
             {
-                BS.book_record_id = reffBookIssue.book_record.id;
-                BS.book_record = reffBookIssue.book_record;
-                //Check book_isue where book_rec_id = rec book_return != null || 0 and issue.student_id = std_id
-                string StudentId = TextBoxStudentID.Text;
+                book_issue BS = new book_issue();
+                BS.id = StringUtil.GenerateRandomChar(10);
+                BS.book_issue_id = (TextBoxIssueRecordId.Text.Trim());
+                book_issue reffBookIssue = (book_issue)BookIssueService.GetById(BS.book_issue_id);
 
-
-                if (null != reffBookIssue && BookIssueService.GetByBookIssueIdReturned(reffBookIssue.id).Count == 0)
+                if (!BookIssue.ExistBookRecord(BS.book_issue_id, BookIssuesReturn) && null != reffBookIssue)
                 {
+                    
+                    //Check book_isue where book_rec_id = rec book_return != null || 0 and issue.student_id = std_id
+                    string StudentId = TextBoxStudentID.Text;
 
-                    BS.book_issue2 = reffBookIssue;
-                    BS.book_record = reffBookIssue.book_record;
-                    BookIssuesReturn.Add(BS);
+
+                    if ( BookIssueService.GetByBookIssueIdReturned(reffBookIssue.id).Count == 0)
+                    {
+                        book_record BookRecord =(book_record) bookRecordService.GetById(reffBookIssue.book_record_id);
+
+                        //BS.book_issue2 = reffBookIssue;
+                        BS.book_record_id = BookRecord.id;
+
+                        book Book =(book) ObjectUtil.GetObjectValues(new string[]
+                        {
+                            "id","title"
+                        },BookRecord.book);
+
+                        book_record BookRec = (book_record)ObjectUtil.GetObjectValues(new string[]
+                        {
+                            "id","book_id", "available"
+                        }, BookRecord);
+                        BookRec.book = Book;
+                        BS.book_record = BookRec;
+                        BookIssuesReturn.Add(BS);
+                    }
+
                 }
-
+            }catch(HttpUnhandledException ex)
+            {
+                throw ex;
             }
 
             ButtonSearch_Click(sender, e);
             ViewState["BookIssuesReturn"] = BookIssuesReturn;
-            PopulateBookIssues();
+            PopulateBooksToReturn();
 
         }
 
@@ -292,7 +309,7 @@ namespace OurLibrary.Web.Admin.Transaction
                 Issues = new List<issue>();
                 IssuesReturn = new List<issue>();
                 BookIssuesReturn = new List<book_issue>();
-                PopulateBookIssues();
+                PopulateBooksToReturn();
                 AlertMessage("Sukses mengembalikan buku " + IssueID);
                 //ButtonClearList_Click(sender, e);
 
@@ -304,14 +321,14 @@ namespace OurLibrary.Web.Admin.Transaction
             }
         }
 
-        private void PopulateBookIssues()
+        private void PopulateBooksToReturn()
         {
             PanelBookIssues.Controls.Clear();
-           // PanelBookIssues.Controls.Add(ControlUtil.GenerateLabel("test"));
+            // PanelBookIssues.Controls.Add(ControlUtil.GenerateLabel("test"));
             foreach (book_issue b in BookIssuesReturn)
             {
                 Panel PanelItem = new Panel();
-                PanelItem.Controls.Add(ControlUtil.GenerateLabel(b.id + " | " + b.book_record.book.title + "(" + b.book_record.id + ")" + " "));
+                PanelItem.Controls.Add(ControlUtil.GenerateLabel(b.id + (b.book_record != null? " | " + b.book_record.book.title + "(" + b.book_record.id + ")" + " " : "")));
                 Button DeleteButton = new Button()
                 ;
                 DeleteButton.CssClass = "btn btn-danger";
@@ -320,9 +337,13 @@ namespace OurLibrary.Web.Admin.Transaction
                 DeleteButton.CommandArgument = b.id;
                 DeleteButton.Click += new EventHandler(DeleteReturnItem);
                 PanelItem.Controls.Add(DeleteButton);
-              //  PanelBookIssues.Controls.Add(PanelItem);
+                //  PanelBookIssues.Controls.Add(PanelItem);
                 PanelBookIssues.Controls.Add(PanelItem);
             }
+            PanelTest.Controls.Clear();
+           
+                PanelTest.Controls.Add(new Label() { Text = BookIssuesReturn.Count+ DateTime.Now.ToLongTimeString() });
+           
 
         }
 
@@ -348,7 +369,7 @@ namespace OurLibrary.Web.Admin.Transaction
             ViewState["BookIssuesReturn"] = BookIssuesReturn;
             ButtonSearch_Click(sender, e);
 
-            PopulateBookIssues();
+            PopulateBooksToReturn();
         }
 
         private void AlertMessage(string Message)

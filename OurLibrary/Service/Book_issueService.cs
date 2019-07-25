@@ -34,8 +34,12 @@ namespace OurLibrary.Service
 
         public override object GetById(string Id)
         {
-            book_issue Book_issue = (from c in dbEntities.book_issue where c.id.Equals(Id) select c).SingleOrDefault();
-            return Book_issue;
+            return SearchAdvanced(new Dictionary<string, object>()
+            {
+                {"id",Id }
+            })[0];
+            //book_issue Book_issue = (from c in dbEntities.book_issue where c.id.Equals(Id) select c).SingleOrDefault();
+            //return Book_issue;
         }
 
         public override void Delete(object Obj)
@@ -130,11 +134,11 @@ namespace OurLibrary.Service
             Book_issue.ref_issue = "not used";
             try
             {
-                //Book_issue.book_issue2 = null;
-                //Book_issue.issue = null;
-                //Book_issue.book_issue1 = null;
-                //Book_issue.book_record = null;
-                if(Book_issue.book_return == null)
+                Book_issue.book_issue2 = null;
+                Book_issue.issue = null;
+                Book_issue.book_issue1 = null;
+                Book_issue.book_record = null;
+                if (Book_issue.book_return == null)
                 {
                     Book_issue.book_return = 0;
                 }

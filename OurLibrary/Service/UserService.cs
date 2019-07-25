@@ -9,9 +9,6 @@ namespace OurLibrary.Service
 
     public class UserService :BaseService
     {
-        private LibraryEntities dbEntities = new LibraryEntities();
-
-       
         public bool IsValid(user User)
         {
             if(User == null)

@@ -15,7 +15,18 @@ namespace OurLibrary.Models
     
     public partial class LibraryEntities : DbContext
     {
-        public LibraryEntities()
+        private static LibraryEntities libEntities = null;
+
+        public static LibraryEntities Instance()
+        {
+            if (libEntities == null)
+            {
+                libEntities = new LibraryEntities();
+            }
+            return libEntities;
+        }
+
+        private LibraryEntities()
             : base("name=LibraryEntities")
         {
         }
