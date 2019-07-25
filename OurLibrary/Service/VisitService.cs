@@ -63,7 +63,9 @@ namespace OurLibrary.Service
             visit visit = (visit)Obj;
             /*if (visit.id == null)
                 visit.id = StringUtil.GenerateRandomNumber(7);*/
-            visit newvisit = dbEntities.visits.Add(visit);
+            visit.student = null;
+            visit cleanVisit = new visit() { id= visit.id, date=visit.date, info = visit.info, student_id= visit.student_id };
+            visit newvisit = dbEntities.visits.Add(cleanVisit);
             try
             {
                 dbEntities.SaveChanges();
@@ -97,30 +99,35 @@ namespace OurLibrary.Service
         }
 
         private List<object> ListWithSql(string sql, int limit = 0, int offset = 0)
-        {
-            List<object> visitList = new List<object>();
-            var visits = dbEntities.visits
-                .SqlQuery(sql
-                ).
-                Select(v => new
+        {try
+            {
+                List<object> visitList = new List<object>();
+                var visits = dbEntities.visits
+                    .SqlQuery(sql
+                    ).
+                    Select(v => new
+                    {
+                        v
+                    });
+                if (limit > 0)
                 {
-                    v
-                });
-            if (limit > 0)
-            {
-                visits = visits.Skip(offset * limit).Take(limit).ToList();
-            }
-            else
-            {
-                visits = visits.ToList();
-            }
-            foreach (var v in visits)
-            {
-                visit Visit = v.v;
-                visitList.Add(Visit);
-            }
+                    visits = visits.Skip(offset * limit).Take(limit).ToList();
+                }
+                else
+                {
+                    visits = visits.ToList();
+                }
+                foreach (var v in visits)
+                {
+                    visit Visit = v.v;
+                    visitList.Add(Visit);
+                }
 
-            return visitList;
+                return visitList;
+            }catch(Exception e)
+            {
+                return new List<object>();
+            }
         }
 
         public override List<object> SearchAdvanced(Dictionary<string, object> Params, int limit = 0, int offset = 0)
@@ -150,8 +157,14 @@ namespace OurLibrary.Service
 
         public override int countSQL(string sql, object dbSet)
         {
-            return ((DbSet<visit>)dbSet)
-                .SqlQuery(sql).Count();
+            try
+            {
+                return ((DbSet<visit>)dbSet)
+                    .SqlQuery(sql).Count();
+            }catch(Exception e)
+            {
+                return 0;
+            }
         }
     }
 }

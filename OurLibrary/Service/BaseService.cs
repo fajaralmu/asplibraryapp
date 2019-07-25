@@ -1,4 +1,5 @@
 ﻿using OurLibrary.Models;
+using OurLibrary.Util.Common;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -11,6 +12,11 @@ namespace OurLibrary.Service
     {
         public int count = 0;
         protected static LibraryEntities dbEntities = new LibraryEntities();
+
+        public BaseService()
+        {
+            dbEntities = new LibraryEntities();
+        }
 
         public virtual List<object> ObjectList(int offset, int limit)
         {
@@ -56,5 +62,36 @@ namespace OurLibrary.Service
         {
             return count;
         }
+
+        public static List<object> GetObjectList(BaseService Service, HttpRequest Req)
+        {
+            int Offset = 0;
+            int Limit = 0;
+            Dictionary<string, object> Params = new Dictionary<string, object>();
+            if (StringUtil.NotNullAndNotBlank(Req.Form["limit"]) && StringUtil.NotNullAndNotBlank(Req.Form["offset"]))
+            {
+                try
+                {
+                    Offset = int.Parse(Req.Form["offset"].ToString());
+                    Limit = int.Parse(Req.Form["limit"].ToString());
+
+                }
+                catch (Exception ex)
+                {
+                    return null;
+                }
+            }
+            if (StringUtil.NotNullAndNotBlank(Req.Form["search_param"]))
+            {
+                string Param = Req.Form["search_param"].ToString();
+                Param = Param.Replace("${", "");
+                Param = Param.Replace("}$", "");
+                Param = Param.Replace(";", "&");
+                Params = StringUtil.QUeryStringToDict(Param);
+            }
+            return Service.SearchAdvanced(Params, Limit, Offset);
+
+        }
+
     }
 }

@@ -13,27 +13,31 @@ namespace OurLibrary.Web.API
 {
     public partial class Info : System.Web.UI.Page
     {
-        private book_issueService BookIssueService = new book_issueService();
-        private StudentService studentService = new StudentService();
-        private VisitService VisitService = new VisitService();
-        private BookService bookService = new BookService();
-        private IssueService issueService = new IssueService();
-        private Book_recordService bookRecordService = new Book_recordService();
+        private UserService UserService = new UserService();
+        private book_issueService BookIssueService ;
+        private StudentService studentService ;
+        private VisitService VisitService ;
+        private BookService bookService ;
+        private IssueService issueService ;
+        private Book_recordService bookRecordService ;
         private int BookCount = 0;
         private int StudentCount = 0;
         private int IssueCount = 0;
         private int VisitCount = 0;
         private int BookIssueCount = 0;
+        private bool UserValid = false;
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Request.RequestType == "POST")
             {
+                CheckUser();
                 string Out = "\"" + GetTime() + "\"";
                 int Result = 1;
                 switch (Request.Form["Action"])
                 {
                     case "studentVisit":
-                        Out = GetStudentById();
+                        Out = UserValid ? GetStudentById() : "0";
                         if (Out != null && Out != "0")
                         {
                             string Visit = StudentVisit(Request.Form["Id"].ToString());
@@ -47,7 +51,7 @@ namespace OurLibrary.Web.API
                         }
                         break;
                     case "studentById":
-                        Out = GetStudentById();
+                        Out = UserValid ? GetStudentById() : "0";
                         if (Out != null && Out != "0")
                         {
                             Out = "{\"student\":" + Out + "}";
@@ -55,7 +59,7 @@ namespace OurLibrary.Web.API
                         }
                         break;
                     case "bookList":
-                        Out = GetBookList();
+                        Out = UserValid ? GetBookList() : "0";
                         if (Out != null && Out != "0")
                         {
                             Out += (
@@ -67,7 +71,7 @@ namespace OurLibrary.Web.API
                         }
                         break;
                     case "studentList":
-                        Out = GetStudentList();
+                        Out = UserValid ? GetStudentList() : "0";
                         if (Out != null && Out != "0")
                         {
                             Out += (
@@ -79,7 +83,7 @@ namespace OurLibrary.Web.API
                         }
                         break;
                     case "issuesList":
-                        Out = GetIssuesList();
+                        Out = UserValid ? GetIssuesList() : "0";
                         if (Out != null && Out != "0")
                         {
                             Out += (
@@ -91,7 +95,7 @@ namespace OurLibrary.Web.API
                         }
                         break;
                     case "visitList":
-                        Out = GetVisitsList();
+                        Out = UserValid ? GetVisitsList() : "0";
                         if (Out != null && Out != "0")
                         {
                             Out += (
@@ -103,7 +107,7 @@ namespace OurLibrary.Web.API
                         }
                         break;
                     case "bookIssueList":
-                        Out = GetBookIssueList();
+                        Out = UserValid ? GetBookIssueList() : "0";
                         if (Out != null && Out != "0")
                         {
                             Out += (
@@ -115,14 +119,15 @@ namespace OurLibrary.Web.API
                         }
                         break;
                     case "checkReturnedBook":
-                        book_issue ReturnBookIssue = GetBookIssue();
+                        book_issue ReturnBookIssue = UserValid ? GetBookIssue() : null;
                         if (ReturnBookIssue != null)
                         {
                             Out = (
                                 "{\"book_issue_id\":\"" + ReturnBookIssue.id + "\"}"
                                 );
                             Result = 0;
-                        }else
+                        }
+                        else
                         {
                             Result = 1;
                         }
@@ -142,9 +147,22 @@ namespace OurLibrary.Web.API
             }
         }
 
+        private void CheckUser()
+        {
+            string Username = Request.Form["u"];
+            string Password = Request.Form["p"];
+
+            user LoggedUser = UserService.GetUser(Username, Password);
+            if (LoggedUser != null)
+            {
+                UserValid = true;
+            }
+        }
+
         private string GetBookIssueList()
         {
-            List<object> book_issuesObj = GetObjectList(BookIssueService);
+            BookIssueService = new book_issueService();
+            List<object> book_issuesObj = BaseService.GetObjectList(BookIssueService, Request);
             BookIssueCount = BookIssueService.ObjectCount();
             if (book_issuesObj != null)
             {
@@ -170,7 +188,8 @@ namespace OurLibrary.Web.API
 
         private string GetVisitsList()
         {
-            List<object> VisitsObj = GetObjectList(VisitService);
+            VisitService = new VisitService();
+            List<object> VisitsObj = BaseService.GetObjectList(VisitService, Request);
             VisitCount = VisitService.ObjectCount();
             if (VisitsObj != null)
             {
@@ -180,12 +199,12 @@ namespace OurLibrary.Web.API
                 {
                     foreach (visit Vst in Visits)
                     {
-                      
+
 
                         visit Visit = (visit)ObjectUtil.GetObjectValues(new string[]{
                             "id","student_id","date","info"
                         }, Vst);
-                       
+
                         VisitsToSerialize.Add(Visit);
                     }
 
@@ -198,8 +217,9 @@ namespace OurLibrary.Web.API
 
         private book_issue GetBookIssue()
         {
-            List<object> BookIssues = GetObjectList(BookIssueService);
-           if (BookIssues != null && BookIssues.Count > 0)
+            BookIssueService = new book_issueService();
+            List<object> BookIssues = BaseService.GetObjectList(BookIssueService, Request);
+            if (BookIssues != null && BookIssues.Count > 0)
             {
                 List<book_issue> BookIssuesList = (List<book_issue>)ObjectUtil.ConvertList(BookIssues, typeof(List<book_issue>));
                 return BookIssuesList.ElementAt(0);
@@ -209,7 +229,8 @@ namespace OurLibrary.Web.API
 
         private string GetStudentList()
         {
-            List<object> StudentObj = GetObjectList(studentService);
+            studentService = new StudentService();
+            List<object> StudentObj = BaseService.GetObjectList(studentService, Request);
             StudentCount = studentService.ObjectCount();
             if (StudentObj != null)
             {
@@ -239,40 +260,11 @@ namespace OurLibrary.Web.API
             return "0";
         }
 
-        private List<object> GetObjectList(BaseService Service)
-        {
-            int Offset = 0;
-            int Limit = 0;
-            Dictionary<string, object> Params = new Dictionary<string, object>();
-            if (StringUtil.NotNullAndNotBlank(Request.Form["limit"]) && StringUtil.NotNullAndNotBlank(Request.Form["offset"]))
-            {
-                try
-                {
-                    Offset = int.Parse(Request.Form["offset"].ToString());
-                    Limit = int.Parse(Request.Form["limit"].ToString());
-
-                }
-                catch (Exception ex)
-                {
-                    return null;
-                }
-            }
-            if (StringUtil.NotNullAndNotBlank(Request.Form["search_param"]))
-            {
-                string Param = Request.Form["search_param"].ToString();
-                Param = Param.Replace("${", "");
-                Param = Param.Replace("}$", "");
-                Param = Param.Replace(";", "&");
-                Params = StringUtil.QUeryStringToDict(Param);
-            }
-            return Service.SearchAdvanced(Params, Limit, Offset);
-
-        }
-
+        
         private string GetBookList()
         {
-
-            List<object> BooksObj = GetObjectList(bookService);
+            bookService = new BookService();
+            List<object> BooksObj = BaseService.GetObjectList(bookService, Request);
             BookCount = bookService.ObjectCount();
             if (BooksObj != null)
             {
@@ -317,7 +309,8 @@ namespace OurLibrary.Web.API
 
         private string GetIssuesList()
         {
-            List<object> Issues = GetObjectList(issueService);
+            issueService = new IssueService();
+            List<object> Issues = BaseService.GetObjectList(issueService, Request);
             IssueCount = issueService.ObjectCount();
             if (Issues != null && Issues.Count > 0)
             {
@@ -362,6 +355,7 @@ namespace OurLibrary.Web.API
 
         private string StudentVisit(string StdId)
         {
+            VisitService = new VisitService();
             visit Visit = new visit()
             {
                 student_id = StdId,
@@ -369,6 +363,7 @@ namespace OurLibrary.Web.API
                 info = "visit"
             };
             visit VisitDB = (visit)VisitService.Add(Visit);
+            VisitDB.student = null;
             if (VisitDB != null)
             {
                 return JsonConvert.SerializeObject(VisitDB);
@@ -386,7 +381,7 @@ namespace OurLibrary.Web.API
                     return "0";
                 }
                 student toSend = (student)ObjectUtil.GetObjectValues(new string[]{
-                            "id","name","bod","class_id","address","email","class"
+                            "id","name","bod","class_id","address","email"
                         }, Std);
                 return JsonConvert.SerializeObject(toSend);
             }
