@@ -10,6 +10,14 @@ namespace OurLibrary.Util.Common
         private const string Numbers = "1234567890";
         private const string Chars = "qwertyuiopasdfghjklzxcvbnm1234567890";
 
+        public static String DateTimeToString(DateTime Date)
+        {
+            
+           return  Date.Year + "-" + Date.Month + "-" + Date.Day + " " + Date.Hour + ":" + Date.Minute + ":" + Date.Second + "." + Date.Millisecond;
+
+
+        }
+
         private static bool IsItemAlreadyExist(List<string> list, string val)
         {
             foreach (string s in list)

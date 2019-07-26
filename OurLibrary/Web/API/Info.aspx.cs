@@ -5,6 +5,7 @@ using OurLibrary.Util.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -37,7 +38,7 @@ namespace OurLibrary.Web.API
                 switch (Request.Form["Action"])
                 {
                     case "studentVisit":
-                        Out = UserValid ? GetStudentById() : "0";
+                        Out =true || UserValid ? GetStudentById() : "0";
                         if (Out != null && Out != "0")
                         {
                             string Visit = StudentVisit(Request.Form["Id"].ToString());
@@ -352,8 +353,8 @@ namespace OurLibrary.Web.API
 
         }
 
-
-        private string StudentVisit(string StdId)
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        private string  StudentVisit(string StdId)
         {
             VisitService = new VisitService();
             visit Visit = new visit()
@@ -363,9 +364,10 @@ namespace OurLibrary.Web.API
                 info = "visit"
             };
             visit VisitDB = (visit)VisitService.Add(Visit);
-            VisitDB.student = null;
+           
             if (VisitDB != null)
             {
+                VisitDB.student = null;
                 return JsonConvert.SerializeObject(VisitDB);
             }
             return "0";

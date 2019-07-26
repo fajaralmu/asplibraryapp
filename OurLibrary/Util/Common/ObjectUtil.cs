@@ -11,6 +11,37 @@ namespace OurLibrary.Util.Common
 {
     public class ObjectUtil
     {
+        public static string CreateInsertQuery(string Name, string[] Params, object Object)
+        {
+            string Q = "INSERT INTO   " + Name + "  (";
+            string Val = "";
+            for (int i = 0; i < Params.Length; i++)
+            {
+                string PropertyName = Params[i];
+                if (!HasProperty(PropertyName, Object))
+                    continue;
+                Q += PropertyName;
+                object Value = GetValueFromProp(PropertyName, Object);
+                if (Value.GetType().Equals(typeof(DateTime)))
+                {
+                    Value = StringUtil.DateTimeToString((DateTime)Value);
+                }
+
+                Val += "'" + Value + "'";
+
+                if (i < Params.Length - 1)
+                {
+                    Q += ",";
+                    Val += ",";
+                }
+
+
+            }
+            Q = Q + ")VALUES(" + Val + ")";
+
+            return Q;
+
+        }
 
         public static object ConvertList(List<object> value, Type type)
         {
@@ -29,7 +60,7 @@ namespace OurLibrary.Util.Common
 
         public static string GetIDProps(string ObjectPath)
         {
-           Type t = Type.GetType(ObjectPath);
+            Type t = Type.GetType(ObjectPath);
             PropertyInfo[] Props = t.GetProperties();
             for (int i = 0; i < Props.Length; i++)
             {
@@ -53,7 +84,7 @@ namespace OurLibrary.Util.Common
             for (int i = 0; i < Props.Length; i++)
             {
                 string PropName = Props[i];
-                if(HasProperty(PropName, OriginalObj))
+                if (HasProperty(PropName, OriginalObj))
                 {
                     object val = OriginalObj.GetType().GetProperty(PropName).GetValue(OriginalObj);
                     NewObject.GetType().GetProperty(PropName).SetValue(NewObject, val);

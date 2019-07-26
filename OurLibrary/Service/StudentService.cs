@@ -44,10 +44,21 @@ namespace OurLibrary.Service
 
         public student GetByIdFull(string Id)
         {
-            student student = (from s in dbEntities.students where s.id.Equals(Id) select s).SingleOrDefault();
-            if(student !=null)
-                student.@class = (from c in dbEntities.classes where c.id.Equals(student.class_id) select c).SingleOrDefault();
-            return student;
+            dbEntities = LibraryEntities.Instance();
+
+            try
+            {
+                student student = (from s in dbEntities.students where s.id.Equals(Id) select s).SingleOrDefault();
+                if (student != null)
+                    student.@class = (from c in dbEntities.classes where c.id.Equals(student.class_id) select c).SingleOrDefault();
+                return student;
+            }catch(InvalidOperationException ex)
+            {
+                return null;
+            }catch (Exception ex)
+            {
+                return null;
+            }
         }
 
         public override void Delete(object Obj)

@@ -20,6 +20,10 @@ namespace OurLibrary.Service
 
         public user GetUser(string Username, string Password)
         {
+            if(dbEntities == null || Username == null || Password == null)
+            {
+                return null;
+            }
             user User = (from u in dbEntities.users
                          where u.username.Equals(Username) && u.password.Equals(Password)
                          select u).SingleOrDefault();

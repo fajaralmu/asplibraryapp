@@ -12,14 +12,16 @@ namespace OurLibrary.Models
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
-    
+    using System.Reflection;
+
     public partial class LibraryEntities : DbContext
     {
         private static LibraryEntities libEntities = null;
 
         public static LibraryEntities Instance()
         {
-            if (libEntities == null)
+            
+            if (libEntities == null || IsDisposed(libEntities))
             {
                 libEntities = new LibraryEntities();
             }
@@ -29,8 +31,30 @@ namespace OurLibrary.Models
         private LibraryEntities()
             : base("name=LibraryEntities")
         {
+           
         }
-    
+
+        private static bool IsDisposed( DbContext context)
+        {
+            if (context == null) return false;
+            var result = true;
+
+            var typeDbContext = typeof(DbContext);
+            var typeInternalContext = typeDbContext.Assembly.GetType("System.Data.Entity.Internal.InternalContext");
+
+            var fi_InternalContext = typeDbContext.GetField("_internalContext", BindingFlags.NonPublic | BindingFlags.Instance);
+            var pi_IsDisposed = typeInternalContext.GetProperty("IsDisposed");
+
+            var ic = fi_InternalContext.GetValue(context);
+
+            if (ic != null)
+            {
+                result = (bool)pi_IsDisposed.GetValue(ic);
+            }
+
+            return result;
+        }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             throw new UnintentionalCodeFirstException();

@@ -3,6 +3,7 @@ using OurLibrary.Util.Common;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Web;
 
@@ -60,46 +61,29 @@ namespace OurLibrary.Service
 
         public override object Add(object Obj)
         {
-            visit visit = (visit)Obj;
-            /*if (visit.id == null)
-                visit.id = StringUtil.GenerateRandomNumber(7);*/
-            visit.student = null;
-            visit cleanVisit = new visit() { id= visit.id, date=visit.date, info = visit.info, student_id= visit.student_id };
-            visit newvisit = dbEntities.visits.Add(cleanVisit);
-            try
+            using (LibraryEntities ctx = LibraryEntities.Instance())
             {
-                dbEntities.SaveChanges();
-                return newvisit;
-            }
-            catch (System.Data.Entity.Validation.DbEntityValidationException dbEx)
-            {
-
-                Exception raise = dbEx;
-                foreach (var validationErrors in dbEx.EntityValidationErrors)
+                visit visit = (visit)Obj;
+                visit DBVisit = null;
+                try
                 {
-                    foreach (var validationError in validationErrors.ValidationErrors)
-                    {
-                        string message = string.Format("{0}:{1}",
-                            validationErrors.Entry.Entity.ToString(),
-                            validationError.ErrorMessage);
-                        // raise a new exception nesting
-                        // the current instance as InnerException
-                        raise = new InvalidOperationException(message, raise);
-                    }
+                    DBVisit= ctx.visits.Add(visit);
+                    int RES = ctx.SaveChanges();
+
                 }
-                throw raise;
-                //  return null;
+                
+                catch (Exception e)
+                {
+                    DBVisit = null;
+                }
+                return DBVisit;
             }
-            catch (System.Data.Entity.Infrastructure.DbUpdateException dbEx)
-            {
-                Exception raise = new Exception(dbEx.StackTrace);
-                throw raise;
-                //  return null;
-            }
+
         }
 
         private List<object> ListWithSql(string sql, int limit = 0, int offset = 0)
-        {try
+        {
+            try
             {
                 List<object> visitList = new List<object>();
                 var visits = dbEntities.visits
@@ -124,7 +108,8 @@ namespace OurLibrary.Service
                 }
 
                 return visitList;
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
                 return new List<object>();
             }
@@ -161,7 +146,8 @@ namespace OurLibrary.Service
             {
                 return ((DbSet<visit>)dbSet)
                     .SqlQuery(sql).Count();
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
                 return 0;
             }
