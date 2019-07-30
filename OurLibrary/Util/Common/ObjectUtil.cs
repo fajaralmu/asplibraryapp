@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Web;
+using OurLibrary.Models;
 
 namespace OurLibrary.Util.Common
 {
@@ -103,6 +104,67 @@ namespace OurLibrary.Util.Common
                 }
             }
             return false;
+        }
+
+        public static string[] ValidateProps(string[] Props, object Obj)
+        {
+            List<string> ValidProp = new List<string>();
+            for (int j = 0; j < Props.Length; j++)
+            {
+                string Prop = Props[j];
+                if (HasProperty(Prop, Obj))
+                {
+                    ValidProp.Add(Prop);
+                }
+            }
+            return ValidProp.ToArray<string>();
+        }
+
+        public static List<object> ICollectionToListObj(ICollection Collection)
+        {   List<object> List = new List<object>();
+            foreach(var item in Collection)
+            {
+                if (item == null)
+                    continue;
+                List.Add(item);
+            }
+            return List;
+        }
+
+        public static string ListToDelimitedString(object ListOfObject, string Delimiter,string ValDelimiter, params string[] Props)
+        {
+            String ListString = "";
+            if (ListOfObject == null )
+                return "";
+            List<object> List = ICollectionToListObj((ICollection)ListOfObject);
+            if(List == null || List.Count == 0)
+            {
+                return "";
+            }
+            string[] ValidProps = ValidateProps(Props, List.ElementAt(0));
+           
+            for (int i = 0; i < List.Count; i++)
+
+            {
+                object Obj = List.ElementAt(i);
+                string Value = "";
+                for (int j = 0; j < ValidProps.Length; j++)
+                {
+                    string Prop = ValidProps[j];
+                    Value += GetValueFromProp(Prop, Obj).ToString();
+                    if (j < ValidProps.Length - 1)
+                    {
+                        Value += ValDelimiter;
+                    }
+                }
+                ListString += Value;
+                if (i < List.Count - 1)
+                {
+                    ListString += Delimiter;
+                }
+
+            }
+            return ListString;
         }
     }
 

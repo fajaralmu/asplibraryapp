@@ -110,7 +110,7 @@ namespace OurLibrary.Service
             string user_id = Params.ContainsKey("user_id") ? (string)Params["user_id"] : "";
             string additional_info = Params.ContainsKey("additional_info") ? (string)Params["additional_info"] : "";
             string student_id = Params.ContainsKey("student_id") ? (string)Params["student_id"] : "";
-            string type = Params.ContainsKey("type") ? (string)Params["type"] : "";
+            string type = Params.ContainsKey("type") || Params.ContainsKey("TYPE") ?!Params.ContainsKey("type") || (string)Params["type"] == null? !Params.ContainsKey("TYPE") ||(string)Params["TYPE"] == null?"": (string)Params["TYPE"] : (string)Params["type"] : "";
             string book_issue_id = Params.ContainsKey("book_issue") ? (string)Params["book_issue"] : "";
             string orderby = Params.ContainsKey("orderby") ? (string)Params["orderby"] : "";
             string ordertype = Params.ContainsKey("ordertype") ? (string)Params["ordertype"] : "";

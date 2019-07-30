@@ -68,7 +68,7 @@ namespace OurLibrary.Web.Admin.Transaction
                     string labelHtml = "<li class=\"book_issue-item\" id=\"Book_Issue_Rec_" + Bs.id
                         + "\"> Issue Rec Id: " + Bs.id + "<br/>Book Rec Id: "
                         + Bs.book_record_id + "<br/>"
-                        + Bs.book_record.book.title + " - returned: " + BookReturned + DateTime.Now.ToString();
+                        + Bs.book_record.book.title + " - returned: <code>" + BookReturned+"</code>";// + DateTime.Now.ToString();
 
                     if (!BookReturned)
                     {
@@ -151,8 +151,8 @@ namespace OurLibrary.Web.Admin.Transaction
                         + "\"> Return Rec Id: " + Bs.id + "<br/>Book Rec Id: "
                             + Bs.book_record_id + " - Returned From Issue Rec Id: " + anchor +
                             "<br/>" + Bs.book_record.book.title
-                            + "<br/>Issued: " + IssuedDate + "<br/>Max return: " + MaxReturn + " - late: " + Late
-                            + "</li>"));
+                            + "<br/>Issued: " + IssuedDate + "<br/>Max return: " + MaxReturn + " - late: <code>" + Late
+                            + "</code></li>"));
 
 
                     }
@@ -340,9 +340,9 @@ namespace OurLibrary.Web.Admin.Transaction
                 //  PanelBookIssues.Controls.Add(PanelItem);
                 PanelBookIssues.Controls.Add(PanelItem);
             }
-            PanelTest.Controls.Clear();
+            //PanelTest.Controls.Clear();
            
-                PanelTest.Controls.Add(new Label() { Text = BookIssuesReturn.Count+ DateTime.Now.ToLongTimeString() });
+            //    PanelTest.Controls.Add(new Label() { Text = BookIssuesReturn.Count+ DateTime.Now.ToLongTimeString() });
            
 
         }

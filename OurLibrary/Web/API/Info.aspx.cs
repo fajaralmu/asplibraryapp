@@ -15,12 +15,13 @@ namespace OurLibrary.Web.API
     public partial class Info : System.Web.UI.Page
     {
         private UserService UserService = new UserService();
-        private book_issueService BookIssueService ;
-        private StudentService studentService ;
-        private VisitService VisitService ;
-        private BookService bookService ;
-        private IssueService issueService ;
-        private Book_recordService bookRecordService ;
+        private book_issueService BookIssueService;
+        private StudentService studentService;
+        private VisitService VisitService;
+        private BookService bookService;
+        private IssueService issueService;
+        private user User;
+        private Book_recordService bookRecordService;
         private int BookCount = 0;
         private int StudentCount = 0;
         private int IssueCount = 0;
@@ -38,7 +39,7 @@ namespace OurLibrary.Web.API
                 switch (Request.Form["Action"])
                 {
                     case "studentVisit":
-                        Out =true || UserValid ? GetStudentById() : "0";
+                        Out = true || UserValid ? GetStudentById() : "0";
                         if (Out != null && Out != "0")
                         {
                             string Visit = StudentVisit(Request.Form["Id"].ToString());
@@ -56,6 +57,14 @@ namespace OurLibrary.Web.API
                         if (Out != null && Out != "0")
                         {
                             Out = "{\"student\":" + Out + "}";
+                            Result = 0;
+                        }
+                        break;
+                    case "bookRecById":
+                        Out = UserValid ? GetBookRecordById() : "0";
+                        if (Out != null && Out != "0")
+                        {
+                            Out = "{\"book_record\":" + Out + "}";
                             Result = 0;
                         }
                         break;
@@ -133,6 +142,21 @@ namespace OurLibrary.Web.API
                             Result = 1;
                         }
                         break;
+                    case "issueBook":
+                        issue Issue = UserValid ? IssueBook() : null;
+                        if (Issue != null)
+                        {
+                            string RecIds = ObjectUtil.ListToDelimitedString(Issue.book_issue, ";","~", "book_record_id","id");
+                            Out = (
+                                "{\"issue_id\":\"" + Issue.id + "\",\"date\":\""+Issue.date+"\", \"items\":\""+RecIds+"\"}"
+                                );
+                            Result = 0;
+                        }
+                        else
+                        {
+                            Result = 1;
+                        }
+                        break;
 
 
                 }
@@ -148,6 +172,95 @@ namespace OurLibrary.Web.API
             }
         }
 
+        private string GetBookRecordById()
+        {
+            if (StringUtil.NotNullAndNotBlank(Request.Form["Id"]))
+            {
+                bookRecordService = new Book_recordService();
+                book_record BookRecord =(book_record) bookRecordService.GetById(Request.Form["Id"]);
+                if (BookRecord == null)
+                {
+                    return "0";
+                }
+                book_record toSend = (book_record)ObjectUtil.GetObjectValues(new string[]{
+                            "id","book_id","available"
+                        }, BookRecord);
+                if (BookRecord.book != null)
+                {
+                    toSend. book =(book) ObjectUtil.GetObjectValues(new string[]{
+                            "id","title" }, BookRecord.book);
+                }
+
+                return JsonConvert.SerializeObject(toSend);
+            }
+            return "0";
+        }
+
+        private issue IssueBook()
+        {
+           if (StringUtil.NotNullAndNotBlank(Request.Form["student_id"]) &&
+                StringUtil.NotNullAndNotBlank(Request.Form["book_recs"]))
+            {
+                issueService = new IssueService();
+                studentService = new StudentService();
+                bookRecordService = new Book_recordService();
+                BookIssueService = new book_issueService();
+
+                string StudentId = Request.Form["student_id"];
+                student Student = (student)studentService.GetById(StudentId);
+                if (Student == null)
+                {
+                    return null;
+                }
+
+                string IssueID = StringUtil.GenerateRandomNumber(9);
+                issue Issue = new issue();
+                Issue.user_id = User.id;
+                Issue.id = IssueID;
+                Issue.type = "issue";
+                Issue.date = DateTime.Now;
+                Issue.student_id = Student.id;
+                Issue.addtional_info = "test";
+
+                string[] BookRecIds = Request.Form["book_recs"].Split(';');
+
+                if (BookRecIds.Length < 1)
+                {
+                    return null;
+                }
+
+                if (null == issueService.Add(Issue))
+                {
+                    return null;
+                }
+
+                List<book_issue> BookIssues = new List<book_issue>();
+                foreach (string Id in BookRecIds)
+                {
+                    book_record BR = (book_record)bookRecordService.GetById(Id);
+                    if (BR == null || BR.available == 0)
+                    {
+                        continue;
+                    }
+                    book_issue BookIssue = new book_issue();
+                    BookIssue.id = StringUtil.GenerateRandomChar(10);
+                    BookIssue.issue_id = IssueID;
+                    BookIssue.book_record_id = Id;
+                    BookIssue.qty = 1;
+                    BookIssues.Add(BookIssue);
+                    BookIssueService.Add(BookIssue);
+
+                    BR.available = 0;
+                    bookRecordService.Update(BR);
+
+                }
+                Issue.book_issue = BookIssues;
+
+                return Issue;
+            }
+            return null;
+        }
+
         private void CheckUser()
         {
             string Username = Request.Form["u"];
@@ -156,6 +269,7 @@ namespace OurLibrary.Web.API
             user LoggedUser = UserService.GetUser(Username, Password);
             if (LoggedUser != null)
             {
+                User = LoggedUser;
                 UserValid = true;
             }
         }
@@ -261,7 +375,7 @@ namespace OurLibrary.Web.API
             return "0";
         }
 
-        
+
         private string GetBookList()
         {
             bookService = new BookService();
@@ -354,7 +468,7 @@ namespace OurLibrary.Web.API
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        private string  StudentVisit(string StdId)
+        private string StudentVisit(string StdId)
         {
             VisitService = new VisitService();
             visit Visit = new visit()
@@ -364,7 +478,7 @@ namespace OurLibrary.Web.API
                 info = "visit"
             };
             visit VisitDB = (visit)VisitService.Add(Visit);
-           
+
             if (VisitDB != null)
             {
                 VisitDB.student = null;

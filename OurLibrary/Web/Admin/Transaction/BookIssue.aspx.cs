@@ -336,6 +336,9 @@ namespace OurLibrary.Web.Admin.Transaction
                 foreach (book_issue BS in BookIssues)
                 {
 
+                    //final check
+                    if (bookRecordService.FindByIdFull(BS.book_record_id).available == 0)
+                        continue;
                     BS.issue_id = Issue.id;
                     if (null == BookIssueService.Add(BS))
                     {
