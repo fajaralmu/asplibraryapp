@@ -210,8 +210,6 @@ namespace OurLibrary.Web.Admin.Transaction
             }
         }
 
-
-
         protected void ButtonReturn_Click(object sender, EventArgs e)
         {
             try
@@ -278,7 +276,7 @@ namespace OurLibrary.Web.Admin.Transaction
                 Issue.type = "return";
                 Issue.date = DateTime.Now;
                 Issue.student_id = Student.id;
-                Issue.addtional_info = "test";
+                Issue.addtional_info = "RETURN INFO";
 
                 if (null == IssueService.Add(Issue))
                 {

@@ -34,10 +34,15 @@ namespace OurLibrary.Service
 
         public override object GetById(string Id)
         {
-            return SearchAdvanced(new Dictionary<string, object>()
+            List<object> List = SearchAdvanced(new Dictionary<string, object>()
             {
                 {"id",Id }
-            })[0];
+            });
+            if(List!=null && List.Count > 0)
+            {
+                return List.ElementAt(0);
+            }
+            return null;
             //book_issue Book_issue = (from c in dbEntities.book_issue where c.id.Equals(Id) select c).SingleOrDefault();
             //return Book_issue;
         }
@@ -85,16 +90,18 @@ namespace OurLibrary.Service
             string student_id = Params.ContainsKey("student_id") ? (string)Params["student_id"] : "";
             string book_return = Params.ContainsKey("book_return") ? (string)Params["book_return"] : "";
             string issue_type = Params.ContainsKey("issue_type") ? (string)Params["issue_type"] : "";
+            string book_record_id = Params.ContainsKey("book_record_id") ? (string)Params["book_record_id"] : "";
 
             string orderby = Params.ContainsKey("orderby") ? (string)Params["orderby"] : "";
             string ordertype = Params.ContainsKey("ordertype") ? (string)Params["ordertype"] : "";
 
             string sql = "select * from book_issue " +
-               "left join issue on issue.id = book_issue.issue_id " +
-             " where book_issue.id like '%" + id + "%'" +
-                (book_issue_id != null && book_issue_id != ""?" and book_issue.book_issue_id like '%" + book_issue_id + "%' " : "")+
-                 " and issue.student_id like '%" + student_id + "%' " +
-                 " and issue.type like '%" + issue_type + "%' " + (book_return != null && book_return != "" ? " and book_issue.book_return = " + book_return : " ");
+                    " left join issue on issue.id = book_issue.issue_id " +
+                    " where book_issue.id like '%" + id + "%'" +
+                    (book_issue_id != null && book_issue_id != ""?" and book_issue.book_issue_id like '%" + book_issue_id + "%' " : "")+
+                    (book_record_id != null && book_record_id != "" ? " and book_issue.book_record_id ='" + book_record_id + "' " : "") +
+                    " and issue.student_id like '%" + student_id + "%' " +
+                    " and issue.type like '%" + issue_type + "%' " + (book_return != null && book_return != "" ? " and book_issue.book_return = " + book_return : " ");
             if (!orderby.Equals(""))
             {
                 sql += " ORDER BY " + orderby;
