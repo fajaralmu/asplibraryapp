@@ -289,9 +289,10 @@ namespace OurLibrary.Web.API
                 }
                 List<object> BookIssuesOBJ = BookIssueService.SearchAdvanced(new Dictionary<string, object>()
                 {
-                    {"student_id",Request.Form["student_id"].ToString() },
-                     {"book_record_id",Request.Form["rec_id"].ToString() },
-                     {"book_return","0" }
+                        {"student_id",Request.Form["student_id"].ToString() },
+                        {"book_record_id",Request.Form["rec_id"].ToString() },
+                        {"book_return","0" },
+                        {"issue_type","issue" },
                 });
                 if (BookIssuesOBJ == null || BookIssuesOBJ.Count == 0)
                 {

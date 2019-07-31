@@ -54,7 +54,7 @@ namespace OurLibrary.Web.Admin.Transaction
 
         private bool IsStudentValid()
         {
-            return Session["Student_Id"] != null && !Session["Student_Id"].GetType().Equals(typeof(student));
+            return Session["Student_Id"] != null && Session["Student_Id"].GetType().Equals(typeof(student));
         }
 
         private void InitPage()

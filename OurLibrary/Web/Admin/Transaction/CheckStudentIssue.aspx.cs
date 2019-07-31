@@ -75,7 +75,7 @@ namespace OurLibrary.Web.Admin.Transaction
                         string[] Attrs = new string[]
                         {
                             "href=\"#\"",
-                            "onclick=SetTextInput('"+Bs.id+"','MainContent_TextBoxIssueRecordId')"
+                            "onclick=SetTextInput('"+Bs.book_record_id+"','MainContent_TextBoxIssueRecordId')"
                         };
                         string anchor = ControlUtil.GenerateHtmlTag("a", Attrs, " return now ");
                         labelHtml +=  "<br/>"+anchor;
@@ -216,8 +216,33 @@ namespace OurLibrary.Web.Admin.Transaction
             {
                 book_issue BS = new book_issue();
                 BS.id = StringUtil.GenerateRandomChar(10);
-                BS.book_issue_id = (TextBoxIssueRecordId.Text.Trim());
-                book_issue reffBookIssue = (book_issue)BookIssueService.GetById(BS.book_issue_id);
+                //BS.book_issue_id = (TextBoxIssueRecordId.Text.Trim());
+                //add
+                student Student = (student)StudentService.GetById(TextBoxStudentID.Text);
+                if(Student == null)
+                {
+                    return;
+                }
+                string Student_ID = Student.id;
+                string RecId = (TextBoxIssueRecordId.Text.Trim());
+                List<object> BookIssuesOBJ = BookIssueService.SearchAdvanced(new Dictionary<string, object>()
+                {
+                        {"student_id",Student_ID },
+                        {"book_record_id",RecId },
+                        {"issue_type","issue" },
+                        {"book_return","0" }
+                });
+                if (BookIssuesOBJ == null || BookIssuesOBJ.Count == 0)
+                {
+                    return;
+                }
+                book_issue reffBookIssue = (book_issue)BookIssuesOBJ.ElementAt(0);
+                if(reffBookIssue.book_return != 0)
+                {
+                    return;
+                }
+                BS.book_issue_id = reffBookIssue.id;
+                //   book_issue reffBookIssue = (book_issue)BookIssueService.GetById(BS.book_issue_id);
 
                 if (!BookIssue.ExistBookRecord(BS.book_issue_id, BookIssuesReturn) && null != reffBookIssue)
                 {
