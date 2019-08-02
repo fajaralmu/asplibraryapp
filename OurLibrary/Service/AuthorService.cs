@@ -30,7 +30,13 @@ namespace OurLibrary.Service
         public override object Update(object Obj)
         {
             author author = (author)Obj;
-            dbEntities.Entry(author).CurrentValues.SetValues(author);
+            Refresh();
+            author DBAuthor = (author)GetById(author.id);
+            if (DBAuthor == null)
+            {
+                return null;
+            }
+            dbEntities.Entry(DBAuthor).CurrentValues.SetValues(author);
             dbEntities.SaveChanges();
             return author;
         }
@@ -55,6 +61,7 @@ namespace OurLibrary.Service
 
         public override object Add(object Obj)
         {
+            Refresh();
             author author = (author)Obj;
             if (author.id == null)
                 author.id = StringUtil.GenerateRandomChar(7);

@@ -28,8 +28,15 @@ namespace OurLibrary.Service
 
         public override object Update(object Obj)
         {
+            Refresh();
+            
             publisher publisher = (publisher)Obj;
-            dbEntities.Entry(publisher).CurrentValues.SetValues(publisher);
+            publisher DBPublisher = (publisher)GetById(publisher.id);
+            if (DBPublisher == null)
+            {
+                return null;
+            }
+            dbEntities.Entry(DBPublisher).CurrentValues.SetValues(publisher);
             dbEntities.SaveChanges();
             return publisher;
         }

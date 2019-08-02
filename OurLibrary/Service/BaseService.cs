@@ -108,7 +108,8 @@ namespace OurLibrary.Service
 
         protected void Refresh()
         {
-            dbEntities.Dispose();
+            if(dbEntities!=null)
+                dbEntities.Dispose();
             dbEntities = LibraryEntities.Instance();
 
         }

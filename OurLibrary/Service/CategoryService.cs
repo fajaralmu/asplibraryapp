@@ -26,8 +26,14 @@ namespace OurLibrary.Service
         }
         public override object Update(object Obj)
         {
+            Refresh();
             category Category = (category)Obj;
-            dbEntities.Entry(Category).CurrentValues.SetValues(Category);
+            category DBCategory = (category)GetById(Category.id);
+            if (DBCategory == null)
+            {
+                return null;
+            }
+            dbEntities.Entry(DBCategory).CurrentValues.SetValues(Category);
             dbEntities.SaveChanges();
             return Category;
         }

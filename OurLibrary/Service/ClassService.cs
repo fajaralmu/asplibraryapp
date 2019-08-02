@@ -31,7 +31,13 @@ namespace OurLibrary.Service
         public override object Update(object Obj)
         {
             @class Class = (@class)Obj;
-            dbEntities.Entry(Class).CurrentValues.SetValues(Class);
+            Refresh();
+            @class DBClass = (@class)GetById(Class.id);
+            if (DBClass == null)
+            {
+                return null;
+            }
+            dbEntities.Entry(DBClass).CurrentValues.SetValues(Class);
             dbEntities.SaveChanges();
             return Class;
         }

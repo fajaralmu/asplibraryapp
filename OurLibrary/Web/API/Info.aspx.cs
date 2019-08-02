@@ -71,6 +71,38 @@ namespace OurLibrary.Web.API
                             Result = 0;
                         }
                         break;
+                    case "addAuthor":
+                        Out = UserValid ? AddAuthor() : "0";
+                        if (Out != null && Out != "0")
+                        {
+                            Out = "{\"author\":" + Out + "}";
+                            Result = 0;
+                        }
+                        break;
+                    case "addPublisher":
+                        Out = UserValid ? AddPublisher() : "0";
+                        if (Out != null && Out != "0")
+                        {
+                            Out = "{\"publisher\":" + Out + "}";
+                            Result = 0;
+                        }
+                        break;
+                    case "addClass":
+                        Out = UserValid ? AddClass() : "0";
+                        if (Out != null && Out != "0")
+                        {
+                            Out = "{\"class\":" + Out + "}";
+                            Result = 0;
+                        }
+                        break;
+                    case "addCategory":
+                        Out = UserValid ? AddCategory() : "0";
+                        if (Out != null && Out != "0")
+                        {
+                            Out = "{\"category\":" + Out + "}";
+                            Result = 0;
+                        }
+                        break;
                     case "addBook":
                         Out = UserValid ? AddBook() : "0";
                         if (Out != null && Out != "0")
@@ -277,6 +309,88 @@ namespace OurLibrary.Web.API
             }
         }
 
+        private string AddAuthor()
+        {
+            author author = (author)ObjectUtil.FillObjectWithMap(new author(), BaseService.ReqToDict(Request));
+            if (author != null)
+            {
+                AuthorService = new AuthorService();
+                author Std = null;
+                if (StringUtil.NotNullAndNotBlank(author.id))
+                {
+                    Std = (author)AuthorService.Update(author);
+                }
+                else
+                {
+                    Std = (author)AuthorService.Add(author);
+                }
+                if (Std == null)
+                {
+                    return "0";
+                }
+                author toSend = (author)ObjectUtil.GetObjectValues(new string[]{
+                            "id","name","address","email","phone"
+                        }, Std);
+                return JsonConvert.SerializeObject(toSend);
+            }
+            return "0";
+        }
+
+        private string AddClass()
+        {
+            @class Class = (@class)ObjectUtil.FillObjectWithMap(new @class(), BaseService.ReqToDict(Request));
+            if (Class != null)
+            {
+                ClassService = new ClassService();
+                @class classDB = null;
+                if (Class.id != null && Class.id != "")
+                {
+                    classDB = (@class)ClassService.Update(Class);
+
+                }
+                else
+                {
+                    classDB = (@class)ClassService.Add(Class);
+                }
+                if (classDB == null)
+                {
+                    return "0";
+                }
+                @class toSend = (@class)ObjectUtil.GetObjectValues(new string[]{
+                            "id","class_name"
+                        }, classDB);
+                return JsonConvert.SerializeObject(toSend);
+            }
+            return "0";
+        }
+
+        private string AddPublisher()
+        {
+            publisher publisher = (publisher)ObjectUtil.FillObjectWithMap(new publisher(), BaseService.ReqToDict(Request));
+            if (publisher != null)
+            {
+                PublisherService = new PublisherService();
+                publisher Std = null;
+                if (StringUtil.NotNullAndNotBlank(publisher.id))
+                {
+                    Std = (publisher)PublisherService.Update(publisher);
+                }
+                else
+                {
+                    Std = (publisher)PublisherService.Add(publisher);
+                }
+                if (Std == null)
+                {
+                    return "0";
+                }
+                publisher toSend = (publisher)ObjectUtil.GetObjectValues(new string[]{
+                            "id","name","address","contact"
+                        }, Std);
+                return JsonConvert.SerializeObject(toSend);
+            }
+            return "0";
+        }
+
         private string AddStudent()
         {
             student Student = (student)ObjectUtil.FillObjectWithMap(new student(), BaseService.ReqToDict(Request));
@@ -311,12 +425,14 @@ namespace OurLibrary.Web.API
             {
                 bookService = new BookService();
                 book BookDB = null;
-                if(Book.id != null && Book.id != ""){
-                  BookDB = (book)bookService.Update(Book);
-                   
+                if (Book.id != null && Book.id != "")
+                {
+                    BookDB = (book)bookService.Update(Book);
+
                 }
-                else{
-                    BookDB=(book)bookService.Add(Book);
+                else
+                {
+                    BookDB = (book)bookService.Add(Book);
                 }
                 if (BookDB == null)
                 {
@@ -330,6 +446,33 @@ namespace OurLibrary.Web.API
             return "0";
         }
 
+        private string AddCategory()
+        {
+            category category = (category)ObjectUtil.FillObjectWithMap(new category(), BaseService.ReqToDict(Request));
+            if (category != null)
+            {
+                CategoryService = new CategoryService();
+                category categoryDB = null;
+                if (category.id != null && category.id != "")
+                {
+                    categoryDB = (category)CategoryService.Update(category);
+
+                }
+                else
+                {
+                    categoryDB = (category)CategoryService.Add(category);
+                }
+                if (categoryDB == null)
+                {
+                    return "0";
+                }
+                category toSend = (category)ObjectUtil.GetObjectValues(new string[]{
+                            "id","category_name"
+                        }, categoryDB);
+                return JsonConvert.SerializeObject(toSend);
+            }
+            return "0";
+        }
 
         private issue ReturnBook()
         {
