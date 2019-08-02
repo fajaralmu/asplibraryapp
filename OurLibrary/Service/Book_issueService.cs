@@ -13,6 +13,7 @@ namespace OurLibrary.Service
         {
 
         }
+
         public override List<object> ObjectList(int offset, int limit)
         {
             List<object> ObjList = new List<object>();
@@ -24,6 +25,7 @@ namespace OurLibrary.Service
             }
             return ObjList;
         }
+
         public override object Update(object Obj)
         {
             book_issue Book_issue = (book_issue)Obj;
@@ -121,7 +123,6 @@ namespace OurLibrary.Service
             List<object> ReturnedBookIssues = SearchAdvanced(Params);
             return (List<book_issue>)ObjectUtil.ConvertList(ReturnedBookIssues, typeof(List<book_issue>));
         }
-
 
         public override int ObjectCount()
         {

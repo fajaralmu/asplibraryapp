@@ -15,7 +15,7 @@ namespace OurLibrary.Service
 
         public BaseService()
         {
-            dbEntities = LibraryEntities.Instance();
+            Refresh();
         }
 
         public virtual List<object> ObjectList(int offset, int limit)
@@ -35,7 +35,7 @@ namespace OurLibrary.Service
 
         public virtual void Delete(object obj)
         {
-            
+
         }
 
         public virtual int ObjectCount()
@@ -90,6 +90,26 @@ namespace OurLibrary.Service
                 Params = StringUtil.QUeryStringToDict(Param);
             }
             return Service.SearchAdvanced(Params, Limit, Offset);
+
+        }
+
+        public static Dictionary<string, object> ReqToDict(HttpRequest Req)
+        {
+            if (StringUtil.NotNullAndNotBlank(Req.Form["field_param"]))
+            {
+                string Param = Req.Form["field_param"].ToString();
+                Param = Param.Replace("${", "");
+                Param = Param.Replace("}$", "");
+                Param = Param.Replace(";", "&");
+                return StringUtil.QUeryStringToDict(Param);
+            }
+            return null;
+        }
+
+        protected void Refresh()
+        {
+            dbEntities.Dispose();
+            dbEntities = LibraryEntities.Instance();
 
         }
 

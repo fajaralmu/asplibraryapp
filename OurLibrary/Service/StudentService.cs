@@ -30,10 +30,20 @@ namespace OurLibrary.Service
 
         public override object Update(object Obj)
         {
-            student student = (student)Obj;
-            dbEntities.Entry(student).CurrentValues.SetValues(student);
+            Refresh();
+            student StdObj = (student)Obj;
+            student DBStudent = (student)GetById(StdObj.id);
+            if (DBStudent == null)
+            {
+                return null;
+            }
+            student CleanStudent = (student)ObjectUtil.GetObjectValues(new string[]
+            {
+                "id","name","bod","address","email","class_id"
+            }, StdObj);
+            dbEntities.Entry(DBStudent).CurrentValues.SetValues(CleanStudent);
             dbEntities.SaveChanges();
-            return student;
+            return StdObj;
         }
 
         public override object GetById(string Id)
@@ -52,10 +62,12 @@ namespace OurLibrary.Service
                 if (student != null)
                     student.@class = (from c in dbEntities.classes where c.id.Equals(student.class_id) select c).SingleOrDefault();
                 return student;
-            }catch(InvalidOperationException ex)
+            }
+            catch (InvalidOperationException ex)
             {
                 return null;
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return null;
             }
@@ -107,7 +119,9 @@ namespace OurLibrary.Service
             {
 
                 Exception raise = new Exception(dbEx.StackTrace);
-
+                dbEntities.Dispose();
+                dbEntities = LibraryEntities.Instance();
+                return null;
                 throw raise;
                 //  return null;
             }
@@ -186,7 +200,8 @@ namespace OurLibrary.Service
             {
                 return ((DbSet<student>)dbSet)
                     .SqlQuery(sql).Count();
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
                 return 0;
             }

@@ -131,6 +131,73 @@ namespace OurLibrary.Util.Common
             return List;
         }
 
+        public static object FillObjectWithMap(object OBJ, Dictionary<string, object> ObjMap)
+        {
+            if (ObjMap == null)
+            {
+                return null;
+            }
+                foreach (string key in ObjMap.Keys)
+            {
+                object keyVal = ObjMap[key];
+                if (null != keyVal && HasProperty(key, OBJ))
+                {
+                    PropertyInfo PropInfo = OBJ.GetType().GetProperty(key);
+
+                    object Value = null;
+                    Type KeyType = keyVal.GetType();
+                    
+
+
+                    if (KeyType.Equals(typeof(Int64)))
+                    {
+                        Value = Convert.ToInt32(ObjMap[key]);
+                    }
+                    else
+                    {
+                        Value = ObjMap[key];
+                    }
+                    if (null == Value)
+                    {
+                        continue;
+                    }
+                    if (Value.GetType().Equals(typeof(Dictionary<string, object>)))
+                    {
+                        object ObjValue = Activator.CreateInstance(OBJ.GetType().GetProperty(key).PropertyType);
+                        Value = FillObjectWithMap(ObjValue, (Dictionary<string, object>)Value);
+                    }
+                    else if (Value.GetType().Equals(typeof(List<>)) || Value.GetType().Equals(typeof(ICollection)))
+                    {
+                        List<object> ObjList = new List<object>();
+                        List<object> ValList = (List<object>)Value;
+                        foreach (object o in ValList)
+                        {
+                            if (o.GetType().Equals(typeof(Dictionary<string, object>)))
+                            {
+                                object itemVal = null;
+                                object ObjValue = Activator.CreateInstance(OBJ.GetType().GetProperty(key).PropertyType);
+                                itemVal = FillObjectWithMap(null, (Dictionary<string, object>)o);
+                                ObjList.Add(itemVal);
+                            }
+                        }
+                        Value = ObjList;
+                    }
+                    if(Value == null || Value.ToString() == "")
+                    {
+                        continue;
+                    }
+                    if (PropInfo.PropertyType.Equals(typeof(System.Int32)))
+                    {
+                        Value = int.Parse(Value.ToString());
+                    }
+
+                    OBJ.GetType().GetProperty(key).SetValue(OBJ, Value);
+                }
+            }
+            return OBJ;
+        }
+
+
         public static string ListToDelimitedString(object ListOfObject, string Delimiter,string ValDelimiter, params string[] Props)
         {
             String ListString = "";

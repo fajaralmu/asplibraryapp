@@ -15,18 +15,29 @@ namespace OurLibrary.Web.API
     public partial class Info : System.Web.UI.Page
     {
         private UserService UserService = new UserService();
+        private ClassService ClassService;
+        private AuthorService AuthorService;
+        private PublisherService PublisherService;
+        private CategoryService CategoryService;
         private book_issueService BookIssueService;
         private StudentService studentService;
         private VisitService VisitService;
         private BookService bookService;
         private IssueService issueService;
+
         private user User;
         private Book_recordService bookRecordService;
+
         private int BookCount = 0;
         private int StudentCount = 0;
         private int IssueCount = 0;
         private int VisitCount = 0;
         private int BookIssueCount = 0;
+        private int ClassCoount = 0;
+        private int AuthorCount = 0;
+        private int PublisherCount = 0;
+        private int CategoryCount = 0;
+
         private bool UserValid = false;
 
         protected void Page_Load(object sender, EventArgs e)
@@ -52,6 +63,22 @@ namespace OurLibrary.Web.API
                             }
                         }
                         break;
+                    case "addStudent":
+                        Out = UserValid ? AddStudent() : "0";
+                        if (Out != null && Out != "0")
+                        {
+                            Out = "{\"student\":" + Out + "}";
+                            Result = 0;
+                        }
+                        break;
+                    case "addBook":
+                        Out = UserValid ? AddBook() : "0";
+                        if (Out != null && Out != "0")
+                        {
+                            Out = "{\"book\":" + Out + "}";
+                            Result = 0;
+                        }
+                        break;
                     case "studentById":
                         Out = UserValid ? GetStudentById() : "0";
                         if (Out != null && Out != "0")
@@ -60,6 +87,7 @@ namespace OurLibrary.Web.API
                             Result = 0;
                         }
                         break;
+
                     case "bookRecById":
                         Out = UserValid ? GetBookRecordById() : "0";
                         if (Out != null && Out != "0")
@@ -111,6 +139,54 @@ namespace OurLibrary.Web.API
                             Out += (
                                 ",\"offset\":" + Request.Form["offset"]
                                  + ",\"count\":" + VisitCount
+                                + ",\"limit\":" + Request.Form["limit"]
+                                );
+                            Result = 0;
+                        }
+                        break;
+                    case "classList":
+                        Out = UserValid ? GetClassList() : "0";
+                        if (Out != null && Out != "0")
+                        {
+                            Out += (
+                                ",\"offset\":" + Request.Form["offset"]
+                                 + ",\"count\":" + ClassCoount
+                                + ",\"limit\":" + Request.Form["limit"]
+                                );
+                            Result = 0;
+                        }
+                        break;
+                    case "authorList":
+                        Out = UserValid ? GetAuthorList() : "0";
+                        if (Out != null && Out != "0")
+                        {
+                            Out += (
+                                ",\"offset\":" + Request.Form["offset"]
+                                 + ",\"count\":" + AuthorCount
+                                + ",\"limit\":" + Request.Form["limit"]
+                                );
+                            Result = 0;
+                        }
+                        break;
+                    case "publisherList":
+                        Out = UserValid ? GetPublisherList() : "0";
+                        if (Out != null && Out != "0")
+                        {
+                            Out += (
+                                ",\"offset\":" + Request.Form["offset"]
+                                 + ",\"count\":" + PublisherCount
+                                + ",\"limit\":" + Request.Form["limit"]
+                                );
+                            Result = 0;
+                        }
+                        break;
+                    case "categoryList":
+                        Out = UserValid ? GetCategoryList() : "0";
+                        if (Out != null && Out != "0")
+                        {
+                            Out += (
+                                ",\"offset\":" + Request.Form["offset"]
+                                 + ",\"count\":" + CategoryCount
                                 + ",\"limit\":" + Request.Form["limit"]
                                 );
                             Result = 0;
@@ -200,6 +276,60 @@ namespace OurLibrary.Web.API
                 return;
             }
         }
+
+        private string AddStudent()
+        {
+            student Student = (student)ObjectUtil.FillObjectWithMap(new student(), BaseService.ReqToDict(Request));
+            if (Student != null)
+            {
+                studentService = new StudentService();
+                student Std = null;
+                if (StringUtil.NotNullAndNotBlank(Student.id))
+                {
+                    Std = (student)studentService.Update(Student);
+                }
+                else
+                {
+                    Std = (student)studentService.Add(Student);
+                }
+                if (Std == null)
+                {
+                    return "0";
+                }
+                student toSend = (student)ObjectUtil.GetObjectValues(new string[]{
+                            "id","name","bod","class_id","address","email"
+                        }, Std);
+                return JsonConvert.SerializeObject(toSend);
+            }
+            return "0";
+        }
+
+        private string AddBook()
+        {
+            book Book = (book)ObjectUtil.FillObjectWithMap(new book(), BaseService.ReqToDict(Request));
+            if (Book != null)
+            {
+                bookService = new BookService();
+                book BookDB = null;
+                if(Book.id != null && Book.id != ""){
+                  BookDB = (book)bookService.Update(Book);
+                   
+                }
+                else{
+                    BookDB=(book)bookService.Add(Book);
+                }
+                if (BookDB == null)
+                {
+                    return "0";
+                }
+                book toSend = (book)ObjectUtil.GetObjectValues(new string[]{
+                            "id","title","publisher_id","author_id","category_id","page","review"
+                        }, BookDB);
+                return JsonConvert.SerializeObject(toSend);
+            }
+            return "0";
+        }
+
 
         private issue ReturnBook()
         {
@@ -532,6 +662,120 @@ namespace OurLibrary.Web.API
             }
             return "0";
         }
+
+        private string GetClassList()
+        {
+            ClassService = new ClassService();
+            List<object> ClassObj = BaseService.GetObjectList(ClassService, Request);
+            ClassCoount = ClassService.ObjectCount();
+            if (ClassObj != null)
+            {
+                List<@class> Classes = (List<@class>)ObjectUtil.ConvertList(ClassObj, typeof(List<@class>));
+                List<@class> ClassesToSerialize = new List<@class>();
+                if (Classes.Count > 0)
+                {
+                    foreach (@class CLass in Classes)
+                    {
+
+
+                        @class NewClass = (@class)ObjectUtil.GetObjectValues(new string[]{
+                            "id","class_name"
+                        }, CLass);
+                        ClassesToSerialize.Add(NewClass);
+                    }
+
+                    return JsonConvert.SerializeObject(ClassesToSerialize);
+                }
+                return "0";
+            }
+            return "0";
+        }
+
+        private string GetAuthorList()
+        {
+            AuthorService = new AuthorService();
+            List<object> AuthorObj = BaseService.GetObjectList(AuthorService, Request);
+            AuthorCount = AuthorService.ObjectCount();
+            if (AuthorObj != null)
+            {
+                List<author> Authors = (List<author>)ObjectUtil.ConvertList(AuthorObj, typeof(List<author>));
+                List<author> AuthorsToSerialize = new List<author>();
+                if (Authors.Count > 0)
+                {
+                    foreach (author Auhtor in Authors)
+                    {
+
+
+                        author NewClass = (author)ObjectUtil.GetObjectValues(new string[]{
+                            "id","name","address","email","phone"
+                        }, Auhtor);
+                        AuthorsToSerialize.Add(NewClass);
+                    }
+
+                    return JsonConvert.SerializeObject(AuthorsToSerialize);
+                }
+                return "0";
+            }
+            return "0";
+        }
+
+        private string GetPublisherList()
+        {
+            PublisherService = new PublisherService();
+            List<object> PublisherObj = BaseService.GetObjectList(PublisherService, Request);
+            PublisherCount = PublisherService.ObjectCount();
+            if (PublisherObj != null)
+            {
+                List<publisher> Publishers = (List<publisher>)ObjectUtil.ConvertList(PublisherObj, typeof(List<publisher>));
+                List<publisher> PublishersToSerialize = new List<publisher>();
+                if (Publishers.Count > 0)
+                {
+                    foreach (publisher Publisher in Publishers)
+                    {
+
+
+                        publisher NewClass = (publisher)ObjectUtil.GetObjectValues(new string[]{
+                            "id","name","address","contact"
+                        }, Publisher);
+                        PublishersToSerialize.Add(NewClass);
+                    }
+
+                    return JsonConvert.SerializeObject(PublishersToSerialize);
+                }
+                return "0";
+            }
+            return "0";
+        }
+
+        private string GetCategoryList()
+        {
+            CategoryService = new CategoryService();
+            List<object> CategoryObj = BaseService.GetObjectList(CategoryService, Request);
+            CategoryCount = CategoryService.ObjectCount();
+            if (CategoryObj != null)
+            {
+                List<category> Categories = (List<category>)ObjectUtil.ConvertList(CategoryObj, typeof(List<category>));
+                List<category> CategoriesToSerialize = new List<category>();
+                if (Categories.Count > 0)
+                {
+                    foreach (category Category in Categories)
+                    {
+
+
+                        category NewClass = (category)ObjectUtil.GetObjectValues(new string[]{
+                            "id","category_name"
+                        }, Category);
+                        CategoriesToSerialize.Add(NewClass);
+                    }
+
+                    return JsonConvert.SerializeObject(CategoriesToSerialize);
+                }
+                return "0";
+            }
+            return "0";
+        }
+
+
 
         private string GetBookList()
         {

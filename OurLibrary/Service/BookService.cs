@@ -41,8 +41,23 @@ namespace OurLibrary.Service
 
         public override object Update(object Obj)
         {
+            Refresh();
             book book = (book)Obj;
-            dbEntities.Entry(book).CurrentValues.SetValues(book);
+            book DBBook =(book) GetById(book.id);
+            if (DBBook == null)
+            {
+                return null;
+            }
+            book CleanBook = (book)ObjectUtil.GetObjectValues(new string[]
+           {
+                "id","title","page","review","category_id","publisher_id","isbn","author_id"
+           }, book);
+            if (CleanBook.page == null)
+            {
+                CleanBook.page = 0;
+            }
+            //   dbEntities.Entry(book).CurrentValues.
+            dbEntities.Entry(DBBook).CurrentValues.SetValues(CleanBook);
             dbEntities.SaveChanges();
             return book;
         }
@@ -195,10 +210,19 @@ namespace OurLibrary.Service
 
         public override object Add(object Obj)
         {
+            Refresh();
             book book = (book)Obj;
             if (book.id == null)
                 book.id = StringUtil.GenerateRandomChar(7);
-            book newbook = dbEntities.books.Add(book);
+           book CleanBook = (book)ObjectUtil.GetObjectValues(new string[]
+            {
+"id","title","page","review","category_id","publisher_id","isbn","author_id"
+            },book);
+            if(CleanBook.page == null)
+            {
+                CleanBook.page = 0;
+            }
+            book newbook = dbEntities.books.Add(CleanBook);
             try
             {
                 dbEntities.SaveChanges();
