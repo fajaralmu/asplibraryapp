@@ -7,6 +7,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
   <PropertyGroup>
     <TimeStampOfAssociatedLegacyPublishXmlFile />
     <_PublishTargetUrl>ftp://ftp.gear.host/site/wwwroot</_PublishTargetUrl>
+    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAK33bJYHB/EK935XkudydtAAAAAACAAAAAAAQZgAAAAEAACAAAADwhHYvahZLuwLwpX+CIxa7br9GkFUL4laNXBqd6POXLgAAAAAOgAAAAAIAACAAAABaFfwpr9iw/Mwuw990NP1uVJSZatIBqdUCQry6d/ROloAAAACHsqWZNHKhtqyOzF5IA4fyROEAR0Jwqznl9gaNE/d/GC5SRDFv2ivdkWxJk+FJPIQaQ+cnXXiVoDajhlnnpUIS7qt2JTZVKUqaQX/GCizYSWbktSsPVCZokZDc2ozglRQdFyOCAhVDhWbVylUbAQUdeI4k710EOjgYYSz2hGTNnUAAAABm95f+ShKcPsBb6TkXZMOkqwdGMfdjetc8RxF4WrSXPd9Cv9c7ny3DGyW4V1s6qbkZ+1rJJVw4EpHfNrx+F4n4</EncryptedPassword>
   </PropertyGroup>
   <ItemGroup>
     <File Include="About.aspx">
@@ -85,46 +86,46 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>07/16/2013 20:06:22</publishTime>
     </File>
     <File Include="bin/EntityFramework.dll">
-      <publishTime>03/02/2015 09:32:26</publishTime>
+      <publishTime>02/03/2015 09:32:26</publishTime>
     </File>
     <File Include="bin/EntityFramework.SqlServer.dll">
-      <publishTime>03/02/2015 09:32:26</publishTime>
+      <publishTime>02/03/2015 09:32:26</publishTime>
     </File>
     <File Include="bin/Microsoft.AI.Agent.Intercept.dll">
-      <publishTime>12/07/2015 19:04:38</publishTime>
+      <publishTime>07/12/2015 19:04:38</publishTime>
     </File>
     <File Include="bin/Microsoft.AI.DependencyCollector.dll">
-      <publishTime>03/10/2016 14:26:18</publishTime>
+      <publishTime>10/03/2016 14:26:18</publishTime>
     </File>
     <File Include="bin/Microsoft.AI.PerfCounterCollector.dll">
-      <publishTime>03/10/2016 14:26:26</publishTime>
+      <publishTime>10/03/2016 14:26:26</publishTime>
     </File>
     <File Include="bin/Microsoft.AI.ServerTelemetryChannel.dll">
-      <publishTime>03/09/2016 12:00:14</publishTime>
+      <publishTime>09/03/2016 12:00:14</publishTime>
     </File>
     <File Include="bin/Microsoft.AI.Web.dll">
-      <publishTime>03/10/2016 14:26:26</publishTime>
+      <publishTime>10/03/2016 14:26:26</publishTime>
     </File>
     <File Include="bin/Microsoft.AI.WindowsServer.dll">
-      <publishTime>03/10/2016 14:26:26</publishTime>
+      <publishTime>10/03/2016 14:26:26</publishTime>
     </File>
     <File Include="bin/Microsoft.ApplicationInsights.dll">
-      <publishTime>03/09/2016 11:57:34</publishTime>
+      <publishTime>09/03/2016 11:57:34</publishTime>
     </File>
     <File Include="bin/Microsoft.AspNet.FriendlyUrls.dll">
       <publishTime>07/30/2013 16:57:30</publishTime>
     </File>
     <File Include="bin/Microsoft.AspNet.Identity.Core.dll">
-      <publishTime>04/03/2015 17:07:22</publishTime>
+      <publishTime>03/04/2015 17:07:22</publishTime>
     </File>
     <File Include="bin/Microsoft.AspNet.Identity.EntityFramework.dll">
-      <publishTime>04/03/2015 17:07:22</publishTime>
+      <publishTime>03/04/2015 17:07:22</publishTime>
     </File>
     <File Include="bin/Microsoft.AspNet.Identity.Owin.dll">
-      <publishTime>04/03/2015 17:07:22</publishTime>
+      <publishTime>03/04/2015 17:07:22</publishTime>
     </File>
     <File Include="bin/Microsoft.AspNet.Web.Optimization.WebForms.dll">
-      <publishTime>02/11/2014 15:26:04</publishTime>
+      <publishTime>11/02/2014 15:26:04</publishTime>
     </File>
     <File Include="bin/Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll">
       <publishTime>06/15/2015 02:06:24</publishTime>
@@ -157,22 +158,22 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>02/13/2015 13:16:42</publishTime>
     </File>
     <File Include="bin/Microsoft.ScriptManager.MSAjax.dll">
-      <publishTime>09/06/2013 11:20:12</publishTime>
+      <publishTime>06/09/2013 11:20:12</publishTime>
     </File>
     <File Include="bin/Microsoft.ScriptManager.WebForms.dll">
-      <publishTime>09/06/2013 11:20:22</publishTime>
+      <publishTime>06/09/2013 11:20:22</publishTime>
     </File>
     <File Include="bin/Microsoft.Web.Infrastructure.dll">
-      <publishTime>01/05/2012 11:08:46</publishTime>
+      <publishTime>05/01/2012 11:08:46</publishTime>
     </File>
     <File Include="bin/Newtonsoft.Json.dll">
       <publishTime>04/22/2019 01:06:16</publishTime>
     </File>
     <File Include="bin/OurLibrary.dll">
-      <publishTime>07/31/2019 10:47:52</publishTime>
+      <publishTime>08/02/2019 13:47:36</publishTime>
     </File>
     <File Include="bin/OurLibrary.pdb">
-      <publishTime>07/31/2019 10:47:52</publishTime>
+      <publishTime>08/02/2019 13:47:36</publishTime>
     </File>
     <File Include="bin/Owin.dll">
       <publishTime>11/27/2012 13:00:52</publishTime>
@@ -214,13 +215,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/18/2015 20:19:46</publishTime>
     </File>
     <File Include="bin/System.Web.Optimization.dll">
-      <publishTime>02/11/2014 15:26:04</publishTime>
+      <publishTime>11/02/2014 15:26:04</publishTime>
     </File>
     <File Include="bin/System.Web.Providers.dll">
       <publishTime>11/22/2013 10:21:56</publishTime>
     </File>
     <File Include="bin/WebGrease.dll">
-      <publishTime>09/10/2013 17:28:38</publishTime>
+      <publishTime>10/09/2013 17:28:38</publishTime>
     </File>
     <File Include="Bundle.config">
       <publishTime>05/20/2019 12:32:36</publishTime>
@@ -238,7 +239,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/20/2019 15:38:21</publishTime>
     </File>
     <File Include="Default.aspx">
-      <publishTime>07/04/2019 22:45:17</publishTime>
+      <publishTime>04/07/2019 22:45:17</publishTime>
     </File>
     <File Include="favicon.ico">
       <publishTime>06/18/2019 10:25:21</publishTime>
@@ -259,7 +260,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>05/20/2019 12:32:36</publishTime>
     </File>
     <File Include="LibraryWeb.Master">
-      <publishTime>07/04/2019 22:40:00</publishTime>
+      <publishTime>04/07/2019 22:40:00</publishTime>
     </File>
     <File Include="Models/LibraryModel.edmx.diagram">
       <publishTime>06/18/2019 15:11:01</publishTime>
@@ -343,7 +344,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>05/20/2019 12:33:30</publishTime>
     </File>
     <File Include="Scripts/WebForms/MSAjax/MicrosoftAjaxWebForms.js">
-      <publishTime>05/20/2019 12:33:30</publishTime>
+      <publishTime>01/01/0001 00:00:00</publishTime>
     </File>
     <File Include="Scripts/WebForms/MSAjax/MicrosoftAjaxWebServices.js">
       <publishTime>05/20/2019 12:33:30</publishTime>
@@ -376,7 +377,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>05/20/2019 12:33:35</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>07/31/2019 10:51:05</publishTime>
+      <publishTime>08/06/2019 12:21:07</publishTime>
     </File>
     <File Include="Web/Admin/Default.aspx">
       <publishTime>05/23/2019 00:10:50</publishTime>
@@ -391,10 +392,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>05/22/2019 09:29:43</publishTime>
     </File>
     <File Include="Web/Admin/Transaction/BookIssue.aspx">
-      <publishTime>07/04/2019 21:32:33</publishTime>
+      <publishTime>04/07/2019 21:32:33</publishTime>
     </File>
     <File Include="Web/Admin/Transaction/CheckStudentIssue.aspx">
-      <publishTime>07/03/2019 08:14:13</publishTime>
+      <publishTime>03/07/2019 08:14:13</publishTime>
     </File>
     <File Include="Web/API/CheckUser.aspx">
       <publishTime>07/08/2019 13:36:17</publishTime>
